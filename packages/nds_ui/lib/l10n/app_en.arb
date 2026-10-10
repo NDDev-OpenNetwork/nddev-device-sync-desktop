@@ -152,5 +152,26 @@
   },
   "startupFailed": "NDS could not start. Restart the application. If this continues, check the installation and local diagnostics.",
   "diagnosticsHttp": "Network diagnostics",
-  "diagnosticsIo": "Local operations"
+  "diagnosticsIo": "Local operations",
+  "devicesTitle": "Your devices",
+  "devicesHelp": "Register this installation with its own native signing key. Device enrollment does not unlock the vault.",
+  "devicesUnverified": "Device inventory has not been freshly verified.",
+  "deviceName": "Device name",
+  "enrollDevice": "Register this device",
+  "refreshDevices": "Refresh devices",
+  "thisDevice": "This installation",
+  "deviceActive": "Active",
+  "deviceRevoked": "Revoked",
+  "deviceCreated": "Registered",
+  "deviceRevokedHelp": "This device key has been revoked. It is retained locally and cannot be reused for enrollment.",
+  "revokeDevice": "Revoke device",
+  "revokeDeviceHelp": "Revoke access for {name}? This identity cannot be enrolled again with the same key.",
+  "keepDevice": "Keep device",
+  "@revokeDeviceHelp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

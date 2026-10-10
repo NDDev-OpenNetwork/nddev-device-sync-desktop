@@ -417,4 +417,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diagnosticsIo => 'Local operations';
+
+  @override
+  String get devicesTitle => 'Your devices';
+
+  @override
+  String get devicesHelp =>
+      'Register this installation with its own native signing key. Device enrollment does not unlock the vault.';
+
+  @override
+  String get devicesUnverified =>
+      'Device inventory has not been freshly verified.';
+
+  @override
+  String get deviceName => 'Device name';
+
+  @override
+  String get enrollDevice => 'Register this device';
+
+  @override
+  String get refreshDevices => 'Refresh devices';
+
+  @override
+  String get thisDevice => 'This installation';
+
+  @override
+  String get deviceActive => 'Active';
+
+  @override
+  String get deviceRevoked => 'Revoked';
+
+  @override
+  String get deviceCreated => 'Registered';
+
+  @override
+  String get deviceRevokedHelp =>
+      'This device key has been revoked. It is retained locally and cannot be reused for enrollment.';
+
+  @override
+  String get revokeDevice => 'Revoke device';
+
+  @override
+  String revokeDeviceHelp(String name) {
+    return 'Revoke access for $name? This identity cannot be enrolled again with the same key.';
+  }
+
+  @override
+  String get keepDevice => 'Keep device';
 }

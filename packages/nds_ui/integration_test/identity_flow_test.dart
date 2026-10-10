@@ -16,51 +16,86 @@ void main() {
     defaultValue: 'complete',
   );
 
-  testWidgets('actual email, native session restore and revocation', (
-    tester,
-  ) async {
-    expect(Uri.parse(server).host, '127.0.0.1');
-    expect(Uri.parse(mailbox).host, '127.0.0.1');
-    expect(owner.endsWith('.invalid') || owner.endsWith('.test'), isTrue);
-    await runNdsApp();
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('server-address')), server);
-    await tester.tap(find.byKey(const Key('connect')));
-    if (phase == 'restore') {
+  testWidgets(
+    'actual identity, device enrollment, native restore and revocation',
+    (tester) async {
+      expect(Uri.parse(server).host, '127.0.0.1');
+      expect(Uri.parse(mailbox).host, '127.0.0.1');
+      expect(owner.endsWith('.invalid') || owner.endsWith('.test'), isTrue);
+      final frameworkHandler = FlutterError.onError;
+      await runNdsApp();
+      final diagnosticHandler = FlutterError.onError;
+      // Production reports redacted classes. The acceptance harness must also
+      // receive unexpected framework failures rather than silently swallow them.
+      FlutterError.onError = (details) {
+        diagnosticHandler?.call(details);
+        frameworkHandler?.call(details);
+      };
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        FlutterError.onError = frameworkHandler;
+      });
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const Key('server-address')), server);
+      await tester.tap(find.byKey(const Key('connect')));
+      if (phase == 'restore') {
+        await waitFor(tester, find.byKey(const Key('logout')));
+        await tester.tap(find.byKey(const Key('logout')));
+        await waitFor(tester, find.byKey(const Key('email')));
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        return;
+      }
+      await waitFor(tester, find.byKey(const Key('email')));
+      await tester.enterText(find.byKey(const Key('email')), owner);
+      await tester.tap(find.byKey(const Key('send-code')));
+      await waitFor(tester, find.byKey(const Key('otp')));
+
+      final code = await readLocalCode(mailbox);
+      await tester.enterText(find.byKey(const Key('otp')), code);
+      await tester.tap(find.byKey(const Key('verify')));
       await waitFor(tester, find.byKey(const Key('logout')));
+      expect(find.byKey(const Key('otp')), findsNothing);
+      expect(tester.takeException(), isNull);
+      if (phase == 'persist') {
+        await tester.pumpWidget(const SizedBox.shrink());
+        return;
+      }
+
+      await tester.ensureVisible(find.byKey(const Key('device-name')));
+      await tester.enterText(
+        find.byKey(const Key('device-name')),
+        'Acceptance device',
+      );
+      await tester.ensureVisible(find.byKey(const Key('enroll-device')));
+      await tester.tap(find.byKey(const Key('enroll-device')));
+      await waitFor(tester, find.text('This installation'));
+      expect(find.text('Acceptance device'), findsOneWidget);
+      expect(find.byKey(const Key('enroll-device')), findsNothing);
+
+      // Replace the client. Restoration must use the actual native store and
+      // a fresh server validation, rather than a retained Dart session object.
+      await tester.ensureVisible(find.text('Change server'));
+      await tester.tap(find.text('Change server'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('connect')));
+      await waitFor(tester, find.byKey(const Key('logout')));
+      expect(find.text('Acceptance device'), findsOneWidget);
+      expect(find.text('This installation'), findsOneWidget);
+      final revoke = find.widgetWithText(TextButton, 'Revoke device');
+      await tester.ensureVisible(revoke);
+      await tester.tap(revoke);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Revoke device'));
+      await tester.pumpAndSettle();
+      await waitFor(tester, find.textContaining('· Revoked'));
+      await tester.ensureVisible(find.byKey(const Key('logout')));
       await tester.tap(find.byKey(const Key('logout')));
       await waitFor(tester, find.byKey(const Key('email')));
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
-      return;
-    }
-    await waitFor(tester, find.byKey(const Key('email')));
-    await tester.enterText(find.byKey(const Key('email')), owner);
-    await tester.tap(find.byKey(const Key('send-code')));
-    await waitFor(tester, find.byKey(const Key('otp')));
-
-    final code = await readLocalCode(mailbox);
-    await tester.enterText(find.byKey(const Key('otp')), code);
-    await tester.tap(find.byKey(const Key('verify')));
-    await waitFor(tester, find.byKey(const Key('logout')));
-    expect(find.byKey(const Key('otp')), findsNothing);
-    expect(tester.takeException(), isNull);
-    if (phase == 'persist') {
-      await tester.pumpWidget(const SizedBox.shrink());
-      return;
-    }
-
-    // Replace the client. Restoration must use the actual native store and
-    // a fresh server validation, rather than a retained Dart session object.
-    await tester.tap(find.text('Change server'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('connect')));
-    await waitFor(tester, find.byKey(const Key('logout')));
-    await tester.tap(find.byKey(const Key('logout')));
-    await waitFor(tester, find.byKey(const Key('email')));
-    expect(tester.takeException(), isNull);
-    await tester.pumpWidget(const SizedBox.shrink());
-  });
+    },
+  );
 }
 
 Future<void> waitFor(WidgetTester tester, Finder finder) async {

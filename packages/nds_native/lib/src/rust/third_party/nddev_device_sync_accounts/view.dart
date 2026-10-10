@@ -7,7 +7,7 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientError>>
 abstract class ClientError implements RustOpaqueInterface {
@@ -15,8 +15,51 @@ abstract class ClientError implements RustOpaqueInterface {
   Future<String> code();
 }
 
+/// Public metadata only; signing keys never cross the presentation boundary.
+class DeviceView {
+  final String deviceId;
+  final String displayName;
+  final String platform;
+  final bool revoked;
+  final bool isCurrent;
+  final String createdAt;
+
+  const DeviceView({
+    required this.deviceId,
+    required this.displayName,
+    required this.platform,
+    required this.revoked,
+    required this.isCurrent,
+    required this.createdAt,
+  });
+
+  @override
+  int get hashCode =>
+      deviceId.hashCode ^
+      displayName.hashCode ^
+      platform.hashCode ^
+      revoked.hashCode ^
+      isCurrent.hashCode ^
+      createdAt.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DeviceView &&
+          runtimeType == other.runtimeType &&
+          deviceId == other.deviceId &&
+          displayName == other.displayName &&
+          platform == other.platform &&
+          revoked == other.revoked &&
+          isCurrent == other.isCurrent &&
+          createdAt == other.createdAt;
+}
+
 /// Presentation state, never a bearer credential or a wire request.
 class View {
+  final List<DeviceView> devices;
+  final String currentDeviceId;
+  final PlatformInt64 devicesCheckedAt;
   final bool emailAvailable;
   final bool githubAvailable;
   final bool credentialStoreReady;
@@ -36,6 +79,9 @@ class View {
   final int retryAfterSeconds;
 
   const View({
+    required this.devices,
+    required this.currentDeviceId,
+    required this.devicesCheckedAt,
     required this.emailAvailable,
     required this.githubAvailable,
     required this.credentialStoreReady,
@@ -60,6 +106,9 @@ class View {
 
   @override
   int get hashCode =>
+      devices.hashCode ^
+      currentDeviceId.hashCode ^
+      devicesCheckedAt.hashCode ^
       emailAvailable.hashCode ^
       githubAvailable.hashCode ^
       credentialStoreReady.hashCode ^
@@ -83,6 +132,9 @@ class View {
       identical(this, other) ||
       other is View &&
           runtimeType == other.runtimeType &&
+          devices == other.devices &&
+          currentDeviceId == other.currentDeviceId &&
+          devicesCheckedAt == other.devicesCheckedAt &&
           emailAvailable == other.emailAvailable &&
           githubAvailable == other.githubAvailable &&
           credentialStoreReady == other.credentialStoreReady &&
