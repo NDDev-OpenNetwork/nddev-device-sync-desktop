@@ -3,6 +3,8 @@
 import argparse
 import hashlib
 import json
+import re
+import zipfile
 from pathlib import Path
 import subprocess
 import tomllib
@@ -38,6 +40,14 @@ record = {'build_kind':'debug', 'app_source':identity(args.app_root),
           'locks_sha256':{'app_pubspec':sha(args.app_root/'pubspec.lock'),
                          'native_cargo':sha(args.native_root/'packages/nds_native/rust/Cargo.lock')},
           'artifact_files_sha256':files}
+if artifact.suffix == '.apk':
+    gradle = (args.app_root/'android/app/build.gradle.kts').read_text()
+    minima = re.findall(r'^\s*minSdk = (\d+)\s*$', gradle, re.MULTILINE)
+    if len(minima) != 1: raise SystemExit('Android requires an explicit native-compatible minimum API')
+    with zipfile.ZipFile(artifact) as archive:
+        abis = sorted(name.split('/')[1] for name in archive.namelist()
+                      if name.startswith('lib/') and name.endswith('/libnds_native.so'))
+    record['platform'] = {'name':'android','minimum_api':int(minima[0]),'native_abis':abis}
 args.output.parent.mkdir(parents=True,exist_ok=True)
 args.output.write_text(json.dumps(record,indent=2,sort_keys=True)+'\n')
 print('Build provenance recorded: wrapper and native source identities are separate')

@@ -29,7 +29,8 @@ dependencies { implementation("org.rustls:rustls-platform-verifier:$verifierVers
 extensions.configure<LibraryExtension> {
     namespace = "ai.nddev.nds.accounts"
     compileSdk = 36
-    defaultConfig { minSdk = 24; consumerProguardFiles("consumer-rules.pro") }
+    // The locked native Rust toolchain links against Android API 35.
+    defaultConfig { minSdk = 35; consumerProguardFiles("consumer-rules.pro") }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
 }
 
