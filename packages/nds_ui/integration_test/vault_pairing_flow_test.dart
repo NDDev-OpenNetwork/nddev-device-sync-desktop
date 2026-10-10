@@ -148,6 +148,25 @@ void main() {
         await waitUntil(
           () => find.text('Linux shared record').evaluate().isNotEmpty,
         );
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Local modules'));
+        await waitUntil(
+          () => find
+              .byKey(const Key('publish-local-state'))
+              .evaluate()
+              .isNotEmpty,
+        );
+        await visible('publish-local-state');
+        await waitUntil(
+          () => find.text('Pending: 0 · Conflicts: 0').evaluate().isNotEmpty,
+        );
+        await tester.tap(find.text('NDS session'));
+        await tester.pumpAndSettle();
+        await visible('open-vault');
+        await waitUntil(
+          () => find.byKey(const Key('vault-pair-grant')).evaluate().isNotEmpty,
+        );
         // Respect the real email challenge cooldown before the second process
         // signs in. No clock modification or provider bypass is used.
         await waitUntil(
@@ -183,6 +202,12 @@ void main() {
         await waitUntil(
           () => find.text('Android shared record').evaluate().isNotEmpty,
         );
+        await visible('open-synced-state');
+        await waitUntil(
+          () => find.text('Pairing recipient').evaluate().isNotEmpty,
+        );
+        await tester.pageBack();
+        await tester.pumpAndSettle();
       } else {
         await visible('vault-pair-start');
         await waitUntil(
@@ -219,6 +244,19 @@ void main() {
         await waitUntil(
           () => find.text('Android shared record').evaluate().isNotEmpty,
         );
+        await visible('open-synced-state');
+        await waitUntil(
+          () => find
+              .byKey(const Key('publish-device-state'))
+              .evaluate()
+              .isNotEmpty,
+        );
+        await visible('publish-device-state');
+        await waitUntil(() => find.text('gds').evaluate().isNotEmpty);
+        expect(find.text('rds'), findsOneWidget);
+        expect(find.text('Pairing owner'), findsOneWidget);
+        await tester.pageBack();
+        await tester.pumpAndSettle();
         await request(relay, {'recipient_saved': 'saved'});
       }
     } else {
@@ -231,6 +269,9 @@ void main() {
       );
       expect(find.text('Android shared record'), findsOneWidget);
       expect(find.byKey(const Key('vault-create')), findsNothing);
+      await visible('open-synced-state');
+      await waitUntil(() => find.text('gds').evaluate().isNotEmpty);
+      expect(find.text('Pairing owner'), findsOneWidget);
     }
     expect(find.text('PRIVATE_PAIR_LINUX_VALUE'), findsNothing);
     expect(find.text('PRIVATE_PAIR_ANDROID_VALUE'), findsNothing);
