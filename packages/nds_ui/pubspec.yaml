@@ -16,7 +16,7 @@ dependencies:
   nddev_opennetwork_design_system:
     git:
       url: https://github.com/NDDev-OpenNetwork/nddev-opennetwork-design-system.git
-      ref: 484870e1830df77bb467b379a80363e3204121d1
+      ref: 536a48fb0c8fab538cbc8d5baab7af6520c0114f
       path: packages/flutter
   url_launcher: ^6.3.2
 dev_dependencies:

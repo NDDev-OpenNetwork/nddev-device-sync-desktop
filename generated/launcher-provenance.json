@@ -11,12 +11,14 @@
     "windows/runner/resources/app_icon.ico": "1c1a8df5f15415d9b4b86e4e701f714c2aca3e9628b6dd79a36b923c9ef72aa4"
   },
   "source": {
-    "commit": "484870e1830df77bb467b379a80363e3204121d1",
+    "commit": "536a48fb0c8fab538cbc8d5baab7af6520c0114f",
     "inputs_sha256": {
       "assets/brand-source.json": "9c71e04cf60121340eef9678584384da874703c31aadf029b305b8262f2d15e2",
       "assets/nddev-mark.svg": "3997b08aa3c47d0d5827484db657c8e18a53dc0a00e1a875cc57eb931c6f4877",
       "tokens/tokens.json": "e9fd42397d361cf2ac0a3af5d138b0ff43373a6e663af965d492f3053e503536",
-      "tools/generate_launchers.py": "747d4177a4ecde2b3396454ca72adebb0bedb02256de83cfc160516929d7b624"
+      "tools/generate_launchers.py": "52bcb7b8dcb57013b000c619be127f11002be11138c8f223d748875d4c6e66c6",
+      "tools/requirements-icons.txt": "69676f88aba8a6e253f59c6921d70e62959658a8b02baf921b1b358fb70f86d5",
+      "tools/with-renderer-zlib.sh": "87251e8744f00e1ec45420a9ca3bf1e6bcccef68f3b6d8c764712df8a5dcc7a3"
     },
     "renderer": {
       "pillow": "12.1.1",

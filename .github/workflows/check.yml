@@ -122,7 +122,7 @@ jobs:
           path: vendor/design-system
           persist-credentials: false
       - run: python -m pip install --require-hashes -r vendor/design-system/tools/requirements-icons.txt
-      - run: python vendor/design-system/tools/generate_launchers.py --desktop . --check
+      - run: bash vendor/design-system/tools/with-renderer-zlib.sh python vendor/design-system/tools/generate_launchers.py --desktop . --check
       - run: python -S vendor/design-system/tools/generate_launchers.py --desktop . --verify
   quality:
     if: always()
