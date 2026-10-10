@@ -2,3 +2,7 @@ source_repo = "NDDev-OpenNetwork/nddev-device-sync"
 source_release = "v0.0.1-alpha.9"
 source_commit = "16a477beac6127adf73ef102df74a48451d607f1"
 license = "AGPL-3.0-only"
+
+[amendments.visual]
+source_commit = "35bff12650e4fc16ba2df06fc1b0e8b29f92b7ce"
+decision = "standarts/decisions/0004-opennetwork-visual-source.md"

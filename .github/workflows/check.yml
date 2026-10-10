@@ -70,7 +70,7 @@ jobs:
       - run: flutter pub get --enforce-lockfile
         working-directory: packages/nds_native
       - run: flutter analyze --no-pub
-      - run: python scripts/build.py ${{ matrix.target }} --debug --build-name=0.0.1 --build-number=9
+      - run: python scripts/build.py ${{ matrix.target }} --debug --build-name=0.0.1 --build-number=10
       - run: python scripts/check-artifact.py '${{ matrix.artifact }}' --native-source-commit '${{ github.sha }}'
       - run: python scripts/build-provenance.py '${{ matrix.artifact }}' --output build/nds-build-provenance.json
   contracts:

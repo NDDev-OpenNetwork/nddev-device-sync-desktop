@@ -240,18 +240,18 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/flutter"
-      ref: "536a48fb0c8fab538cbc8d5baab7af6520c0114f"
-      resolved-ref: "536a48fb0c8fab538cbc8d5baab7af6520c0114f"
+      ref: ab5a8d6170be042f141b971ea2322e425bd01b4e
+      resolved-ref: ab5a8d6170be042f141b971ea2322e425bd01b4e
       url: "https://github.com/NDDev-OpenNetwork/nddev-opennetwork-design-system.git"
     source: git
-    version: "0.0.1-alpha.7"
+    version: "0.0.1-alpha.8"
   nds_native:
     dependency: "direct main"
     description:
       path: "../nds_native"
       relative: true
     source: path
-    version: "0.0.1-alpha.9"
+    version: "0.0.1-alpha.10"
   path:
     dependency: transitive
     description:
