@@ -10,7 +10,9 @@ parser.add_argument('--native-source-commit')
 args = parser.parse_args()
 markers = [b'identity_acceptance_generated_test', b'local_modules_generated_test',
            b'NDS_TEST_SERVER', b'NDS_TEST_MAILPIT', b'NDS isolated archive:',
-           b'IntegrationTestPlugin', b'dev/flutter/plugins/integration_test']
+           b'IntegrationTestPlugin', b'dev/flutter/plugins/integration_test',
+           b'IntegrationTestWidgetsFlutterBinding', b'plugins.flutter.io/integration_test',
+           b'package:integration_test/']
 checked = 0
 native_source_found = False
 native_record_count = 0
@@ -57,6 +59,8 @@ if args.artifact.suffix == '.apk':
                     raise SystemExit('Unexpectedly large app inspection input')
                 check(item.filename, archive.read(item))
 elif args.artifact.is_dir():
+    if any('integration_test' in path.name.lower() for path in args.artifact.rglob('*')):
+        raise SystemExit('Native integration test plugin found in app bundle')
     if expected:
         for path in args.artifact.rglob('*'):
             if path.is_file() and 0 < path.stat().st_size <= 128 * 1024 * 1024:
@@ -64,12 +68,15 @@ elif args.artifact.is_dir():
                     magic = candidate.read(4)
                     if magic[:2]==b'MZ' or magic in [b'\x7fELF',b'\xcf\xfa\xed\xfe',b'\xfe\xed\xfa\xcf',b'\xca\xfe\xba\xbe',b'\xbe\xba\xfe\xca',b'\xca\xfe\xba\xbf',b'\xbf\xba\xfe\xca']:
                         native_source(magic + candidate.read())
-    for path in args.artifact.rglob('kernel_blob.bin'):
+    payloads = [*args.artifact.rglob('kernel_blob.bin'), *args.artifact.rglob('libapp.so')]
+    for path in payloads:
+        if path.stat().st_size > 128 * 1024 * 1024:
+            raise SystemExit('Unexpectedly large Dart app payload')
         check(str(path.relative_to(args.artifact)), path.read_bytes())
 else:
     raise SystemExit('Expected an APK or app bundle directory')
 if not checked:
-    raise SystemExit('No expected debug app payload was found')
+    raise SystemExit('No expected Flutter JIT or Linux AOT app payload was found')
 if expected and not native_source_found:
     raise SystemExit('Expected native source SHA is absent from built native code')
 print(f'Checked {checked} built app payloads; integration harness absent')

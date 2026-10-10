@@ -14,6 +14,7 @@ parser.add_argument('artifact', type=Path)
 parser.add_argument('--app-root', type=Path, default=Path.cwd())
 parser.add_argument('--native-root', type=Path, default=Path(__file__).resolve().parents[1])
 parser.add_argument('--output', type=Path, required=True)
+parser.add_argument('--build-kind', choices=['debug','profile','release'], default='debug')
 args = parser.parse_args()
 
 def sha(path):
@@ -33,10 +34,11 @@ elif artifact.is_dir():
     if not paths or len(paths)>32768: raise SystemExit('Unexpected artifact file count')
     files = {str(path.relative_to(artifact)):sha(path) for path in paths}
 else: raise SystemExit('Built artifact does not exist')
-record = {'build_kind':'debug', 'app_source':identity(args.app_root),
+record = {'build_kind':args.build_kind, 'app_source':identity(args.app_root),
           'native_source':identity(args.native_root),
           'standards':tomllib.loads((args.app_root/'standarts.lock').read_text()),
           'toolchains':json.loads((args.native_root/'toolchains.lock.json').read_text()),
+          'rust_toolchain':tomllib.loads((args.native_root/'packages/nds_native/rust/rust-toolchain.toml').read_text())['toolchain'],
           'locks_sha256':{'app_pubspec':sha(args.app_root/'pubspec.lock'),
                          'native_cargo':sha(args.native_root/'packages/nds_native/rust/Cargo.lock')},
           'artifact_files_sha256':files}
