@@ -12,6 +12,29 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async => native.RustLib.init());
 
+  testWidgets('lifecycle during bridge startup does not mark the sink failed', (
+    tester,
+  ) async {
+    final previous = tester.binding.lifecycleState;
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    final diagnostics = ApplicationDiagnostics();
+    try {
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      expect(diagnostics.reportingUnavailable, isFalse);
+      expect(diagnostics.hadFailure, isFalse);
+      diagnostics.nativeInitialized();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      diagnostics.clientReady();
+      expect(diagnostics.reportingUnavailable, isFalse);
+      expect(native.clientDiagnostics().rejectedFieldsOrEvents, BigInt.zero);
+    } finally {
+      diagnostics.dispose();
+      tester.binding.handleAppLifecycleStateChanged(
+        previous ?? AppLifecycleState.resumed,
+      );
+    }
+  });
+
   testWidgets(
     'actual framework failure reaches native policy without raw details',
     (tester) async {

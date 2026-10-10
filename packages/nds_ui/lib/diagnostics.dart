@@ -24,17 +24,22 @@ class ApplicationDiagnostics {
     PlatformDispatcher.instance.onError = _async;
     ErrorWidget.builder = _errorWidget;
     _lifecycle = AppLifecycleListener(
-      onStateChange: (state) => _record(
-        () => native.recordClientLifecycle(
-          state: switch (state) {
-            AppLifecycleState.resumed => native.ClientLifecycle.resumed,
-            AppLifecycleState.inactive => native.ClientLifecycle.inactive,
-            AppLifecycleState.hidden => native.ClientLifecycle.hidden,
-            AppLifecycleState.paused => native.ClientLifecycle.paused,
-            AppLifecycleState.detached => native.ClientLifecycle.detached,
-          },
-        ),
-      ),
+      onStateChange: (state) {
+        // Initial engine lifecycle can arrive while RustLib.init is pending.
+        // It is not evidence of a failed bridge or sink.
+        if (!_nativeAvailable) return;
+        _record(
+          () => native.recordClientLifecycle(
+            state: switch (state) {
+              AppLifecycleState.resumed => native.ClientLifecycle.resumed,
+              AppLifecycleState.inactive => native.ClientLifecycle.inactive,
+              AppLifecycleState.hidden => native.ClientLifecycle.hidden,
+              AppLifecycleState.paused => native.ClientLifecycle.paused,
+              AppLifecycleState.detached => native.ClientLifecycle.detached,
+            },
+          ),
+        );
+      },
       onExitRequested: () async {
         if (_nativeAvailable) {
           try {

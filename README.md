@@ -27,6 +27,10 @@ Install the Rust target matching the platform being built. `flutter pub get
 cover dependencies, static checks, generated-source drift and the Linux build.
 Run the same native build on each other supported host before claiming support.
 
+The Linux alpha uses Flutter's supported Skia GPU backend. Requalify Impeller
+after an engine update passes native interaction acceptance under low VRAM;
+this selection does not enable software rendering.
+
 `flutter run -d linux` opens the client. Enter the HTTPS origin of an NDS server
 supporting protocol v2. Native credential storage must be available and unlocked.
 GitHub sign-in requires the server's actual provider configuration and explicit
