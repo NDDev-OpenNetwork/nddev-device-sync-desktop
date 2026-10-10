@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import signal
+import shutil
 import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -33,8 +34,27 @@ try:
     spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n'.encode())
     environment = os.environ.copy()
     environment['CARGO_BUILD_JOBS'] = '4'
-    result = subprocess.run(['flutter','build',*args.flutter_arguments], env=environment, timeout=1800)
-    raise SystemExit(result.returncode)
+    executable = shutil.which('flutter')
+    if executable is None:
+        raise SystemExit('Flutter is unavailable')
+    process = subprocess.Popen([executable,'build',*args.flutter_arguments],
+        env=environment, start_new_session=os.name != 'nt')
+    try:
+        status = process.wait(timeout=1800)
+    except (subprocess.TimeoutExpired, KeyboardInterrupt):
+        if os.name == 'nt':
+            subprocess.run(['taskkill','/PID',str(process.pid),'/T','/F'],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+        else:
+            os.killpg(process.pid, signal.SIGTERM)
+        try:
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            if os.name != 'nt': os.killpg(process.pid, signal.SIGKILL)
+            else: process.kill()
+            process.wait(timeout=10)
+        raise
+    raise SystemExit(status)
 finally:
     spec.write_bytes(original)
     for sig, handler in handlers.items(): signal.signal(sig, handler)

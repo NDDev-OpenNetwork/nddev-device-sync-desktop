@@ -1,6 +1,9 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 check:
+    flutter pub get --enforce-lockfile
+    cd packages/nds_ui && flutter pub get --enforce-lockfile
+    cd packages/nds_native && flutter pub get --enforce-lockfile
     dart format --output=none --set-exit-if-changed lib packages/nds_ui/lib packages/nds_ui/test packages/nds_ui/integration_test packages/nds_native/lib packages/nds_native/hook
     flutter analyze --no-pub
     cd packages/nds_ui && flutter test --no-pub

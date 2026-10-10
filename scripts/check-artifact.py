@@ -45,7 +45,7 @@ elif args.artifact.is_dir():
             if path.is_file() and 0 < path.stat().st_size <= 128 * 1024 * 1024:
                 with path.open('rb') as candidate:
                     magic = candidate.read(4)
-                    if magic[:2]==b'MZ' or magic in [b'\x7fELF',b'\xcf\xfa\xed\xfe',b'\xfe\xed\xfa\xcf',b'\xca\xfe\xba\xbe']:
+                    if magic[:2]==b'MZ' or magic in [b'\x7fELF',b'\xcf\xfa\xed\xfe',b'\xfe\xed\xfa\xcf',b'\xca\xfe\xba\xbe',b'\xbe\xba\xfe\xca',b'\xca\xfe\xba\xbf',b'\xbf\xba\xfe\xca']:
                         native_source(magic + candidate.read())
     for path in args.artifact.rglob('kernel_blob.bin'):
         check(str(path.relative_to(args.artifact)), path.read_bytes())
