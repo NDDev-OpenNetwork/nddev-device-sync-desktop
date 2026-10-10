@@ -24,7 +24,7 @@ if not re.fullmatch('[a-f0-9]{40}', commit):
     raise SystemExit('Native source requires a Git commit')
 dirty = subprocess.check_output(['git','status','--porcelain','--untracked-files=no'], cwd=source, text=True).strip()
 if dirty:
-    raise SystemExit('Use flutter build directly for uncommitted development; this build requires committed native source')
+    raise SystemExit('Committed native source is required; tracked drift:\n' + '\n'.join(dirty.splitlines()[:32]))
 if app != source and f'ref: {commit}' not in original.decode():
     raise SystemExit('The app must consume this exact shared native source')
 def interrupted(_signal, _frame):
