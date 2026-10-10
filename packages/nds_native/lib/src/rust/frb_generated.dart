@@ -25,6 +25,7 @@ import 'third_party/nddev_device_sync_rds/view.dart';
 import 'third_party/nddev_device_sync_sysinfo/view.dart';
 import 'third_party/nddev_device_sync_telemetry/view.dart';
 import 'third_party/nddev_device_sync_updater/view.dart';
+import 'third_party/nddev_device_sync_vault/view.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -81,7 +82,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => 1184274308;
+  int get rustContentHash => 1303551668;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -184,6 +185,44 @@ abstract class RustLibApi extends BaseApi {
     required String locale,
   });
 
+  Future<VaultView> crateApiIdentityNdsClientVaultCreate({
+    required NdsClient that,
+  });
+
+  Future<String> crateApiIdentityNdsClientVaultPairingGrant({
+    required NdsClient that,
+    required String code,
+  });
+
+  Future<VaultView> crateApiIdentityNdsClientVaultPairingImport({
+    required NdsClient that,
+    required String code,
+  });
+
+  Future<String> crateApiIdentityNdsClientVaultPairingStart({
+    required NdsClient that,
+  });
+
+  Future<List<RecordView>> crateApiIdentityNdsClientVaultRecords({
+    required NdsClient that,
+  });
+
+  Future<VaultView> crateApiIdentityNdsClientVaultRefresh({
+    required NdsClient that,
+  });
+
+  Future<String> crateApiIdentityNdsClientVaultSave({
+    required NdsClient that,
+    String? id,
+    required String title,
+    required String username,
+    required String secret,
+  });
+
+  Future<VaultView> crateApiIdentityNdsClientVaultSync({
+    required NdsClient that,
+  });
+
   Future<View> crateApiIdentityNdsClientVerifyEmail({
     required NdsClient that,
     required String code,
@@ -209,6 +248,12 @@ abstract class RustLibApi extends BaseApi {
   String crateApiModulesUpdateActionKind({required Action action});
 
   String? crateApiModulesUpdateActionPlatform({required Action action});
+
+  Future<String> nddevDeviceSyncVaultViewVaultErrorCode({
+    required VaultError that,
+  });
+
+  Future<VaultView> nddevDeviceSyncVaultViewVaultViewDefault();
 
   Future<View> nddevDeviceSyncAccountsViewViewDefault();
 
@@ -1109,6 +1154,306 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<VaultView> crateApiIdentityNdsClientVaultCreate({
+    required NdsClient that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 26,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_vault_view,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultCreateConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultCreateConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_create",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<String> crateApiIdentityNdsClientVaultPairingGrant({
+    required NdsClient that,
+    required String code,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          sse_encode_String(code, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 27,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultPairingGrantConstMeta,
+        argValues: [that, code],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultPairingGrantConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_pairing_grant",
+        argNames: ["that", "code"],
+      );
+
+  @override
+  Future<VaultView> crateApiIdentityNdsClientVaultPairingImport({
+    required NdsClient that,
+    required String code,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          sse_encode_String(code, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 28,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_vault_view,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultPairingImportConstMeta,
+        argValues: [that, code],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultPairingImportConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_pairing_import",
+        argNames: ["that", "code"],
+      );
+
+  @override
+  Future<String> crateApiIdentityNdsClientVaultPairingStart({
+    required NdsClient that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 29,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultPairingStartConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultPairingStartConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_pairing_start",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<List<RecordView>> crateApiIdentityNdsClientVaultRecords({
+    required NdsClient that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 30,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_record_view,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultRecordsConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultRecordsConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_records",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<VaultView> crateApiIdentityNdsClientVaultRefresh({
+    required NdsClient that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 31,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_vault_view,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultRefreshConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultRefreshConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_refresh",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<String> crateApiIdentityNdsClientVaultSave({
+    required NdsClient that,
+    String? id,
+    required String title,
+    required String username,
+    required String secret,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          sse_encode_opt_String(id, serializer);
+          sse_encode_String(title, serializer);
+          sse_encode_String(username, serializer);
+          sse_encode_String(secret, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 32,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultSaveConstMeta,
+        argValues: [that, id, title, username, secret],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultSaveConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_save",
+        argNames: ["that", "id", "title", "username", "secret"],
+      );
+
+  @override
+  Future<VaultView> crateApiIdentityNdsClientVaultSync({
+    required NdsClient that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 33,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_vault_view,
+          decodeErrorData: sse_decode_vault_error,
+        ),
+        constMeta: kCrateApiIdentityNdsClientVaultSyncConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiIdentityNdsClientVaultSyncConstMeta =>
+      const TaskConstMeta(
+        debugName: "NdsClient_vault_sync",
+        argNames: ["that"],
+      );
+
+  @override
   Future<View> crateApiIdentityNdsClientVerifyEmail({
     required NdsClient that,
     required String code,
@@ -1125,7 +1470,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 26,
+            funcId: 34,
             port: port_,
           );
         },
@@ -1153,7 +1498,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_local_diagnostics,
@@ -1180,7 +1525,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_debug_scope(scope, serializer);
           sse_encode_u_16(seconds, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1208,7 +1553,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 29,
+            funcId: 37,
             port: port_,
           );
         },
@@ -1233,7 +1578,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_failure_kind(kind, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -1261,7 +1606,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_client_lifecycle(state, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -1289,7 +1634,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 40,
             port: port_,
           );
         },
@@ -1313,7 +1658,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -1339,7 +1684,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             action,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -1368,7 +1713,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             action,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -1388,6 +1733,63 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<String> nddevDeviceSyncVaultViewVaultErrorCode({
+    required VaultError that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_vault_error(that, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 44,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: null,
+        ),
+        constMeta: kNddevDeviceSyncVaultViewVaultErrorCodeConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kNddevDeviceSyncVaultViewVaultErrorCodeConstMeta =>
+      const TaskConstMeta(debugName: "vault_error_code", argNames: ["that"]);
+
+  @override
+  Future<VaultView> nddevDeviceSyncVaultViewVaultViewDefault() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 45,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_vault_view,
+          decodeErrorData: null,
+        ),
+        constMeta: kNddevDeviceSyncVaultViewVaultViewDefaultConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kNddevDeviceSyncVaultViewVaultViewDefaultConstMeta =>
+      const TaskConstMeta(debugName: "vault_view_default", argNames: []);
+
+  @override
   Future<View> nddevDeviceSyncAccountsViewViewDefault() {
     return handler.executeNormal(
       NormalTask(
@@ -1396,7 +1798,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 36,
+            funcId: 46,
             port: port_,
           );
         },
@@ -1930,6 +2332,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<RecordView> dco_decode_list_record_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_record_view).toList();
+  }
+
+  @protected
   List<RemoteSession> dco_decode_list_remote_session(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_remote_session).toList();
@@ -2083,6 +2491,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RecordView dco_decode_record_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return RecordView(
+      id: dco_decode_String(arr[0]),
+      title: dco_decode_String(arr[1]),
+      username: dco_decode_String(arr[2]),
+      revision: dco_decode_u_64(arr[3]),
+      conflicted: dco_decode_bool(arr[4]),
+    );
+  }
+
+  @protected
   RemoteSession dco_decode_remote_session(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -2197,6 +2620,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BigInt dco_decode_usize(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dcoDecodeU64(raw);
+  }
+
+  @protected
+  VaultError dco_decode_vault_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return VaultError.values[raw as int];
+  }
+
+  @protected
+  VaultView dco_decode_vault_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return VaultView(
+      unlocked: dco_decode_bool(arr[0]),
+      keyId: dco_decode_String(arr[1]),
+      pending: dco_decode_u_32(arr[2]),
+      conflicts: dco_decode_u_32(arr[3]),
+      cursor: dco_decode_u_64(arr[4]),
+      lastSyncAt: dco_decode_u_64(arr[5]),
+      pairingCode: dco_decode_String(arr[6]),
+    );
   }
 
   @protected
@@ -2825,6 +3271,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<RecordView> sse_decode_list_record_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RecordView>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_record_view(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<RemoteSession> sse_decode_list_remote_session(
     SseDeserializer deserializer,
   ) {
@@ -3033,6 +3491,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RecordView sse_decode_record_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_title = sse_decode_String(deserializer);
+    var var_username = sse_decode_String(deserializer);
+    var var_revision = sse_decode_u_64(deserializer);
+    var var_conflicted = sse_decode_bool(deserializer);
+    return RecordView(
+      id: var_id,
+      title: var_title,
+      username: var_username,
+      revision: var_revision,
+      conflicted: var_conflicted,
+    );
+  }
+
+  @protected
   RemoteSession sse_decode_remote_session(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
@@ -3153,6 +3628,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BigInt sse_decode_usize(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getBigUint64();
+  }
+
+  @protected
+  VaultError sse_decode_vault_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return VaultError.values[inner];
+  }
+
+  @protected
+  VaultView sse_decode_vault_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_unlocked = sse_decode_bool(deserializer);
+    var var_keyId = sse_decode_String(deserializer);
+    var var_pending = sse_decode_u_32(deserializer);
+    var var_conflicts = sse_decode_u_32(deserializer);
+    var var_cursor = sse_decode_u_64(deserializer);
+    var var_lastSyncAt = sse_decode_u_64(deserializer);
+    var var_pairingCode = sse_decode_String(deserializer);
+    return VaultView(
+      unlocked: var_unlocked,
+      keyId: var_keyId,
+      pending: var_pending,
+      conflicts: var_conflicts,
+      cursor: var_cursor,
+      lastSyncAt: var_lastSyncAt,
+      pairingCode: var_pairingCode,
+    );
   }
 
   @protected
@@ -3724,6 +4227,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_record_view(
+    List<RecordView> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_record_view(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_remote_session(
     List<RemoteSession> self,
     SseSerializer serializer,
@@ -3901,6 +4416,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_record_view(RecordView self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.title, serializer);
+    sse_encode_String(self.username, serializer);
+    sse_encode_u_64(self.revision, serializer);
+    sse_encode_bool(self.conflicted, serializer);
+  }
+
+  @protected
   void sse_encode_remote_session(RemoteSession self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.id, serializer);
@@ -3998,6 +4523,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_usize(BigInt self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putBigUint64(self);
+  }
+
+  @protected
+  void sse_encode_vault_error(VaultError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_vault_view(VaultView self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_bool(self.unlocked, serializer);
+    sse_encode_String(self.keyId, serializer);
+    sse_encode_u_32(self.pending, serializer);
+    sse_encode_u_32(self.conflicts, serializer);
+    sse_encode_u_64(self.cursor, serializer);
+    sse_encode_u_64(self.lastSyncAt, serializer);
+    sse_encode_String(self.pairingCode, serializer);
   }
 
   @protected
@@ -4186,6 +4729,44 @@ class NdsClientImpl extends RustOpaque implements NdsClient {
 
   Future<View> startGithub({required String locale}) => RustLib.instance.api
       .crateApiIdentityNdsClientStartGithub(that: this, locale: locale);
+
+  Future<VaultView> vaultCreate() =>
+      RustLib.instance.api.crateApiIdentityNdsClientVaultCreate(that: this);
+
+  Future<String> vaultPairingGrant({required String code}) => RustLib
+      .instance
+      .api
+      .crateApiIdentityNdsClientVaultPairingGrant(that: this, code: code);
+
+  Future<VaultView> vaultPairingImport({required String code}) => RustLib
+      .instance
+      .api
+      .crateApiIdentityNdsClientVaultPairingImport(that: this, code: code);
+
+  Future<String> vaultPairingStart() => RustLib.instance.api
+      .crateApiIdentityNdsClientVaultPairingStart(that: this);
+
+  Future<List<RecordView>> vaultRecords() =>
+      RustLib.instance.api.crateApiIdentityNdsClientVaultRecords(that: this);
+
+  Future<VaultView> vaultRefresh() =>
+      RustLib.instance.api.crateApiIdentityNdsClientVaultRefresh(that: this);
+
+  Future<String> vaultSave({
+    String? id,
+    required String title,
+    required String username,
+    required String secret,
+  }) => RustLib.instance.api.crateApiIdentityNdsClientVaultSave(
+    that: this,
+    id: id,
+    title: title,
+    username: username,
+    secret: secret,
+  );
+
+  Future<VaultView> vaultSync() =>
+      RustLib.instance.api.crateApiIdentityNdsClientVaultSync(that: this);
 
   Future<View> verifyEmail({required String code}) => RustLib.instance.api
       .crateApiIdentityNdsClientVerifyEmail(that: this, code: code);

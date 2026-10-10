@@ -21,6 +21,7 @@ parser.add_argument("--cold-restart", action="store_true",
                     help="Verify encrypted persistence across two Android app processes")
 parser.add_argument("--isolated-android", action="store_true",
                     help="Use a unique test applicationId on an explicitly selected Android device")
+parser.add_argument("--vault", action="store_true", help="Exercise real native vault creation and encrypted sync")
 args = parser.parse_args()
 app = args.app.resolve()
 app_id = None
@@ -77,6 +78,8 @@ try:
         "--dart-define=NDS_TEST_SERVER=" + fixture["base_url"],
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"]]
+    if args.vault:
+        command.append("--dart-define=NDS_TEST_VAULT=true")
     environment = os.environ.copy()
     environment["CARGO_BUILD_JOBS"] = "4"
     status = 0

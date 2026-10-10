@@ -11,6 +11,7 @@ void main() {
   const server = String.fromEnvironment('NDS_TEST_SERVER');
   const mailbox = String.fromEnvironment('NDS_TEST_MAILPIT');
   const owner = String.fromEnvironment('NDS_TEST_OWNER');
+  const vault = bool.fromEnvironment('NDS_TEST_VAULT');
   const phase = String.fromEnvironment(
     'NDS_TEST_PHASE',
     defaultValue: 'complete',
@@ -79,6 +80,39 @@ void main() {
         findsOneWidget,
       );
       expect(find.byKey(const Key('enroll-device')), findsNothing);
+      if (vault) {
+        await tester.ensureVisible(find.byKey(const Key('open-vault')));
+        await tester.tap(find.byKey(const Key('open-vault')));
+        await waitFor(tester, find.byKey(const Key('vault-create')));
+        await tester.tap(find.byKey(const Key('vault-create')));
+        await waitFor(tester, find.byKey(const Key('vault-title')));
+        await tester.enterText(
+          find.byKey(const Key('vault-title')),
+          'UI encrypted record',
+        );
+        await tester.enterText(
+          find.byKey(const Key('vault-username')),
+          'fixture-user',
+        );
+        await tester.enterText(
+          find.byKey(const Key('vault-secret')),
+          'PRIVATE_UI_VAULT_VALUE',
+        );
+        await tester.ensureVisible(find.byKey(const Key('vault-save')));
+        await tester.tap(find.byKey(const Key('vault-save')));
+        await waitFor(tester, find.text('UI encrypted record'));
+        expect(
+          tester
+              .widget<TextField>(find.byKey(const Key('vault-secret')))
+              .controller!
+              .text,
+          isEmpty,
+        );
+        expect(find.text('PRIVATE_UI_VAULT_VALUE'), findsNothing);
+        expect(tester.takeException(), isNull);
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+      }
       if (phase == 'persist') {
         await tester.pumpWidget(const SizedBox.shrink());
         return;

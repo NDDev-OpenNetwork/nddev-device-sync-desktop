@@ -466,4 +466,84 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get keepDevice => 'Оставить устройство';
+
+  @override
+  String get vaultTitle => 'Vault и синхронизация';
+
+  @override
+  String get vaultHelp =>
+      'Ключи остаются в нативном защищённом хранилище. Сервер получает только зашифрованные записи. Потерянные ключи восстановить нельзя.';
+
+  @override
+  String get vaultLocked =>
+      'Ключ vault недоступен. Подключитесь через доверенное устройство.';
+
+  @override
+  String get vaultUnlocked => 'Нативный ключ vault доступен.';
+
+  @override
+  String get vaultExisting =>
+      'Существующий ключ vault нельзя заменить. Подключитесь через доверенное устройство.';
+
+  @override
+  String vaultCounts(int pending, int conflicts) {
+    return 'В очереди: $pending · Конфликты: $conflicts';
+  }
+
+  @override
+  String get vaultKeyIdentity => 'Идентичность ключа';
+
+  @override
+  String get vaultCreate => 'Создать первоначальный vault';
+
+  @override
+  String get vaultPairStart => 'Запросить ключ у доверенного устройства';
+
+  @override
+  String get vaultRecordTitle => 'Название записи';
+
+  @override
+  String get vaultUsername => 'Имя пользователя или аккаунта';
+
+  @override
+  String get vaultSecret => 'Секретное значение';
+
+  @override
+  String get vaultSave => 'Зашифровать и синхронизировать';
+
+  @override
+  String vaultRevision(String revision) {
+    return 'Ревизия $revision';
+  }
+
+  @override
+  String get vaultConflict => 'Конфликт не разрешён. Обе версии сохранены.';
+
+  @override
+  String get vaultPairHelp =>
+      'Передайте код приглашения доверенному устройству, подтвердите получателя и перенесите зашифрованный ответ обратно. Приглашение действует пять минут.';
+
+  @override
+  String get vaultPairCode => 'Приглашение или зашифрованный ответ';
+
+  @override
+  String get vaultGrant => 'Подтвердить доверенную передачу ключа';
+
+  @override
+  String get vaultGrantConfirm =>
+      'Подтвердите, что это приглашение получено напрямую от устройства, которому вы доверяете. Это даст зарегистрированному устройству доступ к вашему vault.';
+
+  @override
+  String get vaultImport => 'Принять зашифрованный ответ с ключом';
+
+  @override
+  String get vaultSync => 'Синхронизировать сейчас';
+
+  @override
+  String get vaultInputError =>
+      'Проверьте поля записи или полный код подключения.';
+
+  @override
+  String get vaultProofError =>
+      'Не удалось подтвердить передачу ключа или подлинность зашифрованных данных.';
 }

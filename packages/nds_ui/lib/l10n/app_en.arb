@@ -173,5 +173,45 @@
         "type": "String"
       }
     }
+  },
+  "vaultTitle": "Vault and sync",
+  "vaultHelp": "Keys stay in native secure storage. Only encrypted records reach the server. Lost keys cannot be recovered.",
+  "vaultLocked": "Vault key is unavailable. Pair with a trusted device.",
+  "vaultUnlocked": "Native vault key is available.",
+  "vaultExisting": "An existing vault key cannot be replaced. Pair with a trusted device.",
+  "vaultCounts": "Pending: {pending} · Conflicts: {conflicts}",
+  "vaultKeyIdentity": "Key identity",
+  "vaultCreate": "Create the initial vault",
+  "vaultPairStart": "Request a key from a trusted device",
+  "vaultRecordTitle": "Record title",
+  "vaultUsername": "Username or account label",
+  "vaultSecret": "Secret value",
+  "vaultSave": "Encrypt and synchronize",
+  "vaultRevision": "Revision {revision}",
+  "vaultConflict": "Unresolved conflict. Both versions are retained.",
+  "vaultPairHelp": "Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.",
+  "vaultPairCode": "Invitation or wrapped response",
+  "vaultGrant": "Confirm trusted key transfer",
+  "vaultGrantConfirm": "Confirm that this invitation came directly from the device you trust. This grants that registered device access to your vault.",
+  "vaultImport": "Accept the wrapped key response",
+  "vaultSync": "Synchronize now",
+  "vaultInputError": "Check the record fields or the complete pairing code.",
+  "vaultProofError": "Key transfer or encrypted data could not be authenticated.",
+  "@vaultCounts": {
+    "placeholders": {
+      "pending": {
+        "type": "int"
+      },
+      "conflicts": {
+        "type": "int"
+      }
+    }
+  },
+  "@vaultRevision": {
+    "placeholders": {
+      "revision": {
+        "type": "String"
+      }
+    }
   }
 }

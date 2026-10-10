@@ -5,8 +5,11 @@
 
 import '../frb_generated.dart';
 import '../third_party/nddev_device_sync_accounts/view.dart';
+import '../third_party/nddev_device_sync_vault/view.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
+// These functions are ignored because they are not marked as `pub`: `data_directory`, `observe`, `vault`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>>
 abstract class NdsClient implements RustOpaqueInterface {
@@ -33,6 +36,27 @@ abstract class NdsClient implements RustOpaqueInterface {
   View snapshot();
 
   Future<View> startGithub({required String locale});
+
+  Future<VaultView> vaultCreate();
+
+  Future<String> vaultPairingGrant({required String code});
+
+  Future<VaultView> vaultPairingImport({required String code});
+
+  Future<String> vaultPairingStart();
+
+  Future<List<RecordView>> vaultRecords();
+
+  Future<VaultView> vaultRefresh();
+
+  Future<String> vaultSave({
+    String? id,
+    required String title,
+    required String username,
+    required String secret,
+  });
+
+  Future<VaultView> vaultSync();
 
   Future<View> verifyEmail({required String code});
 }
