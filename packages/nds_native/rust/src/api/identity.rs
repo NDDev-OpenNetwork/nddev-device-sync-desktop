@@ -33,6 +33,15 @@ impl NdsClient {
     pub async fn logout(&self) -> Result<View, ClientError> {
         self.inner.logout().await
     }
+    pub async fn refresh_devices(&self) -> Result<View, ClientError> {
+        self.inner.refresh_devices().await
+    }
+    pub async fn enroll_device(&self, name: String) -> Result<View, ClientError> {
+        self.inner.enroll_device(name).await
+    }
+    pub async fn revoke_device(&self, id: String) -> Result<View, ClientError> {
+        self.inner.revoke_device(id).await
+    }
     #[frb(sync)]
     pub fn snapshot(&self) -> View {
         self.inner.view()

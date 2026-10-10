@@ -130,6 +130,9 @@ class _IdentityScreenState extends State<_IdentityScreen>
   );
   final _email = TextEditingController();
   final _code = TextEditingController();
+  final _deviceName = TextEditingController(
+    text: const String.fromEnvironment('NDS_DEVICE_NAME'),
+  );
   native.NdsClient? _client;
   native.View? _view;
   bool _busy = false;
@@ -173,6 +176,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     _email.dispose();
     _code.clear();
     _code.dispose();
+    _deviceName.dispose();
     super.dispose();
   }
 
@@ -186,7 +190,12 @@ class _IdentityScreenState extends State<_IdentityScreen>
       _error = null;
     });
     try {
-      final view = await action();
+      var view = await action();
+      if (view.authenticated &&
+          view.sessionVerified &&
+          view.devicesCheckedAt == 0) {
+        view = await _client!.refreshDevices();
+      }
       if (!mounted || epoch != _actionEpoch) return;
       setState(() => _view = view);
       if (view.authenticated) _code.clear();
@@ -303,6 +312,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     'request_timeout' ||
     'dependency_unavailable' => l.networkError,
     'authentication_failed' || 'authorization_denied' => l.authError,
+    'device_revoked' => l.deviceRevokedHelp,
     'challenge_expired' => l.expiredError,
     'rate_limited' || 'server_busy' || 'busy' => l.rateError,
     'cancelled' => l.cancelledError,
@@ -410,6 +420,120 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     const SizedBox(height: OpenNetworkSpacing.four),
                     Text(
                       '${l.verified}: ${_date(DateTime.fromMillisecondsSinceEpoch(v.sessionCheckedAt.toInt() * 1000, isUtc: true).toIso8601String())}',
+                    ),
+                    const SizedBox(height: OpenNetworkSpacing.six),
+                    Text(
+                      l.devicesTitle,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    Text(l.devicesHelp),
+                    const SizedBox(height: OpenNetworkSpacing.four),
+                    if (v.devicesCheckedAt == 0) Text(l.devicesUnverified),
+                    if (v.currentDeviceId.isEmpty) ...[
+                      TextField(
+                        key: const Key('device-name'),
+                        controller: _deviceName,
+                        enabled: !_busy && v.sessionVerified,
+                        maxLength: 128,
+                        decoration: InputDecoration(labelText: l.deviceName),
+                      ),
+                      FilledButton(
+                        key: const Key('enroll-device'),
+                        onPressed: _busy || !v.sessionVerified
+                            ? null
+                            : () => _run(
+                                () => _client!.enrollDevice(
+                                  name: _deviceName.text.trim(),
+                                ),
+                              ),
+                        child: Text(l.enrollDevice),
+                      ),
+                    ],
+                    for (final device in v.devices)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                            OpenNetworkSpacing.four,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                device.displayName,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              Text(
+                                '${device.platform} · ${device.revoked ? l.deviceRevoked : l.deviceActive}',
+                              ),
+                              if (device.isCurrent) Text(l.thisDevice),
+                              Text(
+                                '${l.deviceCreated}: ${_date(device.createdAt)}',
+                              ),
+                              if (device.revoked && device.isCurrent)
+                                Text(l.deviceRevokedHelp),
+                              if (!device.revoked)
+                                TextButton(
+                                  key: Key('revoke-device-${device.deviceId}'),
+                                  onPressed: _busy || !v.sessionVerified
+                                      ? null
+                                      : () async {
+                                          final confirmed =
+                                              await showDialog<bool>(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      title: Text(
+                                                        l.revokeDevice,
+                                                      ),
+                                                      content: Text(
+                                                        l.revokeDeviceHelp(
+                                                          device.displayName,
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                context,
+                                                                false,
+                                                              ),
+                                                          child: Text(
+                                                            l.keepDevice,
+                                                          ),
+                                                        ),
+                                                        FilledButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                context,
+                                                                true,
+                                                              ),
+                                                          child: Text(
+                                                            l.revokeDevice,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              );
+                                          if (confirmed == true && mounted) {
+                                            await _run(
+                                              () => _client!.revokeDevice(
+                                                id: device.deviceId,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                  child: Text(l.revokeDevice),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    TextButton(
+                      key: const Key('refresh-devices'),
+                      onPressed: _busy || !v.sessionVerified
+                          ? null
+                          : () => _run(() => _client!.refreshDevices()),
+                      child: Text(l.refreshDevices),
                     ),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(

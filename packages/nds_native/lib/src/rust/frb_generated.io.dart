@@ -182,6 +182,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   DebugScope dco_decode_debug_scope(dynamic raw);
 
   @protected
+  DeviceView dco_decode_device_view(dynamic raw);
+
+  @protected
   Diagnostics dco_decode_diagnostics(dynamic raw);
 
   @protected
@@ -228,6 +231,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<Check> dco_decode_list_check(dynamic raw);
+
+  @protected
+  List<DeviceView> dco_decode_list_device_view(dynamic raw);
 
   @protected
   List<Entry> dco_decode_list_entry(dynamic raw);
@@ -466,6 +472,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   DebugScope sse_decode_debug_scope(SseDeserializer deserializer);
 
   @protected
+  DeviceView sse_decode_device_view(SseDeserializer deserializer);
+
+  @protected
   Diagnostics sse_decode_diagnostics(SseDeserializer deserializer);
 
   @protected
@@ -514,6 +523,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<Check> sse_decode_list_check(SseDeserializer deserializer);
+
+  @protected
+  List<DeviceView> sse_decode_list_device_view(SseDeserializer deserializer);
 
   @protected
   List<Entry> sse_decode_list_entry(SseDeserializer deserializer);
@@ -785,6 +797,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_debug_scope(DebugScope self, SseSerializer serializer);
 
   @protected
+  void sse_encode_device_view(DeviceView self, SseSerializer serializer);
+
+  @protected
   void sse_encode_diagnostics(Diagnostics self, SseSerializer serializer);
 
   @protected
@@ -838,6 +853,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_check(List<Check> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_device_view(
+    List<DeviceView> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_entry(List<Entry> self, SseSerializer serializer);

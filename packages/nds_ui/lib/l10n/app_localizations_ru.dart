@@ -419,4 +419,51 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get diagnosticsIo => 'Локальные операции';
+
+  @override
+  String get devicesTitle => 'Ваши устройства';
+
+  @override
+  String get devicesHelp =>
+      'Зарегистрируйте эту установку с её собственным нативным ключом подписи. Регистрация устройства не открывает vault.';
+
+  @override
+  String get devicesUnverified =>
+      'Список устройств ещё не подтверждён свежей проверкой.';
+
+  @override
+  String get deviceName => 'Имя устройства';
+
+  @override
+  String get enrollDevice => 'Зарегистрировать устройство';
+
+  @override
+  String get refreshDevices => 'Обновить устройства';
+
+  @override
+  String get thisDevice => 'Эта установка';
+
+  @override
+  String get deviceActive => 'Активно';
+
+  @override
+  String get deviceRevoked => 'Доступ отозван';
+
+  @override
+  String get deviceCreated => 'Зарегистрировано';
+
+  @override
+  String get deviceRevokedHelp =>
+      'Ключ этого устройства отозван. Он сохранён локально и не может повторно использоваться для регистрации.';
+
+  @override
+  String get revokeDevice => 'Отозвать устройство';
+
+  @override
+  String revokeDeviceHelp(String name) {
+    return 'Отозвать доступ для $name? Эта идентичность не сможет снова зарегистрироваться с тем же ключом.';
+  }
+
+  @override
+  String get keepDevice => 'Оставить устройство';
 }
