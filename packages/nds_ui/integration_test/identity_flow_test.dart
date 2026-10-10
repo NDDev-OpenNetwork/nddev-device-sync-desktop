@@ -40,6 +40,8 @@ void main() {
       await tester.tap(find.byKey(const Key('connect')));
       if (phase == 'restore') {
         await waitFor(tester, find.byKey(const Key('logout')));
+        expect(find.text('This installation'), findsOneWidget);
+        await tester.ensureVisible(find.byKey(const Key('logout')));
         await tester.tap(find.byKey(const Key('logout')));
         await waitFor(tester, find.byKey(const Key('email')));
         expect(tester.takeException(), isNull);
@@ -57,11 +59,6 @@ void main() {
       await waitFor(tester, find.byKey(const Key('logout')));
       expect(find.byKey(const Key('otp')), findsNothing);
       expect(tester.takeException(), isNull);
-      if (phase == 'persist') {
-        await tester.pumpWidget(const SizedBox.shrink());
-        return;
-      }
-
       await tester.ensureVisible(find.byKey(const Key('device-name')));
       await tester.enterText(
         find.byKey(const Key('device-name')),
@@ -70,8 +67,22 @@ void main() {
       await tester.ensureVisible(find.byKey(const Key('enroll-device')));
       await tester.tap(find.byKey(const Key('enroll-device')));
       await waitFor(tester, find.text('This installation'));
-      expect(find.text('Acceptance device'), findsOneWidget);
+      Finder currentCard() => find.ancestor(
+        of: find.text('This installation'),
+        matching: find.byType(Card),
+      );
+      expect(
+        find.descendant(
+          of: currentCard(),
+          matching: find.text('Acceptance device'),
+        ),
+        findsOneWidget,
+      );
       expect(find.byKey(const Key('enroll-device')), findsNothing);
+      if (phase == 'persist') {
+        await tester.pumpWidget(const SizedBox.shrink());
+        return;
+      }
 
       // Replace the client. Restoration must use the actual native store and
       // a fresh server validation, rather than a retained Dart session object.
@@ -80,15 +91,30 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('connect')));
       await waitFor(tester, find.byKey(const Key('logout')));
-      expect(find.text('Acceptance device'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: currentCard(),
+          matching: find.text('Acceptance device'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('This installation'), findsOneWidget);
-      final revoke = find.widgetWithText(TextButton, 'Revoke device');
+      final revoke = find.descendant(
+        of: currentCard(),
+        matching: find.widgetWithText(TextButton, 'Revoke device'),
+      );
       await tester.ensureVisible(revoke);
       await tester.tap(revoke);
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Revoke device'));
       await tester.pumpAndSettle();
-      await waitFor(tester, find.textContaining('· Revoked'));
+      await waitFor(
+        tester,
+        find.descendant(
+          of: currentCard(),
+          matching: find.textContaining('· Revoked'),
+        ),
+      );
       await tester.ensureVisible(find.byKey(const Key('logout')));
       await tester.tap(find.byKey(const Key('logout')));
       await waitFor(tester, find.byKey(const Key('email')));
