@@ -5,7 +5,7 @@ use nddev_device_sync_accounts::{
 };
 use nddev_device_sync_vault::{
     VaultClient,
-    view::{RecordView, VaultError, VaultView},
+    view::{PairingPeer, RecordView, VaultError, VaultView},
 };
 use std::{sync::Arc, time::Instant};
 use tracing::Instrument;
@@ -107,6 +107,12 @@ impl NdsClient {
     pub async fn vault_pairing_grant(&self, code: String) -> Result<String, VaultError> {
         observe("vault.pairing.grant", async {
             self.vault().await?.grant_pairing(code).await
+        })
+        .await
+    }
+    pub async fn vault_pairing_preview(&self, code: String) -> Result<PairingPeer, VaultError> {
+        observe("vault.pairing.preview", async {
+            self.vault().await?.preview_pairing(code).await
         })
         .await
     }

@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1303551668;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1762275497;
 
 // Section: executor
 
@@ -1579,6 +1579,66 @@ fn wire__crate__api__identity__NdsClient_vault_pairing_import_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_vault_pairing_preview_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_vault_pairing_preview",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_code = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::vault_pairing_preview(
+                            &*api_that_guard,
+                            api_code,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_vault_pairing_start_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -2504,6 +2564,12 @@ const _: fn() = || {
         let _: bool = Page.more;
     }
     {
+        let PairingPeer = None::<nddev_device_sync_vault::view::PairingPeer>.unwrap();
+        let _: String = PairingPeer.device_id;
+        let _: String = PairingPeer.name;
+        let _: String = PairingPeer.fingerprint;
+    }
+    {
         let Plan = None::<nddev_device_sync_updater::view::Plan>.unwrap();
         let _: u8 = Plan.schema;
         let _: String = Plan.channel;
@@ -2566,6 +2632,7 @@ const _: fn() = || {
         let _: u64 = VaultView.cursor;
         let _: u64 = VaultView.last_sync_at;
         let _: String = VaultView.pairing_code;
+        let _: String = VaultView.pairing_fingerprint;
     }
     {
         let View = None::<nddev_device_sync_accounts::view::View>.unwrap();
@@ -3396,6 +3463,20 @@ impl SseDecode for nddev_device_sync_clipboard::view::Page {
     }
 }
 
+impl SseDecode for nddev_device_sync_vault::view::PairingPeer {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_deviceId = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_fingerprint = <String>::sse_decode(deserializer);
+        return nddev_device_sync_vault::view::PairingPeer {
+            device_id: var_deviceId,
+            name: var_name,
+            fingerprint: var_fingerprint,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_updater::view::Plan {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3614,6 +3695,7 @@ impl SseDecode for nddev_device_sync_vault::view::VaultView {
         let mut var_cursor = <u64>::sse_decode(deserializer);
         let mut var_lastSyncAt = <u64>::sse_decode(deserializer);
         let mut var_pairingCode = <String>::sse_decode(deserializer);
+        let mut var_pairingFingerprint = <String>::sse_decode(deserializer);
         return nddev_device_sync_vault::view::VaultView {
             unlocked: var_unlocked,
             key_id: var_keyId,
@@ -3622,6 +3704,7 @@ impl SseDecode for nddev_device_sync_vault::view::VaultView {
             cursor: var_cursor,
             last_sync_at: var_lastSyncAt,
             pairing_code: var_pairingCode,
+            pairing_fingerprint: var_pairingFingerprint,
         };
     }
 }
@@ -3808,53 +3891,59 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__identity__NdsClient_vault_pairing_start_impl(
+        29 => wire__crate__api__identity__NdsClient_vault_pairing_preview_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__api__identity__NdsClient_vault_records_impl(
+        30 => wire__crate__api__identity__NdsClient_vault_pairing_start_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+        31 => wire__crate__api__identity__NdsClient_vault_records_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => {
+        32 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        33 => {
             wire__crate__api__identity__NdsClient_vault_save_impl(port, ptr, rust_vec_len, data_len)
         }
-        33 => {
+        34 => {
             wire__crate__api__identity__NdsClient_vault_sync_impl(port, ptr, rust_vec_len, data_len)
         }
-        34 => wire__crate__api__identity__NdsClient_verify_email_impl(
+        35 => wire__crate__api__identity__NdsClient_verify_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__api__telemetry__init_app_impl(port, ptr, rust_vec_len, data_len),
-        40 => {
+        38 => wire__crate__api__telemetry__init_app_impl(port, ptr, rust_vec_len, data_len),
+        41 => {
             wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
         }
-        44 => wire__nddev_device_sync_vault__view__vault_error_code_impl(
+        45 => wire__nddev_device_sync_vault__view__vault_error_code_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        45 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        46 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        46 => wire__nddev_device_sync_accounts__view__view_default_impl(
+        47 => wire__nddev_device_sync_accounts__view__view_default_impl(
             port,
             ptr,
             rust_vec_len,
@@ -3876,15 +3965,15 @@ fn pde_ffi_dispatcher_sync_impl(
         9 => wire__crate__api__modules__LocalAgent_modules_impl(ptr, rust_vec_len, data_len),
         15 => wire__crate__api__identity__NdsClient_cancel_impl(ptr, rust_vec_len, data_len),
         24 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
-        35 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        36 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
-        38 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
-        39 => {
+        36 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
+        37 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        39 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        40 => {
             wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
         }
-        41 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        42 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        43 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        42 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        43 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        44 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4547,6 +4636,28 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_clipboard::v
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::PairingPeer> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.device_id.into_into_dart().into_dart(),
+            self.0.name.into_into_dart().into_dart(),
+            self.0.fingerprint.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_vault::view::PairingPeer>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_vault::view::PairingPeer>>
+    for nddev_device_sync_vault::view::PairingPeer
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_vault::view::PairingPeer> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_updater::view::Plan> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4795,6 +4906,7 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view:
             self.0.cursor.into_into_dart().into_dart(),
             self.0.last_sync_at.into_into_dart().into_dart(),
             self.0.pairing_code.into_into_dart().into_dart(),
+            self.0.pairing_fingerprint.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -5473,6 +5585,15 @@ impl SseEncode for nddev_device_sync_clipboard::view::Page {
     }
 }
 
+impl SseEncode for nddev_device_sync_vault::view::PairingPeer {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.device_id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <String>::sse_encode(self.fingerprint, serializer);
+    }
+}
+
 impl SseEncode for nddev_device_sync_updater::view::Plan {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5655,6 +5776,7 @@ impl SseEncode for nddev_device_sync_vault::view::VaultView {
         <u64>::sse_encode(self.cursor, serializer);
         <u64>::sse_encode(self.last_sync_at, serializer);
         <String>::sse_encode(self.pairing_code, serializer);
+        <String>::sse_encode(self.pairing_fingerprint, serializer);
     }
 }
 

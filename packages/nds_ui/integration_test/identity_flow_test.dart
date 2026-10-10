@@ -42,6 +42,16 @@ void main() {
       if (phase == 'restore') {
         await waitFor(tester, find.byKey(const Key('logout')));
         expect(find.text('This installation'), findsOneWidget);
+        if (vault) {
+          await tester.ensureVisible(find.byKey(const Key('open-vault')));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('open-vault')));
+          await waitFor(tester, find.text('UI encrypted record'));
+          expect(find.byKey(const Key('vault-create')), findsNothing);
+          expect(find.text('PRIVATE_UI_VAULT_VALUE'), findsNothing);
+          await tester.pageBack();
+          await tester.pumpAndSettle();
+        }
         await tester.ensureVisible(find.byKey(const Key('logout')));
         await tester.tap(find.byKey(const Key('logout')));
         await waitFor(tester, find.byKey(const Key('email')));
@@ -65,7 +75,10 @@ void main() {
         find.byKey(const Key('device-name')),
         'Acceptance device',
       );
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const Key('enroll-device')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('enroll-device')));
       await waitFor(tester, find.text('This installation'));
       Finder currentCard() => find.ancestor(
@@ -98,7 +111,10 @@ void main() {
           find.byKey(const Key('vault-secret')),
           'PRIVATE_UI_VAULT_VALUE',
         );
+        FocusManager.instance.primaryFocus?.unfocus();
+        await tester.pumpAndSettle();
         await tester.ensureVisible(find.byKey(const Key('vault-save')));
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(const Key('vault-save')));
         await waitFor(tester, find.text('UI encrypted record'));
         expect(

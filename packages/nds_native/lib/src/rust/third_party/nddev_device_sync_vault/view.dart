@@ -7,7 +7,31 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
+
+class PairingPeer {
+  final String deviceId;
+  final String name;
+  final String fingerprint;
+
+  const PairingPeer({
+    required this.deviceId,
+    required this.name,
+    required this.fingerprint,
+  });
+
+  @override
+  int get hashCode => deviceId.hashCode ^ name.hashCode ^ fingerprint.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PairingPeer &&
+          runtimeType == other.runtimeType &&
+          deviceId == other.deviceId &&
+          name == other.name &&
+          fingerprint == other.fingerprint;
+}
 
 class RecordView {
   final String id;
@@ -65,6 +89,7 @@ class VaultView {
   final BigInt cursor;
   final BigInt lastSyncAt;
   final String pairingCode;
+  final String pairingFingerprint;
 
   const VaultView({
     required this.unlocked,
@@ -74,6 +99,7 @@ class VaultView {
     required this.cursor,
     required this.lastSyncAt,
     required this.pairingCode,
+    required this.pairingFingerprint,
   });
 
   static Future<VaultView> default_() =>
@@ -87,7 +113,8 @@ class VaultView {
       conflicts.hashCode ^
       cursor.hashCode ^
       lastSyncAt.hashCode ^
-      pairingCode.hashCode;
+      pairingCode.hashCode ^
+      pairingFingerprint.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -100,5 +127,6 @@ class VaultView {
           conflicts == other.conflicts &&
           cursor == other.cursor &&
           lastSyncAt == other.lastSyncAt &&
-          pairingCode == other.pairingCode;
+          pairingCode == other.pairingCode &&
+          pairingFingerprint == other.pairingFingerprint;
 }

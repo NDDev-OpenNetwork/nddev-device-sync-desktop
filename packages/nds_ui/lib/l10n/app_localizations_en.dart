@@ -529,8 +529,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vaultGrant => 'Confirm trusted key transfer';
 
   @override
-  String get vaultGrantConfirm =>
-      'Confirm that this invitation came directly from the device you trust. This grants that registered device access to your vault.';
+  String vaultGrantConfirm(String name, String deviceId, String fingerprint) {
+    return 'Confirm access for $name ($deviceId). Compare this invitation fingerprint on both devices: $fingerprint. Approve only if they match.';
+  }
 
   @override
   String get vaultImport => 'Accept the wrapped key response';

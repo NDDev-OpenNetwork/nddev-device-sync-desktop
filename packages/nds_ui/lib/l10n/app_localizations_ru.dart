@@ -530,8 +530,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vaultGrant => 'Подтвердить доверенную передачу ключа';
 
   @override
-  String get vaultGrantConfirm =>
-      'Подтвердите, что это приглашение получено напрямую от устройства, которому вы доверяете. Это даст зарегистрированному устройству доступ к вашему vault.';
+  String vaultGrantConfirm(String name, String deviceId, String fingerprint) {
+    return 'Подтвердите доступ для $name ($deviceId). Сравните отпечаток приглашения на обоих устройствах: $fingerprint. Подтверждайте только при совпадении.';
+  }
 
   @override
   String get vaultImport => 'Принять зашифрованный ответ с ключом';

@@ -1036,8 +1036,8 @@ abstract class AppLocalizations {
   /// No description provided for @vaultGrantConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Confirm that this invitation came directly from the device you trust. This grants that registered device access to your vault.'**
-  String get vaultGrantConfirm;
+  /// **'Confirm access for {name} ({deviceId}). Compare this invitation fingerprint on both devices: {fingerprint}. Approve only if they match.'**
+  String vaultGrantConfirm(String name, String deviceId, String fingerprint);
 
   /// No description provided for @vaultImport.
   ///

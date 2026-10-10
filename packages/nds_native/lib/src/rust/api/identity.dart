@@ -43,6 +43,8 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<VaultView> vaultPairingImport({required String code});
 
+  Future<PairingPeer> vaultPairingPreview({required String code});
+
   Future<String> vaultPairingStart();
 
   Future<List<RecordView>> vaultRecords();

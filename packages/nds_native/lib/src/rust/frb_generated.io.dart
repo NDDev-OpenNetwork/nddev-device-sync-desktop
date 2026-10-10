@@ -297,6 +297,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Page dco_decode_page(dynamic raw);
 
   @protected
+  PairingPeer dco_decode_pairing_peer(dynamic raw);
+
+  @protected
   Plan dco_decode_plan(dynamic raw);
 
   @protected
@@ -607,6 +610,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Page sse_decode_page(SseDeserializer deserializer);
+
+  @protected
+  PairingPeer sse_decode_pairing_peer(SseDeserializer deserializer);
 
   @protected
   Plan sse_decode_plan(SseDeserializer deserializer);
@@ -968,6 +974,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_page(Page self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_pairing_peer(PairingPeer self, SseSerializer serializer);
 
   @protected
   void sse_encode_plan(Plan self, SseSerializer serializer);

@@ -102,12 +102,17 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
 
   Future<void> _pair({required bool grant}) => _run(() async {
     if (grant) {
+      final invitation = _code.text.trim();
+      final peer = await widget.client.vaultPairingPreview(code: invitation);
+      if (!mounted) return widget.client.vaultRefresh();
       final l = AppLocalizations.of(context)!;
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(l.vaultGrant),
-          content: Text(l.vaultGrantConfirm),
+          content: SelectableText(
+            l.vaultGrantConfirm(peer.name, peer.deviceId, peer.fingerprint),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -121,9 +126,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
         ),
       );
       if (confirmed != true) return widget.client.vaultRefresh();
-      final code = await widget.client.vaultPairingGrant(
-        code: _code.text.trim(),
-      );
+      final code = await widget.client.vaultPairingGrant(code: invitation);
       if (mounted) setState(() => _outputCode = code);
       _code.clear();
       return widget.client.vaultRefresh();
@@ -278,6 +281,11 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                     SelectableText(
                       _outputCode!,
                       key: const Key('vault-pair-output'),
+                    ),
+                  if (view?.pairingFingerprint.isNotEmpty == true)
+                    SelectableText(
+                      view!.pairingFingerprint,
+                      key: const Key('vault-pair-fingerprint'),
                     ),
                   const SizedBox(height: OpenNetworkSpacing.four),
                   OutlinedButton(

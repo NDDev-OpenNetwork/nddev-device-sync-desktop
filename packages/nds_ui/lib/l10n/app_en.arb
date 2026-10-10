@@ -192,7 +192,7 @@
   "vaultPairHelp": "Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.",
   "vaultPairCode": "Invitation or wrapped response",
   "vaultGrant": "Confirm trusted key transfer",
-  "vaultGrantConfirm": "Confirm that this invitation came directly from the device you trust. This grants that registered device access to your vault.",
+  "vaultGrantConfirm": "Confirm access for {name} ({deviceId}). Compare this invitation fingerprint on both devices: {fingerprint}. Approve only if they match.",
   "vaultImport": "Accept the wrapped key response",
   "vaultSync": "Synchronize now",
   "vaultInputError": "Check the record fields or the complete pairing code.",
@@ -210,6 +210,19 @@
   "@vaultRevision": {
     "placeholders": {
       "revision": {
+        "type": "String"
+      }
+    }
+  },
+  "@vaultGrantConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "deviceId": {
+        "type": "String"
+      },
+      "fingerprint": {
         "type": "String"
       }
     }

@@ -22,6 +22,8 @@ parser.add_argument("--cold-restart", action="store_true",
 parser.add_argument("--isolated-android", action="store_true",
                     help="Use a unique test applicationId on an explicitly selected Android device")
 parser.add_argument("--vault", action="store_true", help="Exercise real native vault creation and encrypted sync")
+parser.add_argument("--pairing-role", choices=["owner", "recipient"])
+parser.add_argument("--relay-url", help="Owned loopback relay for public invitations and encrypted grants only")
 args = parser.parse_args()
 app = args.app.resolve()
 app_id = None
@@ -58,12 +60,19 @@ for key in ["base_url", "mailpit_url"]:
         raise SystemExit("Only the isolated loopback fixture is accepted")
 if fixture.get("status") != "running":
     raise SystemExit("Fixture is not running")
-source = Path(__file__).resolve().parents[1] / "packages/nds_ui/integration_test/identity_flow_test.dart"
+source = Path(__file__).resolve().parents[1] / "packages/nds_ui/integration_test" / (
+    "vault_pairing_flow_test.dart" if args.pairing_role else "identity_flow_test.dart")
+if args.pairing_role:
+    relay = urlparse(args.relay_url or "")
+    if relay.scheme != "http" or relay.hostname != "127.0.0.1" or relay.path not in ["", "/"]:
+        raise SystemExit("Pairing acceptance requires an explicitly owned loopback relay origin")
 target = app / "integration_test/identity_acceptance_generated_test.dart"
 if target.exists():
     raise SystemExit("Refuse to overwrite existing generated test target")
 target.parent.mkdir(exist_ok=True)
 ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]]
+if args.pairing_role:
+    ports.append(str(relay.port))
 log = args.fixture.parent / ("flutter-" + args.device + ".log")
 runner = ExitStack()
 try:
@@ -80,6 +89,9 @@ try:
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"]]
     if args.vault:
         command.append("--dart-define=NDS_TEST_VAULT=true")
+    if args.pairing_role:
+        command.extend(["--dart-define=NDS_TEST_PAIRING_ROLE=" + args.pairing_role,
+                        "--dart-define=NDS_TEST_RELAY=" + args.relay_url])
     environment = os.environ.copy()
     environment["CARGO_BUILD_JOBS"] = "4"
     status = 0
