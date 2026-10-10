@@ -11,12 +11,13 @@
     "windows/runner/resources/app_icon.ico": "b323bb7844dfeae1bd562741a9f960aca5fd8d7319770fe88d592df94b33a9a4"
   },
   "source": {
-    "commit": "ab5a8d6170be042f141b971ea2322e425bd01b4e",
+    "commit": "1ee1fece90b1d29d2493e8cfdce8b4e7f884d70f",
     "inputs_sha256": {
+      ".gitattributes": "1aa4dff82b46fab86daa00edfe5180a952bdd2de760ddc6a19d54f4f2ddbd675",
       "assets/brand-source.json": "d512d54c78c672356593942cb6d4c5361135e6df90026c233c803757c1091e6a",
       "assets/nddev-mark.svg": "3997b08aa3c47d0d5827484db657c8e18a53dc0a00e1a875cc57eb931c6f4877",
       "tokens/tokens.json": "82d2da35ec8595ec3352a4f17e997159f81b45a7c057a2c2d5985c15f47ffef1",
-      "tools/generate_launchers.py": "52bcb7b8dcb57013b000c619be127f11002be11138c8f223d748875d4c6e66c6",
+      "tools/generate_launchers.py": "a47b9e0c2bef341e7a2b2c30235c1a7661d1bf2aa92524088b2c48db226bfe9d",
       "tools/requirements-icons.txt": "69676f88aba8a6e253f59c6921d70e62959658a8b02baf921b1b358fb70f86d5",
       "tools/with-renderer-zlib.sh": "85aabb9dc8b7b97835039a5a64b6eab8f1858cd9cf558875d1eb7bd9b78de8fe"
     },
