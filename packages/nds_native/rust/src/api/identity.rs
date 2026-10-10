@@ -86,11 +86,11 @@ pub fn init_app() -> Result<(), ClientError> {
             service: "nddev-device-sync-client".into(),
             version: env!("CARGO_PKG_VERSION").into(),
             repository: "NDDev-OpenNetwork/nddev-device-sync-desktop".into(),
-            commit: option_env!("NDS_SOURCE_COMMIT").unwrap_or("unknown").into(),
+            commit: crate::provenance::source_commit().into(),
             channel: "alpha".into(),
             standards: "v0.0.1-alpha.9".into(),
             environment: if cfg!(debug_assertions)
-                || option_env!("NDS_SOURCE_COMMIT").unwrap_or("unknown") == "unknown"
+                || crate::provenance::source_commit() == "unknown"
             {
                 "development"
             } else {

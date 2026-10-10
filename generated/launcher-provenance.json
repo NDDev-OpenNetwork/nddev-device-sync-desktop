@@ -11,14 +11,19 @@
     "windows/runner/resources/app_icon.ico": "1c1a8df5f15415d9b4b86e4e701f714c2aca3e9628b6dd79a36b923c9ef72aa4"
   },
   "source": {
-    "commit": "797d376a9d37f68ff6ad09be0ff4fa0323e6e0f3",
+    "commit": "484870e1830df77bb467b379a80363e3204121d1",
     "inputs_sha256": {
       "assets/brand-source.json": "9c71e04cf60121340eef9678584384da874703c31aadf029b305b8262f2d15e2",
       "assets/nddev-mark.svg": "3997b08aa3c47d0d5827484db657c8e18a53dc0a00e1a875cc57eb931c6f4877",
       "tokens/tokens.json": "e9fd42397d361cf2ac0a3af5d138b0ff43373a6e663af965d492f3053e503536",
-      "tools/generate_launchers.py": "1852eaa1bc24e38529da522d667171d703de5500e2dfcd351112295fc67b7033"
+      "tools/generate_launchers.py": "747d4177a4ecde2b3396454ca72adebb0bedb02256de83cfc160516929d7b624"
     },
-    "pillow_version": "12.1.1",
+    "renderer": {
+      "pillow": "12.1.1",
+      "platform": "Linux-x86_64",
+      "python": "3.14.4",
+      "zlib": "1.3.1"
+    },
     "repository": "NDDev-OpenNetwork/nddev-opennetwork-design-system"
   }
 }

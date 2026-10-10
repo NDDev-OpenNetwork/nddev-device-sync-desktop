@@ -13,6 +13,7 @@ markers = [b'identity_acceptance_generated_test', b'local_modules_generated_test
            b'IntegrationTestPlugin', b'dev/flutter/plugins/integration_test']
 checked = 0
 native_source_found = False
+native_record_count = 0
 expected = args.native_source_commit
 if expected is not None:
     import re
@@ -20,9 +21,25 @@ if expected is not None:
         raise SystemExit('Expected an immutable native source SHA')
 
 def native_source(data):
-    global native_source_found
-    if expected and expected.encode() in data:
+    global native_source_found, native_record_count
+    if expected is None: return
+    prefix = b'NDS-SOURCE-1\0'
+    offset = 0
+    while (offset := data.find(prefix, offset)) >= 0:
+        body = data[offset+len(prefix):offset+len(prefix)+41]
+        offset += len(prefix)
+        if len(body) != 41 or body[-1] != 0:
+            raise SystemExit('Malformed native source record')
+        value = body.rstrip(b'\0')
+        if value != b'unknown' and not re.fullmatch(b'[a-f0-9]{40}', value):
+            raise SystemExit('Malformed native source identity')
+        if value.decode() != expected:
+            raise SystemExit('Native source record differs: ' + value.decode())
+        native_record_count += 1
+        if native_record_count > 32:
+            raise SystemExit('Unexpected native source record count')
         native_source_found = True
+
 
 def check(name, data):
     global checked
@@ -56,3 +73,4 @@ if not checked:
 if expected and not native_source_found:
     raise SystemExit('Expected native source SHA is absent from built native code')
 print(f'Checked {checked} built app payloads; integration harness absent')
+if expected: print(f'Verified {native_record_count} retained native source records')

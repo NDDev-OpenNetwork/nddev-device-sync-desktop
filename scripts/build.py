@@ -27,6 +27,7 @@ if dirty:
     raise SystemExit('Committed native source is required; tracked drift:\n' + '\n'.join(dirty.splitlines()[:32]))
 if app != source and f'ref: {commit}' not in original.decode():
     raise SystemExit('The app must consume this exact shared native source')
+print('Building native source: ' + commit, flush=True)
 def interrupted(_signal, _frame):
     raise KeyboardInterrupt
 handlers = {sig: signal.signal(sig, interrupted) for sig in [signal.SIGTERM, signal.SIGINT]}
