@@ -48,7 +48,9 @@ void main() {
       );
       if (body != null) {
         req.headers.contentType = ContentType.json;
-        req.write(jsonEncode(body));
+        final bytes = utf8.encode(jsonEncode(body));
+        req.contentLength = bytes.length;
+        req.add(bytes);
       }
       final res = await req.close().timeout(const Duration(seconds: 5));
       expect(res.statusCode, 200);
