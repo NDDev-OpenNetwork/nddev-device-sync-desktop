@@ -117,6 +117,9 @@ try:
                     os.killpg(process.pid, signal.SIGKILL)
                     process.wait()
                 raise
+        if status == 0 and "All tests passed!" not in phase_log.read_text():
+            status = 1
+            print("Flutter exited without a completed passing test receipt")
         print(f"Actual identity UI acceptance phase={phase} exit={status}; private log: {phase_log}")
         if status:
             break

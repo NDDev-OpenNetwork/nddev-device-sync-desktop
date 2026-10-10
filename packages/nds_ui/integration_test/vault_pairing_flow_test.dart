@@ -67,7 +67,9 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
-      await tester.pumpAndSettle();
+      // A confirmation dialog intentionally keeps the operation busy. Waiting
+      // for every animation behind it to settle would prevent confirmation.
+      await tester.pump(const Duration(milliseconds: 300));
     }
 
     Future<void> visible(String key) async {
