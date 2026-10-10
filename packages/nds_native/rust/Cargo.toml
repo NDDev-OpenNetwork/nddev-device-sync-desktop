@@ -9,6 +9,8 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
+# ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
+# fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = "=2.13.0"
 nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "89278118a0c124b4207f6aac5e8141c43bc530b2" }
 tracing = "0.1"
