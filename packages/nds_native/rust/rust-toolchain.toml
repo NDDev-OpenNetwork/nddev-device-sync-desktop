@@ -1,0 +1,11 @@
+[toolchain]
+channel = "1.99.0"
+profile = "minimal"
+# NativeAssets validates the requested target against this declaration. Entries
+# declare build targets, not evidence that a platform has passed acceptance.
+targets = [
+  "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc",
+  "aarch64-apple-darwin", "x86_64-apple-darwin",
+  "aarch64-apple-ios", "aarch64-apple-ios-sim", "x86_64-apple-ios",
+  "aarch64-linux-android", "x86_64-linux-android",
+]

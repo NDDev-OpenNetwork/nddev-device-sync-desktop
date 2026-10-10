@@ -1,0 +1,23 @@
+{
+  "flutter": "3.47.7",
+  "dart": "3.13.5",
+  "python": "3.14.4",
+  "archives": {
+    "Linux-x86_64": {
+      "archive": "stable/linux/flutter_linux_3.47.7-stable.tar.xz",
+      "sha256": "af7455f540df951184c7953fbe3cf884766e7541dacf8571f9f582db03dd6230"
+    },
+    "Darwin-x86_64": {
+      "archive": "stable/macos/flutter_macos_3.47.7-stable.zip",
+      "sha256": "17d39b000a5d0681e3f7b61a105a36f6f31dd41ab9073f625fd466f38035f901"
+    },
+    "Darwin-arm64": {
+      "archive": "stable/macos/flutter_macos_arm64_3.47.7-stable.zip",
+      "sha256": "dd9da574c3168460550117eb0e8dd0313ae934fabf64a82a6d557fff5fd1422e"
+    },
+    "Windows-AMD64": {
+      "archive": "stable/windows/flutter_windows_3.47.7-stable.zip",
+      "sha256": "c2c875da25a1a1448d18ee4e8f398b2f6fce888b4775d8f9130538e16d826cb4"
+    }
+  }
+}

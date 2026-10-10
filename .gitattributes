@@ -1,0 +1,2 @@
+# Keep generated text stable when Flutter runs on different hosts.
+* text=auto eol=lf
