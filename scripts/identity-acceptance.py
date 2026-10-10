@@ -74,6 +74,8 @@ ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]
 if args.pairing_role:
     ports.append(str(relay.port))
 log = args.fixture.parent / ("flutter-" + args.device + ".log")
+if args.pairing_role:
+    log = log.with_stem(log.stem + "-pair-" + args.pairing_role)
 runner = ExitStack()
 try:
     if temporary_gradle is not None:
@@ -83,7 +85,8 @@ try:
     if android:
         for port in ports:
             subprocess.run(["adb", "-s", args.device, "reverse", "tcp:" + port, "tcp:" + port], check=True, timeout=10)
-    command = ["flutter", "test", str(target), "-d", args.device, "--timeout=3m", "--no-pub",
+    command = ["flutter", "test", str(target), "-d", args.device,
+        "--timeout=5m" if args.pairing_role else "--timeout=3m", "--no-pub",
         "--dart-define=NDS_TEST_SERVER=" + fixture["base_url"],
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"]]

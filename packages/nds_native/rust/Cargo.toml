@@ -9,7 +9,7 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
-nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "75c45c2eef9830c49c21d79c7829ca2a96333087" }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "c6c62ac182b30c5339394f072b64f6360b25ac8e" }
 tokio = { version = "1.53", features = ["sync"] }
 zeroize = "1.8"
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
