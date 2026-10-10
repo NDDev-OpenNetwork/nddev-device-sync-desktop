@@ -34,6 +34,10 @@ runs actual Flutter interactions with installed providers, a fresh clipboard
 archive with capture disabled, and a temporary Git repository. It does not read
 or change the personal clipboard archive or execute cleanup/updates.
 
+`python scripts/build.py linux --debug` builds committed source with an explicit,
+cache-tracked native source SHA; ordinary `flutter build` retains development
+provenance. The build wrapper restores its temporary hook configuration.
+
 CI pins SDK archives by SHA-256 and builds Linux, macOS (ARM64/Intel) and
 Windows. Those builds are separate from native credential/provider interaction
 acceptance. `scripts/check-artifact.py` rejects integration entrypoints and
