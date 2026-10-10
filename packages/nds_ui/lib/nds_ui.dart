@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'l10n/app_localizations.dart';
 import 'modules_screen.dart';
 import 'diagnostics.dart';
+import 'vault_screen.dart';
 
 Future<void> runNdsApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -535,6 +536,20 @@ class _IdentityScreenState extends State<_IdentityScreen>
                           : () => _run(() => _client!.refreshDevices()),
                       child: Text(l.refreshDevices),
                     ),
+                    if (v.devices.any(
+                      (device) => device.isCurrent && !device.revoked,
+                    ))
+                      FilledButton(
+                        key: const Key('open-vault'),
+                        onPressed: _busy || !v.sessionVerified
+                            ? null
+                            : () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => VaultScreen(client: _client!),
+                                ),
+                              ),
+                        child: Text(l.vaultTitle),
+                      ),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(
                       key: const Key('refresh'),
