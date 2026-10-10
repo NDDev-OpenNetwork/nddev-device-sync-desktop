@@ -5,6 +5,7 @@
 
 import 'api/identity.dart';
 import 'api/modules.dart';
+import 'api/telemetry.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -22,6 +23,7 @@ import 'third_party/nddev_device_sync_clipboard/view.dart';
 import 'third_party/nddev_device_sync_gds/view.dart';
 import 'third_party/nddev_device_sync_rds/view.dart';
 import 'third_party/nddev_device_sync_sysinfo/view.dart';
+import 'third_party/nddev_device_sync_telemetry/view.dart';
 import 'third_party/nddev_device_sync_updater/view.dart';
 
 /// Main entrypoint of the Rust API
@@ -68,7 +70,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   @override
   Future<void> executeRustInitializers() async {
-    await api.crateApiIdentityInitApp();
+    await api.crateApiTelemetryInitApp();
   }
 
   @override
@@ -79,7 +81,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => 1754468160;
+  int get rustContentHash => -1797447553;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -147,13 +149,6 @@ abstract class RustLibApi extends BaseApi {
 
   void crateApiIdentityNdsClientCancel({required NdsClient that});
 
-  bool crateApiIdentityNdsClientDebugEnabled({required NdsClient that});
-
-  void crateApiIdentityNdsClientEnableDebug({
-    required NdsClient that,
-    required int seconds,
-  });
-
   Future<View> crateApiIdentityNdsClientLogout({required NdsClient that});
 
   Future<NdsClient> crateApiIdentityNdsClientNew({required String endpoint});
@@ -180,9 +175,20 @@ abstract class RustLibApi extends BaseApi {
     required String code,
   });
 
-  ClientDiagnostics crateApiIdentityClientDiagnostics();
+  LocalDiagnostics crateApiTelemetryClientDiagnostics();
 
-  Future<void> crateApiIdentityInitApp();
+  void crateApiTelemetryConfigureDebug({
+    required DebugScope scope,
+    required int seconds,
+  });
+
+  Future<void> crateApiTelemetryInitApp();
+
+  bool crateApiTelemetryRecordClientFailure({required FailureKind kind});
+
+  bool crateApiTelemetryRecordClientLifecycle({required ClientLifecycle state});
+
+  Future<LocalDiagnostics> crateApiTelemetryShutdownTelemetry();
 
   bool crateApiModulesSupportsLocalAgent();
 
@@ -739,69 +745,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "NdsClient_cancel", argNames: ["that"]);
 
   @override
-  bool crateApiIdentityNdsClientDebugEnabled({required NdsClient that}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
-            that,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_bool,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiIdentityNdsClientDebugEnabledConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiIdentityNdsClientDebugEnabledConstMeta =>
-      const TaskConstMeta(
-        debugName: "NdsClient_debug_enabled",
-        argNames: ["that"],
-      );
-
-  @override
-  void crateApiIdentityNdsClientEnableDebug({
-    required NdsClient that,
-    required int seconds,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
-            that,
-            serializer,
-          );
-          sse_encode_u_16(seconds, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError,
-        ),
-        constMeta: kCrateApiIdentityNdsClientEnableDebugConstMeta,
-        argValues: [that, seconds],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiIdentityNdsClientEnableDebugConstMeta =>
-      const TaskConstMeta(
-        debugName: "NdsClient_enable_debug",
-        argNames: ["that", "seconds"],
-      );
-
-  @override
   Future<View> crateApiIdentityNdsClientLogout({required NdsClient that}) {
     return handler.executeNormal(
       NormalTask(
@@ -814,7 +757,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 18,
+            funcId: 16,
             port: port_,
           );
         },
@@ -843,7 +786,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 19,
+            funcId: 17,
             port: port_,
           );
         },
@@ -876,7 +819,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 20,
+            funcId: 18,
             port: port_,
           );
         },
@@ -911,7 +854,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 21,
+            funcId: 19,
             port: port_,
           );
         },
@@ -949,7 +892,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 22,
+            funcId: 20,
             port: port_,
           );
         },
@@ -981,7 +924,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_view,
@@ -1014,7 +957,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 24,
+            funcId: 22,
             port: port_,
           );
         },
@@ -1053,7 +996,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 25,
+            funcId: 23,
             port: port_,
           );
         },
@@ -1076,29 +1019,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  ClientDiagnostics crateApiIdentityClientDiagnostics() {
+  LocalDiagnostics crateApiTelemetryClientDiagnostics() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_client_diagnostics,
+          decodeSuccessData: sse_decode_local_diagnostics,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiIdentityClientDiagnosticsConstMeta,
+        constMeta: kCrateApiTelemetryClientDiagnosticsConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiIdentityClientDiagnosticsConstMeta =>
+  TaskConstMeta get kCrateApiTelemetryClientDiagnosticsConstMeta =>
       const TaskConstMeta(debugName: "client_diagnostics", argNames: []);
 
   @override
-  Future<void> crateApiIdentityInitApp() {
+  void crateApiTelemetryConfigureDebug({
+    required DebugScope scope,
+    required int seconds,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_debug_scope(scope, serializer);
+          sse_encode_u_16(seconds, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_diagnostics_error,
+        ),
+        constMeta: kCrateApiTelemetryConfigureDebugConstMeta,
+        argValues: [scope, seconds],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiTelemetryConfigureDebugConstMeta =>
+      const TaskConstMeta(
+        debugName: "configure_debug",
+        argNames: ["scope", "seconds"],
+      );
+
+  @override
+  Future<void> crateApiTelemetryInitApp() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1106,24 +1079,104 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 27,
+            funcId: 26,
             port: port_,
           );
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
-          decodeErrorData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError,
+          decodeErrorData: sse_decode_diagnostics_error,
         ),
-        constMeta: kCrateApiIdentityInitAppConstMeta,
+        constMeta: kCrateApiTelemetryInitAppConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiIdentityInitAppConstMeta =>
+  TaskConstMeta get kCrateApiTelemetryInitAppConstMeta =>
       const TaskConstMeta(debugName: "init_app", argNames: []);
+
+  @override
+  bool crateApiTelemetryRecordClientFailure({required FailureKind kind}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_failure_kind(kind, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiTelemetryRecordClientFailureConstMeta,
+        argValues: [kind],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiTelemetryRecordClientFailureConstMeta =>
+      const TaskConstMeta(
+        debugName: "record_client_failure",
+        argNames: ["kind"],
+      );
+
+  @override
+  bool crateApiTelemetryRecordClientLifecycle({
+    required ClientLifecycle state,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_client_lifecycle(state, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiTelemetryRecordClientLifecycleConstMeta,
+        argValues: [state],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiTelemetryRecordClientLifecycleConstMeta =>
+      const TaskConstMeta(
+        debugName: "record_client_lifecycle",
+        argNames: ["state"],
+      );
+
+  @override
+  Future<LocalDiagnostics> crateApiTelemetryShutdownTelemetry() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 29,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_local_diagnostics,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiTelemetryShutdownTelemetryConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiTelemetryShutdownTelemetryConstMeta =>
+      const TaskConstMeta(debugName: "shutdown_telemetry", argNames: []);
 
   @override
   bool crateApiModulesSupportsLocalAgent() {
@@ -1131,7 +1184,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -1157,7 +1210,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             action,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -1186,7 +1239,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             action,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -1214,7 +1267,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 31,
+            funcId: 33,
             port: port_,
           );
         },
@@ -1421,6 +1474,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DebugScope dco_decode_box_autoadd_debug_scope(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_debug_scope(raw);
+  }
+
+  @protected
   double dco_decode_box_autoadd_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as double;
@@ -1521,20 +1580,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ClientDiagnostics dco_decode_client_diagnostics(dynamic raw) {
+  ClientLifecycle dco_decode_client_lifecycle(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
-    return ClientDiagnostics(
-      sinkInitialized: dco_decode_bool(arr[0]),
-      rejectedFieldsOrEvents: dco_decode_opt_box_autoadd_u_64(arr[1]),
-      droppedEvents: dco_decode_opt_box_autoadd_u_64(arr[2]),
-      pendingEvents: dco_decode_opt_box_autoadd_u_64(arr[3]),
-      writeFailures: dco_decode_opt_box_autoadd_u_64(arr[4]),
-      terminating: dco_decode_opt_box_autoadd_bool(arr[5]),
-      shutdownIncomplete: dco_decode_opt_box_autoadd_bool(arr[6]),
-    );
+    return ClientLifecycle.values[raw as int];
   }
 
   @protected
@@ -1547,6 +1595,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       usage: dco_decode_opt_box_autoadd_f_64(arr[0]),
       temp: dco_decode_opt_box_autoadd_f_64(arr[1]),
     );
+  }
+
+  @protected
+  DebugScope dco_decode_debug_scope(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return DebugScope.values[raw as int];
   }
 
   @protected
@@ -1563,6 +1617,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       warnings: dco_decode_usize(arr[4]),
       checks: dco_decode_list_check(arr[5]),
     );
+  }
+
+  @protected
+  DiagnosticsError dco_decode_diagnostics_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return DiagnosticsError.values[raw as int];
   }
 
   @protected
@@ -1603,6 +1663,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double dco_decode_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as double;
+  }
+
+  @protected
+  FailureKind dco_decode_failure_kind(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FailureKind.values[raw as int];
   }
 
   @protected
@@ -1719,6 +1785,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LocalDiagnostics dco_decode_local_diagnostics(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    return LocalDiagnostics(
+      sinkInitialized: dco_decode_bool(arr[0]),
+      debugEnabled: dco_decode_bool(arr[1]),
+      debugScope: dco_decode_opt_box_autoadd_debug_scope(arr[2]),
+      rejectedFieldsOrEvents: dco_decode_opt_box_autoadd_u_64(arr[3]),
+      droppedEvents: dco_decode_opt_box_autoadd_u_64(arr[4]),
+      pendingEvents: dco_decode_opt_box_autoadd_u_64(arr[5]),
+      writeFailures: dco_decode_opt_box_autoadd_u_64(arr[6]),
+      terminating: dco_decode_opt_box_autoadd_bool(arr[7]),
+      shutdownIncomplete: dco_decode_opt_box_autoadd_bool(arr[8]),
+    );
+  }
+
+  @protected
   Memory dco_decode_memory(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1774,6 +1859,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_bool(raw);
+  }
+
+  @protected
+  DebugScope? dco_decode_opt_box_autoadd_debug_scope(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_debug_scope(raw);
   }
 
   @protected
@@ -2184,6 +2275,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DebugScope sse_decode_box_autoadd_debug_scope(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_debug_scope(deserializer));
+  }
+
+  @protected
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_f_64(deserializer));
@@ -2295,28 +2392,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ClientDiagnostics sse_decode_client_diagnostics(
-    SseDeserializer deserializer,
-  ) {
+  ClientLifecycle sse_decode_client_lifecycle(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_sinkInitialized = sse_decode_bool(deserializer);
-    var var_rejectedFieldsOrEvents = sse_decode_opt_box_autoadd_u_64(
-      deserializer,
-    );
-    var var_droppedEvents = sse_decode_opt_box_autoadd_u_64(deserializer);
-    var var_pendingEvents = sse_decode_opt_box_autoadd_u_64(deserializer);
-    var var_writeFailures = sse_decode_opt_box_autoadd_u_64(deserializer);
-    var var_terminating = sse_decode_opt_box_autoadd_bool(deserializer);
-    var var_shutdownIncomplete = sse_decode_opt_box_autoadd_bool(deserializer);
-    return ClientDiagnostics(
-      sinkInitialized: var_sinkInitialized,
-      rejectedFieldsOrEvents: var_rejectedFieldsOrEvents,
-      droppedEvents: var_droppedEvents,
-      pendingEvents: var_pendingEvents,
-      writeFailures: var_writeFailures,
-      terminating: var_terminating,
-      shutdownIncomplete: var_shutdownIncomplete,
-    );
+    var inner = sse_decode_i_32(deserializer);
+    return ClientLifecycle.values[inner];
   }
 
   @protected
@@ -2325,6 +2404,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_usage = sse_decode_opt_box_autoadd_f_64(deserializer);
     var var_temp = sse_decode_opt_box_autoadd_f_64(deserializer);
     return Cpu(usage: var_usage, temp: var_temp);
+  }
+
+  @protected
+  DebugScope sse_decode_debug_scope(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return DebugScope.values[inner];
   }
 
   @protected
@@ -2344,6 +2430,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       warnings: var_warnings,
       checks: var_checks,
     );
+  }
+
+  @protected
+  DiagnosticsError sse_decode_diagnostics_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return DiagnosticsError.values[inner];
   }
 
   @protected
@@ -2388,6 +2481,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double sse_decode_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getFloat64();
+  }
+
+  @protected
+  FailureKind sse_decode_failure_kind(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return FailureKind.values[inner];
   }
 
   @protected
@@ -2554,6 +2654,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LocalDiagnostics sse_decode_local_diagnostics(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_sinkInitialized = sse_decode_bool(deserializer);
+    var var_debugEnabled = sse_decode_bool(deserializer);
+    var var_debugScope = sse_decode_opt_box_autoadd_debug_scope(deserializer);
+    var var_rejectedFieldsOrEvents = sse_decode_opt_box_autoadd_u_64(
+      deserializer,
+    );
+    var var_droppedEvents = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_pendingEvents = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_writeFailures = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_terminating = sse_decode_opt_box_autoadd_bool(deserializer);
+    var var_shutdownIncomplete = sse_decode_opt_box_autoadd_bool(deserializer);
+    return LocalDiagnostics(
+      sinkInitialized: var_sinkInitialized,
+      debugEnabled: var_debugEnabled,
+      debugScope: var_debugScope,
+      rejectedFieldsOrEvents: var_rejectedFieldsOrEvents,
+      droppedEvents: var_droppedEvents,
+      pendingEvents: var_pendingEvents,
+      writeFailures: var_writeFailures,
+      terminating: var_terminating,
+      shutdownIncomplete: var_shutdownIncomplete,
+    );
+  }
+
+  @protected
   Memory sse_decode_memory(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_used = sse_decode_opt_box_autoadd_f_64(deserializer);
@@ -2618,6 +2745,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_bool(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  DebugScope? sse_decode_opt_box_autoadd_debug_scope(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_debug_scope(deserializer));
     } else {
       return null;
     }
@@ -3074,6 +3214,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_debug_scope(
+    DebugScope self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_debug_scope(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_f_64(self, serializer);
@@ -3160,18 +3309,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_client_diagnostics(
-    ClientDiagnostics self,
+  void sse_encode_client_lifecycle(
+    ClientLifecycle self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_bool(self.sinkInitialized, serializer);
-    sse_encode_opt_box_autoadd_u_64(self.rejectedFieldsOrEvents, serializer);
-    sse_encode_opt_box_autoadd_u_64(self.droppedEvents, serializer);
-    sse_encode_opt_box_autoadd_u_64(self.pendingEvents, serializer);
-    sse_encode_opt_box_autoadd_u_64(self.writeFailures, serializer);
-    sse_encode_opt_box_autoadd_bool(self.terminating, serializer);
-    sse_encode_opt_box_autoadd_bool(self.shutdownIncomplete, serializer);
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -3179,6 +3322,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_opt_box_autoadd_f_64(self.usage, serializer);
     sse_encode_opt_box_autoadd_f_64(self.temp, serializer);
+  }
+
+  @protected
+  void sse_encode_debug_scope(DebugScope self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -3190,6 +3339,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_usize(self.errors, serializer);
     sse_encode_usize(self.warnings, serializer);
     sse_encode_list_check(self.checks, serializer);
+  }
+
+  @protected
+  void sse_encode_diagnostics_error(
+    DiagnosticsError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -3220,6 +3378,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_f_64(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putFloat64(self);
+  }
+
+  @protected
+  void sse_encode_failure_kind(FailureKind self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -3358,6 +3522,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_local_diagnostics(
+    LocalDiagnostics self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_bool(self.sinkInitialized, serializer);
+    sse_encode_bool(self.debugEnabled, serializer);
+    sse_encode_opt_box_autoadd_debug_scope(self.debugScope, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.rejectedFieldsOrEvents, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.droppedEvents, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.pendingEvents, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.writeFailures, serializer);
+    sse_encode_opt_box_autoadd_bool(self.terminating, serializer);
+    sse_encode_opt_box_autoadd_bool(self.shutdownIncomplete, serializer);
+  }
+
+  @protected
   void sse_encode_memory(Memory self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_opt_box_autoadd_f_64(self.used, serializer);
@@ -3412,6 +3593,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_bool(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_debug_scope(
+    DebugScope? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_debug_scope(self, serializer);
     }
   }
 
@@ -3744,12 +3938,6 @@ class NdsClientImpl extends RustOpaque implements NdsClient {
 
   void cancel() =>
       RustLib.instance.api.crateApiIdentityNdsClientCancel(that: this);
-
-  bool debugEnabled() =>
-      RustLib.instance.api.crateApiIdentityNdsClientDebugEnabled(that: this);
-
-  void enableDebug({required int seconds}) => RustLib.instance.api
-      .crateApiIdentityNdsClientEnableDebug(that: this, seconds: seconds);
 
   Future<View> logout() =>
       RustLib.instance.api.crateApiIdentityNdsClientLogout(that: this);

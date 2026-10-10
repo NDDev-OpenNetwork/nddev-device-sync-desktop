@@ -1650,8 +1650,8 @@ dependencies = [
 
 [[package]]
 name = "nddev-device-sync-accounts"
-version = "0.0.1-alpha.9"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=7635fb8322a6658dc87829ac8bfec5255b474db9#7635fb8322a6658dc87829ac8bfec5255b474db9"
+version = "0.0.1-alpha.10"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=3e9080a171d70ec2d52e322a6235730f3c700e57#3e9080a171d70ec2d52e322a6235730f3c700e57"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -1700,7 +1700,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=e744e0fc90c3a573c86447bc8d4ed185d6ded716#e744e0fc90c3a573c86447bc8d4ed185d6ded716"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=df4d90053210c44d2c5852ba5b98221b23c540c8#df4d90053210c44d2c5852ba5b98221b23c540c8"
 dependencies = [
  "nddev-device-sync-adapter-io",
  "nddev-device-sync-cleaner",
@@ -1777,14 +1777,15 @@ dependencies = [
 
 [[package]]
 name = "nddev-device-sync-telemetry"
-version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability?rev=f5a03884aba9ebeb491e2a64eb06a96a7347937b#f5a03884aba9ebeb491e2a64eb06a96a7347937b"
+version = "0.0.1-alpha.2"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability?rev=7ae68ea764b3f0e639d551b059eb0651a50b5edd#7ae68ea764b3f0e639d551b059eb0651a50b5edd"
 dependencies = [
  "android_log-sys",
  "chrono",
  "jsonschema",
  "opentelemetry",
  "opentelemetry_sdk",
+ "serde",
  "serde_json",
  "thiserror 2.0.21",
  "tracing",
@@ -1810,7 +1811,7 @@ checksum = "27b02d87554356db9e9a873add8782d4ea6e3e58ea071a9adb9a2e8ddb884a8b"
 
 [[package]]
 name = "nds_native"
-version = "0.0.1-alpha.10"
+version = "0.0.1-alpha.11"
 dependencies = [
  "flutter_rust_bridge",
  "jni 0.21.1",

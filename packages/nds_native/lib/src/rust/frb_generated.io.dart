@@ -5,6 +5,7 @@
 
 import 'api/identity.dart';
 import 'api/modules.dart';
+import 'api/telemetry.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -21,6 +22,7 @@ import 'third_party/nddev_device_sync_clipboard/view.dart';
 import 'third_party/nddev_device_sync_gds/view.dart';
 import 'third_party/nddev_device_sync_rds/view.dart';
 import 'third_party/nddev_device_sync_sysinfo/view.dart';
+import 'third_party/nddev_device_sync_telemetry/view.dart';
 import 'third_party/nddev_device_sync_updater/view.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
@@ -138,6 +140,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
+  DebugScope dco_decode_box_autoadd_debug_scope(dynamic raw);
+
+  @protected
   double dco_decode_box_autoadd_f_64(dynamic raw);
 
   @protected
@@ -168,13 +173,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CleanerRunSummary dco_decode_cleaner_run_summary(dynamic raw);
 
   @protected
-  ClientDiagnostics dco_decode_client_diagnostics(dynamic raw);
+  ClientLifecycle dco_decode_client_lifecycle(dynamic raw);
 
   @protected
   Cpu dco_decode_cpu(dynamic raw);
 
   @protected
+  DebugScope dco_decode_debug_scope(dynamic raw);
+
+  @protected
   Diagnostics dco_decode_diagnostics(dynamic raw);
+
+  @protected
+  DiagnosticsError dco_decode_diagnostics_error(dynamic raw);
 
   @protected
   Disk dco_decode_disk(dynamic raw);
@@ -184,6 +195,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double dco_decode_f_64(dynamic raw);
+
+  @protected
+  FailureKind dco_decode_failure_kind(dynamic raw);
 
   @protected
   Finding dco_decode_finding(dynamic raw);
@@ -231,6 +245,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<RemoteSession> dco_decode_list_remote_session(dynamic raw);
 
   @protected
+  LocalDiagnostics dco_decode_local_diagnostics(dynamic raw);
+
+  @protected
   Memory dco_decode_memory(dynamic raw);
 
   @protected
@@ -247,6 +264,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  DebugScope? dco_decode_opt_box_autoadd_debug_scope(dynamic raw);
 
   @protected
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw);
@@ -402,6 +422,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  DebugScope sse_decode_box_autoadd_debug_scope(SseDeserializer deserializer);
+
+  @protected
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
@@ -434,13 +457,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  ClientDiagnostics sse_decode_client_diagnostics(SseDeserializer deserializer);
+  ClientLifecycle sse_decode_client_lifecycle(SseDeserializer deserializer);
 
   @protected
   Cpu sse_decode_cpu(SseDeserializer deserializer);
 
   @protected
+  DebugScope sse_decode_debug_scope(SseDeserializer deserializer);
+
+  @protected
   Diagnostics sse_decode_diagnostics(SseDeserializer deserializer);
+
+  @protected
+  DiagnosticsError sse_decode_diagnostics_error(SseDeserializer deserializer);
 
   @protected
   Disk sse_decode_disk(SseDeserializer deserializer);
@@ -450,6 +479,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  FailureKind sse_decode_failure_kind(SseDeserializer deserializer);
 
   @protected
   Finding sse_decode_finding(SseDeserializer deserializer);
@@ -501,6 +533,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  LocalDiagnostics sse_decode_local_diagnostics(SseDeserializer deserializer);
+
+  @protected
   Memory sse_decode_memory(SseDeserializer deserializer);
 
   @protected
@@ -519,6 +554,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  DebugScope? sse_decode_opt_box_autoadd_debug_scope(
+    SseDeserializer deserializer,
+  );
 
   @protected
   double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer);
@@ -691,6 +731,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_debug_scope(
+    DebugScope self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer);
 
   @protected
@@ -727,8 +773,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_client_diagnostics(
-    ClientDiagnostics self,
+  void sse_encode_client_lifecycle(
+    ClientLifecycle self,
     SseSerializer serializer,
   );
 
@@ -736,7 +782,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_cpu(Cpu self, SseSerializer serializer);
 
   @protected
+  void sse_encode_debug_scope(DebugScope self, SseSerializer serializer);
+
+  @protected
   void sse_encode_diagnostics(Diagnostics self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_diagnostics_error(
+    DiagnosticsError self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_disk(Disk self, SseSerializer serializer);
@@ -746,6 +801,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_failure_kind(FailureKind self, SseSerializer serializer);
 
   @protected
   void sse_encode_finding(Finding self, SseSerializer serializer);
@@ -806,6 +864,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_local_diagnostics(
+    LocalDiagnostics self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_memory(Memory self, SseSerializer serializer);
 
   @protected
@@ -825,6 +889,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_debug_scope(
+    DebugScope? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_box_autoadd_f_64(double? self, SseSerializer serializer);

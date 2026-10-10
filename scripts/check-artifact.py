@@ -12,7 +12,7 @@ markers = [b'identity_acceptance_generated_test', b'local_modules_generated_test
            b'NDS_TEST_SERVER', b'NDS_TEST_MAILPIT', b'NDS isolated archive:',
            b'IntegrationTestPlugin', b'dev/flutter/plugins/integration_test',
            b'IntegrationTestWidgetsFlutterBinding', b'plugins.flutter.io/integration_test',
-           b'package:integration_test/']
+           b'package:integration_test/', b'NDS_DIAGNOSTICS_PRIVATE_SENTINEL']
 checked = 0
 native_source_found = False
 native_record_count = 0

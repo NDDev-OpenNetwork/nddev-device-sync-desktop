@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1754468160;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1797447553;
 
 // Section: executor
 
@@ -856,102 +856,6 @@ fn wire__crate__api__identity__NdsClient_cancel_impl(
         },
     )
 }
-fn wire__crate__api__identity__NdsClient_debug_enabled_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "NdsClient_debug_enabled",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, false,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
-                        _ => unreachable!(),
-                    }
-                }
-                let api_that_guard = api_that_guard.unwrap();
-                let output_ok = Ok::<_, ()>(crate::api::identity::NdsClient::debug_enabled(
-                    &*api_that_guard,
-                ))?;
-                std::result::Result::Ok(output_ok)
-            })())
-        },
-    )
-}
-fn wire__crate__api__identity__NdsClient_enable_debug_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "NdsClient_enable_debug",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
-            >>::sse_decode(&mut deserializer);
-            let api_seconds = <u16>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ClientError>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, false,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
-                        _ => unreachable!(),
-                    }
-                }
-                let api_that_guard = api_that_guard.unwrap();
-                let output_ok =
-                    crate::api::identity::NdsClient::enable_debug(&*api_that_guard, api_seconds)?;
-                std::result::Result::Ok(output_ok)
-            })())
-        },
-    )
-}
 fn wire__crate__api__identity__NdsClient_logout_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1382,7 +1286,7 @@ fn wire__crate__api__identity__NdsClient_verify_email_impl(
         },
     )
 }
-fn wire__crate__api__identity__client_diagnostics_impl(
+fn wire__crate__api__telemetry__client_diagnostics_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
@@ -1405,13 +1309,47 @@ fn wire__crate__api__identity__client_diagnostics_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
-                let output_ok = Ok::<_, ()>(crate::api::identity::client_diagnostics())?;
+                let output_ok = Ok::<_, ()>(crate::api::telemetry::client_diagnostics())?;
                 std::result::Result::Ok(output_ok)
             })())
         },
     )
 }
-fn wire__crate__api__identity__init_app_impl(
+fn wire__crate__api__telemetry__configure_debug_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "configure_debug",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_scope =
+                <nddev_device_sync_telemetry::view::DebugScope>::sse_decode(&mut deserializer);
+            let api_seconds = <u16>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, nddev_device_sync_telemetry::view::DiagnosticsError>(
+                (move || {
+                    let output_ok = crate::api::telemetry::configure_debug(api_scope, api_seconds)?;
+                    std::result::Result::Ok(output_ok)
+                })(),
+            )
+        },
+    )
+}
+fn wire__crate__api__telemetry__init_app_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -1435,8 +1373,106 @@ fn wire__crate__api__identity__init_app_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| {
-                transform_result_sse::<_, ClientError>((move || {
-                    let output_ok = crate::api::identity::init_app()?;
+                transform_result_sse::<_, nddev_device_sync_telemetry::view::DiagnosticsError>(
+                    (move || {
+                        let output_ok = crate::api::telemetry::init_app()?;
+                        std::result::Result::Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__telemetry__record_client_failure_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "record_client_failure",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_kind =
+                <nddev_device_sync_telemetry::view::FailureKind>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Ok::<_, ()>(crate::api::telemetry::record_client_failure(api_kind))?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__telemetry__record_client_lifecycle_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "record_client_lifecycle",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_state =
+                <nddev_device_sync_telemetry::view::ClientLifecycle>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Ok::<_, ()>(crate::api::telemetry::record_client_lifecycle(api_state))?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__telemetry__shutdown_telemetry_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "shutdown_telemetry",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok = Ok::<_, ()>(crate::api::telemetry::shutdown_telemetry())?;
                     std::result::Result::Ok(output_ok)
                 })())
             }
@@ -1707,6 +1743,18 @@ const _: fn() = || {
         let _: Option<f64> = Gpu.usage;
         let _: Option<f64> = Gpu.memory;
         let _: Option<f64> = Gpu.temp;
+    }
+    {
+        let LocalDiagnostics = None::<nddev_device_sync_telemetry::view::LocalDiagnostics>.unwrap();
+        let _: bool = LocalDiagnostics.sink_initialized;
+        let _: bool = LocalDiagnostics.debug_enabled;
+        let _: Option<nddev_device_sync_telemetry::view::DebugScope> = LocalDiagnostics.debug_scope;
+        let _: Option<u64> = LocalDiagnostics.rejected_fields_or_events;
+        let _: Option<u64> = LocalDiagnostics.dropped_events;
+        let _: Option<u64> = LocalDiagnostics.pending_events;
+        let _: Option<u64> = LocalDiagnostics.write_failures;
+        let _: Option<bool> = LocalDiagnostics.terminating;
+        let _: Option<bool> = LocalDiagnostics.shutdown_incomplete;
     }
     {
         let Memory = None::<nddev_device_sync_sysinfo::view::Memory>.unwrap();
@@ -2047,24 +2095,18 @@ impl SseDecode for nddev_device_sync_cleaner::view::CleanerRunSummary {
     }
 }
 
-impl SseDecode for crate::api::identity::ClientDiagnostics {
+impl SseDecode for nddev_device_sync_telemetry::view::ClientLifecycle {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_sinkInitialized = <bool>::sse_decode(deserializer);
-        let mut var_rejectedFieldsOrEvents = <Option<u64>>::sse_decode(deserializer);
-        let mut var_droppedEvents = <Option<u64>>::sse_decode(deserializer);
-        let mut var_pendingEvents = <Option<u64>>::sse_decode(deserializer);
-        let mut var_writeFailures = <Option<u64>>::sse_decode(deserializer);
-        let mut var_terminating = <Option<bool>>::sse_decode(deserializer);
-        let mut var_shutdownIncomplete = <Option<bool>>::sse_decode(deserializer);
-        return crate::api::identity::ClientDiagnostics {
-            sink_initialized: var_sinkInitialized,
-            rejected_fields_or_events: var_rejectedFieldsOrEvents,
-            dropped_events: var_droppedEvents,
-            pending_events: var_pendingEvents,
-            write_failures: var_writeFailures,
-            terminating: var_terminating,
-            shutdown_incomplete: var_shutdownIncomplete,
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => nddev_device_sync_telemetry::view::ClientLifecycle::Ready,
+            1 => nddev_device_sync_telemetry::view::ClientLifecycle::Resumed,
+            2 => nddev_device_sync_telemetry::view::ClientLifecycle::Inactive,
+            3 => nddev_device_sync_telemetry::view::ClientLifecycle::Hidden,
+            4 => nddev_device_sync_telemetry::view::ClientLifecycle::Paused,
+            5 => nddev_device_sync_telemetry::view::ClientLifecycle::Detached,
+            _ => unreachable!("Invalid variant for ClientLifecycle: {}", inner),
         };
     }
 }
@@ -2077,6 +2119,21 @@ impl SseDecode for nddev_device_sync_sysinfo::view::Cpu {
         return nddev_device_sync_sysinfo::view::Cpu {
             usage: var_usage,
             temp: var_temp,
+        };
+    }
+}
+
+impl SseDecode for nddev_device_sync_telemetry::view::DebugScope {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => nddev_device_sync_telemetry::view::DebugScope::Http,
+            1 => nddev_device_sync_telemetry::view::DebugScope::Transport,
+            2 => nddev_device_sync_telemetry::view::DebugScope::Database,
+            3 => nddev_device_sync_telemetry::view::DebugScope::Io,
+            4 => nddev_device_sync_telemetry::view::DebugScope::Process,
+            _ => unreachable!("Invalid variant for DebugScope: {}", inner),
         };
     }
 }
@@ -2098,6 +2155,18 @@ impl SseDecode for nddev_device_sync_cleaner::view::Diagnostics {
             errors: var_errors,
             warnings: var_warnings,
             checks: var_checks,
+        };
+    }
+}
+
+impl SseDecode for nddev_device_sync_telemetry::view::DiagnosticsError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => nddev_device_sync_telemetry::view::DiagnosticsError::InvalidInput,
+            1 => nddev_device_sync_telemetry::view::DiagnosticsError::Unavailable,
+            _ => unreachable!("Invalid variant for DiagnosticsError: {}", inner),
         };
     }
 }
@@ -2150,6 +2219,19 @@ impl SseDecode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_f64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for nddev_device_sync_telemetry::view::FailureKind {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => nddev_device_sync_telemetry::view::FailureKind::FlutterFramework,
+            1 => nddev_device_sync_telemetry::view::FailureKind::DartUnhandled,
+            2 => nddev_device_sync_telemetry::view::FailureKind::NativeBridge,
+            _ => unreachable!("Invalid variant for FailureKind: {}", inner),
+        };
     }
 }
 
@@ -2331,6 +2413,33 @@ impl SseDecode for Vec<nddev_device_sync_rds::view::RemoteSession> {
     }
 }
 
+impl SseDecode for nddev_device_sync_telemetry::view::LocalDiagnostics {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_sinkInitialized = <bool>::sse_decode(deserializer);
+        let mut var_debugEnabled = <bool>::sse_decode(deserializer);
+        let mut var_debugScope =
+            <Option<nddev_device_sync_telemetry::view::DebugScope>>::sse_decode(deserializer);
+        let mut var_rejectedFieldsOrEvents = <Option<u64>>::sse_decode(deserializer);
+        let mut var_droppedEvents = <Option<u64>>::sse_decode(deserializer);
+        let mut var_pendingEvents = <Option<u64>>::sse_decode(deserializer);
+        let mut var_writeFailures = <Option<u64>>::sse_decode(deserializer);
+        let mut var_terminating = <Option<bool>>::sse_decode(deserializer);
+        let mut var_shutdownIncomplete = <Option<bool>>::sse_decode(deserializer);
+        return nddev_device_sync_telemetry::view::LocalDiagnostics {
+            sink_initialized: var_sinkInitialized,
+            debug_enabled: var_debugEnabled,
+            debug_scope: var_debugScope,
+            rejected_fields_or_events: var_rejectedFieldsOrEvents,
+            dropped_events: var_droppedEvents,
+            pending_events: var_pendingEvents,
+            write_failures: var_writeFailures,
+            terminating: var_terminating,
+            shutdown_incomplete: var_shutdownIncomplete,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_sysinfo::view::Memory {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2406,6 +2515,19 @@ impl SseDecode for Option<bool> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<bool>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<nddev_device_sync_telemetry::view::DebugScope> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<nddev_device_sync_telemetry::view::DebugScope>::sse_decode(
+                deserializer,
+            ));
         } else {
             return None;
         }
@@ -2774,35 +2896,38 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__identity__NdsClient_new_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__identity__NdsClient_poll_github_impl(
+        16 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__identity__NdsClient_new_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__identity__NdsClient_poll_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__identity__NdsClient_request_email_impl(
+        19 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__identity__NdsClient_request_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        24 => wire__crate__api__identity__NdsClient_start_github_impl(
+        22 => wire__crate__api__identity__NdsClient_start_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__api__identity__NdsClient_verify_email_impl(
+        23 => wire__crate__api__identity__NdsClient_verify_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        27 => wire__crate__api__identity__init_app_impl(port, ptr, rust_vec_len, data_len),
-        31 => wire__nddev_device_sync_accounts__view__view_default_impl(
+        26 => wire__crate__api__telemetry__init_app_impl(port, ptr, rust_vec_len, data_len),
+        29 => {
+            wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
+        }
+        33 => wire__nddev_device_sync_accounts__view__view_default_impl(
             port,
             ptr,
             rust_vec_len,
@@ -2823,13 +2948,16 @@ fn pde_ffi_dispatcher_sync_impl(
         7 => wire__crate__api__modules__LocalAgent_close_impl(ptr, rust_vec_len, data_len),
         9 => wire__crate__api__modules__LocalAgent_modules_impl(ptr, rust_vec_len, data_len),
         15 => wire__crate__api__identity__NdsClient_cancel_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__identity__NdsClient_debug_enabled_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__identity__NdsClient_enable_debug_impl(ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
-        26 => wire__crate__api__identity__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        28 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        29 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        30 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        28 => {
+            wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
+        }
+        30 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        31 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        32 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -3079,29 +3207,32 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::identity::ClientDiagnostics {
+impl flutter_rust_bridge::IntoDart
+    for FrbWrapper<nddev_device_sync_telemetry::view::ClientLifecycle>
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.sink_initialized.into_into_dart().into_dart(),
-            self.rejected_fields_or_events.into_into_dart().into_dart(),
-            self.dropped_events.into_into_dart().into_dart(),
-            self.pending_events.into_into_dart().into_dart(),
-            self.write_failures.into_into_dart().into_dart(),
-            self.terminating.into_into_dart().into_dart(),
-            self.shutdown_incomplete.into_into_dart().into_dart(),
-        ]
-        .into_dart()
+        match self.0 {
+            nddev_device_sync_telemetry::view::ClientLifecycle::Ready => 0.into_dart(),
+            nddev_device_sync_telemetry::view::ClientLifecycle::Resumed => 1.into_dart(),
+            nddev_device_sync_telemetry::view::ClientLifecycle::Inactive => 2.into_dart(),
+            nddev_device_sync_telemetry::view::ClientLifecycle::Hidden => 3.into_dart(),
+            nddev_device_sync_telemetry::view::ClientLifecycle::Paused => 4.into_dart(),
+            nddev_device_sync_telemetry::view::ClientLifecycle::Detached => 5.into_dart(),
+            _ => unreachable!(),
+        }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::identity::ClientDiagnostics
+    for FrbWrapper<nddev_device_sync_telemetry::view::ClientLifecycle>
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::identity::ClientDiagnostics>
-    for crate::api::identity::ClientDiagnostics
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        FrbWrapper<nddev_device_sync_telemetry::view::ClientLifecycle>,
+    > for nddev_device_sync_telemetry::view::ClientLifecycle
 {
-    fn into_into_dart(self) -> crate::api::identity::ClientDiagnostics {
-        self
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::ClientLifecycle> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -3122,6 +3253,30 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_sysinfo::vie
     for nddev_device_sync_sysinfo::view::Cpu
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_sysinfo::view::Cpu> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_telemetry::view::DebugScope> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            nddev_device_sync_telemetry::view::DebugScope::Http => 0.into_dart(),
+            nddev_device_sync_telemetry::view::DebugScope::Transport => 1.into_dart(),
+            nddev_device_sync_telemetry::view::DebugScope::Database => 2.into_dart(),
+            nddev_device_sync_telemetry::view::DebugScope::Io => 3.into_dart(),
+            nddev_device_sync_telemetry::view::DebugScope::Process => 4.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_telemetry::view::DebugScope>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_telemetry::view::DebugScope>>
+    for nddev_device_sync_telemetry::view::DebugScope
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::DebugScope> {
         self.into()
     }
 }
@@ -3147,6 +3302,31 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_cleaner::vie
     for nddev_device_sync_cleaner::view::Diagnostics
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_cleaner::view::Diagnostics> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for FrbWrapper<nddev_device_sync_telemetry::view::DiagnosticsError>
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            nddev_device_sync_telemetry::view::DiagnosticsError::InvalidInput => 0.into_dart(),
+            nddev_device_sync_telemetry::view::DiagnosticsError::Unavailable => 1.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_telemetry::view::DiagnosticsError>
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        FrbWrapper<nddev_device_sync_telemetry::view::DiagnosticsError>,
+    > for nddev_device_sync_telemetry::view::DiagnosticsError
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::DiagnosticsError> {
         self.into()
     }
 }
@@ -3199,6 +3379,28 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_clipboard::v
     for nddev_device_sync_clipboard::view::Entry
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_clipboard::view::Entry> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_telemetry::view::FailureKind> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            nddev_device_sync_telemetry::view::FailureKind::FlutterFramework => 0.into_dart(),
+            nddev_device_sync_telemetry::view::FailureKind::DartUnhandled => 1.into_dart(),
+            nddev_device_sync_telemetry::view::FailureKind::NativeBridge => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_telemetry::view::FailureKind>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_telemetry::view::FailureKind>>
+    for nddev_device_sync_telemetry::view::FailureKind
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::FailureKind> {
         self.into()
     }
 }
@@ -3266,6 +3468,41 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_sysinfo::vie
     for nddev_device_sync_sysinfo::view::Gpu
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_sysinfo::view::Gpu> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for FrbWrapper<nddev_device_sync_telemetry::view::LocalDiagnostics>
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.sink_initialized.into_into_dart().into_dart(),
+            self.0.debug_enabled.into_into_dart().into_dart(),
+            self.0.debug_scope.into_into_dart().into_dart(),
+            self.0
+                .rejected_fields_or_events
+                .into_into_dart()
+                .into_dart(),
+            self.0.dropped_events.into_into_dart().into_dart(),
+            self.0.pending_events.into_into_dart().into_dart(),
+            self.0.write_failures.into_into_dart().into_dart(),
+            self.0.terminating.into_into_dart().into_dart(),
+            self.0.shutdown_incomplete.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_telemetry::view::LocalDiagnostics>
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        FrbWrapper<nddev_device_sync_telemetry::view::LocalDiagnostics>,
+    > for nddev_device_sync_telemetry::view::LocalDiagnostics
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::LocalDiagnostics> {
         self.into()
     }
 }
@@ -3773,16 +4010,23 @@ impl SseEncode for nddev_device_sync_cleaner::view::CleanerRunSummary {
     }
 }
 
-impl SseEncode for crate::api::identity::ClientDiagnostics {
+impl SseEncode for nddev_device_sync_telemetry::view::ClientLifecycle {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <bool>::sse_encode(self.sink_initialized, serializer);
-        <Option<u64>>::sse_encode(self.rejected_fields_or_events, serializer);
-        <Option<u64>>::sse_encode(self.dropped_events, serializer);
-        <Option<u64>>::sse_encode(self.pending_events, serializer);
-        <Option<u64>>::sse_encode(self.write_failures, serializer);
-        <Option<bool>>::sse_encode(self.terminating, serializer);
-        <Option<bool>>::sse_encode(self.shutdown_incomplete, serializer);
+        <i32>::sse_encode(
+            match self {
+                nddev_device_sync_telemetry::view::ClientLifecycle::Ready => 0,
+                nddev_device_sync_telemetry::view::ClientLifecycle::Resumed => 1,
+                nddev_device_sync_telemetry::view::ClientLifecycle::Inactive => 2,
+                nddev_device_sync_telemetry::view::ClientLifecycle::Hidden => 3,
+                nddev_device_sync_telemetry::view::ClientLifecycle::Paused => 4,
+                nddev_device_sync_telemetry::view::ClientLifecycle::Detached => 5,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -3791,6 +4035,25 @@ impl SseEncode for nddev_device_sync_sysinfo::view::Cpu {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Option<f64>>::sse_encode(self.usage, serializer);
         <Option<f64>>::sse_encode(self.temp, serializer);
+    }
+}
+
+impl SseEncode for nddev_device_sync_telemetry::view::DebugScope {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                nddev_device_sync_telemetry::view::DebugScope::Http => 0,
+                nddev_device_sync_telemetry::view::DebugScope::Transport => 1,
+                nddev_device_sync_telemetry::view::DebugScope::Database => 2,
+                nddev_device_sync_telemetry::view::DebugScope::Io => 3,
+                nddev_device_sync_telemetry::view::DebugScope::Process => 4,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -3803,6 +4066,22 @@ impl SseEncode for nddev_device_sync_cleaner::view::Diagnostics {
         <usize>::sse_encode(self.errors, serializer);
         <usize>::sse_encode(self.warnings, serializer);
         <Vec<nddev_device_sync_cleaner::view::Check>>::sse_encode(self.checks, serializer);
+    }
+}
+
+impl SseEncode for nddev_device_sync_telemetry::view::DiagnosticsError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                nddev_device_sync_telemetry::view::DiagnosticsError::InvalidInput => 0,
+                nddev_device_sync_telemetry::view::DiagnosticsError::Unavailable => 1,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -3836,6 +4115,23 @@ impl SseEncode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_f64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for nddev_device_sync_telemetry::view::FailureKind {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                nddev_device_sync_telemetry::view::FailureKind::FlutterFramework => 0,
+                nddev_device_sync_telemetry::view::FailureKind::DartUnhandled => 1,
+                nddev_device_sync_telemetry::view::FailureKind::NativeBridge => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -3971,6 +4267,24 @@ impl SseEncode for Vec<nddev_device_sync_rds::view::RemoteSession> {
     }
 }
 
+impl SseEncode for nddev_device_sync_telemetry::view::LocalDiagnostics {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.sink_initialized, serializer);
+        <bool>::sse_encode(self.debug_enabled, serializer);
+        <Option<nddev_device_sync_telemetry::view::DebugScope>>::sse_encode(
+            self.debug_scope,
+            serializer,
+        );
+        <Option<u64>>::sse_encode(self.rejected_fields_or_events, serializer);
+        <Option<u64>>::sse_encode(self.dropped_events, serializer);
+        <Option<u64>>::sse_encode(self.pending_events, serializer);
+        <Option<u64>>::sse_encode(self.write_failures, serializer);
+        <Option<bool>>::sse_encode(self.terminating, serializer);
+        <Option<bool>>::sse_encode(self.shutdown_incomplete, serializer);
+    }
+}
+
 impl SseEncode for nddev_device_sync_sysinfo::view::Memory {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4025,6 +4339,16 @@ impl SseEncode for Option<bool> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <bool>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<nddev_device_sync_telemetry::view::DebugScope> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <nddev_device_sync_telemetry::view::DebugScope>::sse_encode(value, serializer);
         }
     }
 }

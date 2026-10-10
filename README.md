@@ -5,6 +5,22 @@ Desktop client and shared Flutter presentation for
 en/ru interface used by desktop and mobile; `packages/nds_native` generates a
 thin bridge to the Rust accounts module. NDS tokens never enter Dart.
 
+The same observability SDK used by the server and agent owns event validation,
+redaction, trace context, debug windows and local diagnostics. Flutter framework
+and root-isolate async failures pass only a fixed error class through the generated
+bridge; raw exception text/stacks are omitted from both logs and error widgets.
+Diagnostics work before sign-in. Network and local-module debug scopes expire
+after five minutes or 100 debug events. Normal security/error logging continues.
+The SDK emits process startup and controlled shutdown; a cancelable desktop exit
+waits for bounded shutdown, while mobile background/detach never terminates it.
+Forced termination cannot promise a final event. Missing native initialization
+shows a safe localized startup screen; a missing sink remains explicitly degraded.
+
+`just check` includes real framework/root-isolate failure tests using the native
+library. The observability repository's isolated pipeline can additionally consume
+that private test log through `NDS_CLIENT_EVENTS_FILE` and verify searchable
+failure records in OpenObserve. This does not configure live client export.
+
 Use Flutter 3.47.7/Dart 3.13.5, Rust 1.99.0 and flutter_rust_bridge_codegen 2.13.0.
 Install the Rust target matching the platform being built. `flutter pub get
 --enforce-lockfile`, `just check`, `just generated-check` and `just build-linux`

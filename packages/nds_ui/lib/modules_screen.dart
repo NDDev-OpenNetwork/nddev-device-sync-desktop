@@ -12,12 +12,14 @@ import 'package:nds_native/gds.dart' as gds;
 import 'package:nds_native/rds.dart' as rds;
 
 import 'l10n/app_localizations.dart';
+import 'diagnostics.dart';
 
 /// Presentation over canonical native responses. Local tools retain their state
 /// and safety policies; this screen exposes bounded read/preview operations.
 class ModulesScreen extends StatefulWidget {
-  const ModulesScreen({super.key, required this.onLocale});
+  const ModulesScreen({super.key, required this.onLocale, this.diagnostics});
   final ValueChanged<Locale> onLocale;
+  final ApplicationDiagnostics? diagnostics;
   @override
   State<ModulesScreen> createState() => _ModulesScreenState();
 }
@@ -53,7 +55,10 @@ class _ModulesScreenState extends State<ModulesScreen> {
         _modules = agent.modules();
         _busy = false;
       });
-    } catch (_) {
+    } catch (error) {
+      if (error is! native.AgentError) {
+        widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
+      }
       if (mounted && epoch == _epoch) {
         setState(() {
           _error = 'unavailable';
@@ -75,6 +80,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
       final result = await operation();
       if (mounted && epoch == _epoch) setState(() => _result = result);
     } catch (error) {
+      if (error is! native.AgentError) {
+        widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
+      }
       if (mounted && epoch == _epoch) {
         setState(
           () => _error = error is native.AgentError ? error.name : 'unknown',
