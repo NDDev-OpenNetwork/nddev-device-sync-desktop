@@ -8,6 +8,7 @@ from pathlib import Path
 import signal
 import shutil
 import subprocess
+import uuid
 from urllib.parse import urlparse
 from integration_runner import integration_runner
 from contextlib import ExitStack
@@ -18,17 +19,33 @@ parser.add_argument("--app", type=Path, default=Path(__file__).resolve().parents
 parser.add_argument("--device", default="linux")
 parser.add_argument("--cold-restart", action="store_true",
                     help="Verify encrypted persistence across two Android app processes")
+parser.add_argument("--isolated-android", action="store_true",
+                    help="Use a unique test applicationId on an explicitly selected Android device")
 args = parser.parse_args()
 app = args.app.resolve()
 app_id = None
+gradle_path = app / "android/app/build.gradle.kts"
+original_gradle = None
+temporary_gradle = None
+android = args.device.startswith("emulator-") or args.isolated_android
+if args.isolated_android:
+    if args.device in ["linux", "macos", "windows"]:
+        raise SystemExit("Select the explicit ADB device id for isolated Android acceptance")
+    original_gradle = gradle_path.read_bytes()
+    match = re.search(rb'applicationId = "(ai[.]nddev[.]nds[.][a-zA-Z0-9_.]+)"', original_gradle)
+    if not match or len(re.findall(rb'applicationId = ', original_gradle)) != 1:
+        raise SystemExit("Expected one NDS applicationId; refuse ambiguous replacement")
+    app_id = "ai.nddev.nds.acceptance.t" + uuid.uuid4().hex
+    temporary_gradle = original_gradle.replace(match[0], f'applicationId = "{app_id}"'.encode())
 if args.cold_restart:
-    if not args.device.startswith("emulator-"):
-        raise SystemExit("Cold-process acceptance requires an explicitly owned emulator")
+    if not android:
+        raise SystemExit("Cold-process acceptance requires an owned emulator or isolated Android namespace")
     gradle = (app / "android/app/build.gradle.kts").read_text()
     match = re.search(r'applicationId = "(ai[.]nddev[.]nds[.][a-zA-Z0-9_.]+)"', gradle)
     if not match:
         raise SystemExit("Expected an NDS-owned Android application id")
-    app_id = match.group(1)
+    if app_id is None:
+        app_id = match.group(1)
     installed = subprocess.run(["adb", "-s", args.device, "shell", "pm", "path", app_id],
                                capture_output=True, timeout=10)
     if installed.stdout.strip():
@@ -49,9 +66,11 @@ ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]
 log = args.fixture.parent / ("flutter-" + args.device + ".log")
 runner = ExitStack()
 try:
+    if temporary_gradle is not None:
+        gradle_path.write_bytes(temporary_gradle)
     runner.enter_context(integration_runner(app, development_http=True))
     shutil.copyfile(source, target)
-    if args.device.startswith("emulator-"):
+    if android:
         for port in ports:
             subprocess.run(["adb", "-s", args.device, "reverse", "tcp:" + port, "tcp:" + port], check=True, timeout=10)
     command = ["flutter", "test", str(target), "-d", args.device, "--timeout=3m", "--no-pub",
@@ -96,10 +115,14 @@ finally:
     try:
         runner.close()
     finally:
+        if temporary_gradle is not None:
+            if gradle_path.read_bytes() != temporary_gradle:
+                raise RuntimeError("Android configuration changed outside acceptance; preserve it for review")
+            gradle_path.write_bytes(original_gradle)
         if app_id is not None:
             subprocess.run(["adb", "-s", args.device, "uninstall", app_id],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15)
-        if args.device.startswith("emulator-"):
+        if android:
             for port in ports:
                 subprocess.run(["adb", "-s", args.device, "reverse", "--remove", "tcp:" + port],
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)

@@ -12,6 +12,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class NdsClient implements RustOpaqueInterface {
   void cancel();
 
+  Future<View> enrollDevice({required String name});
+
   Future<View> logout();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
@@ -22,7 +24,11 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> refresh();
 
+  Future<View> refreshDevices();
+
   Future<View> requestEmail({required String email, required String locale});
+
+  Future<View> revokeDevice({required String id});
 
   View snapshot();
 

@@ -840,6 +840,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Local operations'**
   String get diagnosticsIo;
+
+  /// No description provided for @devicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your devices'**
+  String get devicesTitle;
+
+  /// No description provided for @devicesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Register this installation with its own native signing key. Device enrollment does not unlock the vault.'**
+  String get devicesHelp;
+
+  /// No description provided for @devicesUnverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Device inventory has not been freshly verified.'**
+  String get devicesUnverified;
+
+  /// No description provided for @deviceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Device name'**
+  String get deviceName;
+
+  /// No description provided for @enrollDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Register this device'**
+  String get enrollDevice;
+
+  /// No description provided for @refreshDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh devices'**
+  String get refreshDevices;
+
+  /// No description provided for @thisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This installation'**
+  String get thisDevice;
+
+  /// No description provided for @deviceActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get deviceActive;
+
+  /// No description provided for @deviceRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get deviceRevoked;
+
+  /// No description provided for @deviceCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get deviceCreated;
+
+  /// No description provided for @deviceRevokedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'This device key has been revoked. It is retained locally and cannot be reused for enrollment.'**
+  String get deviceRevokedHelp;
+
+  /// No description provided for @revokeDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke device'**
+  String get revokeDevice;
+
+  /// No description provided for @revokeDeviceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke access for {name}? This identity cannot be enrolled again with the same key.'**
+  String revokeDeviceHelp(String name);
+
+  /// No description provided for @keepDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep device'**
+  String get keepDevice;
 }
 
 class _AppLocalizationsDelegate
