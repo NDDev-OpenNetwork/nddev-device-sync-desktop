@@ -31,7 +31,8 @@ if archive.name.endswith('.tar.xz'):
 elif platform.system() == 'Darwin':
     # The system extractor retains executable and symlink attributes in the
     # verified official macOS archive; Python ZipFile does not preserve them.
-    subprocess.run(['unzip','-q',str(archive),'-d',str(destination)],check=True,timeout=120)
+    # Allow the multi-gigabyte SDK to finish on hosted Intel Macs, with a finite budget.
+    subprocess.run(['unzip','-q',str(archive),'-d',str(destination)],check=True,timeout=300)
 else:
     with zipfile.ZipFile(archive) as source: source.extractall(destination)
 with Path(os.environ['GITHUB_PATH']).open('a') as output:
