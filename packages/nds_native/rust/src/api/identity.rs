@@ -5,7 +5,7 @@ use nddev_device_sync_accounts::{
 };
 use nddev_device_sync_vault::{
     VaultClient,
-    view::{PairingPeer, RecordView, VaultError, VaultView},
+    view::{PairingPeer, RecordView, StatePage, VaultError, VaultView},
 };
 use std::{sync::Arc, time::Instant};
 use tracing::Instrument;
@@ -119,6 +119,100 @@ impl NdsClient {
     pub async fn vault_pairing_import(&self, code: String) -> Result<VaultView, VaultError> {
         observe("vault.pairing.import", async {
             self.vault().await?.import_pairing(code).await
+        })
+        .await
+    }
+    pub async fn sync_states(&self, after: String) -> Result<StatePage, VaultError> {
+        observe("sync.states.read", async {
+            self.vault().await?.states(after).await
+        })
+        .await
+    }
+    pub async fn publish_device_state(&self) -> Result<VaultView, VaultError> {
+        self.publish_state_inner(Vec::new()).await
+    }
+    pub async fn publish_local_state(
+        &self,
+        agent: &super::modules::LocalAgent,
+    ) -> Result<VaultView, VaultError> {
+        self.publish_state_inner(agent.modules().map_err(|_| VaultError::Unavailable)?)
+            .await
+    }
+    async fn publish_state_inner(
+        &self,
+        modules: Vec<nddev_device_sync_agent::view::ModuleState>,
+    ) -> Result<VaultView, VaultError> {
+        use nddev_device_sync_domain::state::{Reachability, Snapshot, State};
+        observe("sync.states.publish", async {
+            let vault = self.vault().await?;
+            self.inner
+                .refresh_devices()
+                .await
+                .map_err(|_| VaultError::Unavailable)?;
+            let view = self.inner.view();
+            let device = view
+                .devices
+                .into_iter()
+                .find(|value| value.is_current && !value.revoked)
+                .ok_or(VaultError::Locked)?;
+            let observed_at_ms = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_err(|_| VaultError::Unavailable)?
+                .as_millis()
+                .try_into()
+                .map_err(|_| VaultError::Invalid)?;
+            let capture = |data| Snapshot {
+                schema_version: 1,
+                observed_at_ms,
+                data,
+            };
+            let expires = time::OffsetDateTime::parse(
+                &view.expires_at,
+                &time::format_description::well_known::Rfc3339,
+            )
+            .map_err(|_| VaultError::Invalid)?
+            .unix_timestamp();
+            let millis = |seconds: i64| {
+                u64::try_from(seconds)
+                    .ok()
+                    .and_then(|value| value.checked_mul(1000))
+                    .ok_or(VaultError::Invalid)
+            };
+            let mut values = vec![
+                capture(State::Device {
+                    display_name: device.display_name,
+                    platform: device.platform,
+                    client_version: env!("CARGO_PKG_VERSION").into(),
+                }),
+                capture(State::Account {
+                    auth_method: view.auth_method,
+                    checked_at_ms: millis(view.session_checked_at)?,
+                    expires_at_ms: millis(expires)?,
+                }),
+            ];
+            for module in modules {
+                let reachability = match module.reachability {
+                    nddev_device_sync_agent::view::Reachability::NotChecked => {
+                        Reachability::NotChecked
+                    }
+                    nddev_device_sync_agent::view::Reachability::Reachable => {
+                        Reachability::Reachable
+                    }
+                    nddev_device_sync_agent::view::Reachability::Unavailable => {
+                        Reachability::Unavailable
+                    }
+                    nddev_device_sync_agent::view::Reachability::Failed => Reachability::Failed,
+                };
+                values.push(capture(State::Module {
+                    module_id: module.id,
+                    version: module.version,
+                    configured: module.configured,
+                    reachability,
+                    checked_at_ms: module.observed_at_ms,
+                    error_class: module.error.map(|error| error.to_string()),
+                }));
+            }
+            vault.publish_states(values).await
         })
         .await
     }

@@ -255,6 +255,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<RemoteSession> dco_decode_list_remote_session(dynamic raw);
 
   @protected
+  List<StateView> dco_decode_list_state_view(dynamic raw);
+
+  @protected
   LocalDiagnostics dco_decode_local_diagnostics(dynamic raw);
 
   @protected
@@ -316,6 +319,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SessionState dco_decode_session_state(dynamic raw);
+
+  @protected
+  StatePage dco_decode_state_page(dynamic raw);
+
+  @protected
+  StateView dco_decode_state_view(dynamic raw);
 
   @protected
   Status dco_decode_status(dynamic raw);
@@ -564,6 +573,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<StateView> sse_decode_list_state_view(SseDeserializer deserializer);
+
+  @protected
   LocalDiagnostics sse_decode_local_diagnostics(SseDeserializer deserializer);
 
   @protected
@@ -631,6 +643,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SessionState sse_decode_session_state(SseDeserializer deserializer);
+
+  @protected
+  StatePage sse_decode_state_page(SseDeserializer deserializer);
+
+  @protected
+  StateView sse_decode_state_view(SseDeserializer deserializer);
 
   @protected
   Status sse_decode_status(SseDeserializer deserializer);
@@ -922,6 +940,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_state_view(
+    List<StateView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_local_diagnostics(
     LocalDiagnostics self,
     SseSerializer serializer,
@@ -998,6 +1022,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_session_state(SessionState self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_state_page(StatePage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_state_view(StateView self, SseSerializer serializer);
 
   @protected
   void sse_encode_status(Status self, SseSerializer serializer);

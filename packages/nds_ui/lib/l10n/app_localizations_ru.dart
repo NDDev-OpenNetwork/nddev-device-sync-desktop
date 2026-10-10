@@ -547,4 +547,28 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get vaultProofError =>
       'Не удалось подтвердить передачу ключа или подлинность зашифрованных данных.';
+
+  @override
+  String get syncedState => 'Состояние устройств и модулей';
+
+  @override
+  String get publishDeviceState =>
+      'Отправить состояние устройства и NDS-сессии';
+
+  @override
+  String get publishModuleState => 'Отправить наблюдаемое состояние модулей';
+
+  @override
+  String get stateHelp =>
+      'Это зашифрованные наблюдения подписанных устройств. Время показывает момент наблюдения, а не текущую доступность. Синхронизация не запускает инструменты на другом устройстве.';
+
+  @override
+  String get statePublishError =>
+      'Состояние не удалось синхронизировать. Проверьте сессию, устройство и подключение к vault.';
+
+  @override
+  String get stateDevice => 'Устройство';
+
+  @override
+  String get stateDevices => 'Устройства';
 }

@@ -226,5 +226,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "syncedState": "Synced device and module state",
+  "publishDeviceState": "Publish this device and NDS session",
+  "publishModuleState": "Publish observed module state",
+  "stateHelp": "These are encrypted observations from signed devices. Their timestamps describe when they were observed, not current reachability. Sync does not execute tools on another device.",
+  "statePublishError": "State could not be synchronized. Check the session, device and vault connection.",
+  "stateDevice": "Device",
+  "stateDevices": "Devices"
 }

@@ -1062,6 +1062,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Key transfer or encrypted data could not be authenticated.'**
   String get vaultProofError;
+
+  /// No description provided for @syncedState.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced device and module state'**
+  String get syncedState;
+
+  /// No description provided for @publishDeviceState.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish this device and NDS session'**
+  String get publishDeviceState;
+
+  /// No description provided for @publishModuleState.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish observed module state'**
+  String get publishModuleState;
+
+  /// No description provided for @stateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'These are encrypted observations from signed devices. Their timestamps describe when they were observed, not current reachability. Sync does not execute tools on another device.'**
+  String get stateHelp;
+
+  /// No description provided for @statePublishError.
+  ///
+  /// In en, this message translates to:
+  /// **'State could not be synchronized. Check the session, device and vault connection.'**
+  String get statePublishError;
+
+  /// No description provided for @stateDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get stateDevice;
+
+  /// No description provided for @stateDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get stateDevices;
 }
 
 class _AppLocalizationsDelegate

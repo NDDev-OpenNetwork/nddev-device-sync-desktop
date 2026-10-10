@@ -5,6 +5,7 @@ import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
 
 import 'l10n/app_localizations.dart';
+import 'state_screen.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({super.key, required this.client});
@@ -193,6 +194,18 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                         child: Text(l.vaultPairStart),
                       ),
                     ] else ...[
+                      OutlinedButton(
+                        key: const Key('open-synced-state'),
+                        onPressed: _busy
+                            ? null
+                            : () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) =>
+                                      StateScreen(client: widget.client),
+                                ),
+                              ),
+                        child: Text(l.syncedState),
+                      ),
                       const SizedBox(height: OpenNetworkSpacing.six),
                       TextField(
                         key: const Key('vault-title'),

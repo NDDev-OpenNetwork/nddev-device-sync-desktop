@@ -36,6 +36,7 @@ class NdsApp extends StatefulWidget {
 class _NdsAppState extends State<NdsApp> {
   Locale? _locale;
   int _page = 0;
+  native.NdsClient? _client;
   @override
   void initState() {
     super.initState();
@@ -81,6 +82,7 @@ class _NdsAppState extends State<NdsApp> {
           final identity = _IdentityScreen(
             onLocale: (locale) => setState(() => _locale = locale),
             diagnostics: widget.diagnostics,
+            onClient: (client) => setState(() => _client = client),
           );
           if (!native.supportsLocalAgent()) return identity;
           final l = AppLocalizations.of(context)!;
@@ -92,6 +94,7 @@ class _NdsAppState extends State<NdsApp> {
                 ModulesScreen(
                   onLocale: (locale) => setState(() => _locale = locale),
                   diagnostics: widget.diagnostics,
+                  client: _client,
                 ),
               ],
             ),
@@ -117,9 +120,14 @@ class _NdsAppState extends State<NdsApp> {
 }
 
 class _IdentityScreen extends StatefulWidget {
-  const _IdentityScreen({required this.onLocale, this.diagnostics});
+  const _IdentityScreen({
+    required this.onLocale,
+    this.diagnostics,
+    this.onClient,
+  });
   final ValueChanged<Locale> onLocale;
   final ApplicationDiagnostics? diagnostics;
+  final ValueChanged<native.NdsClient?>? onClient;
   @override
   State<_IdentityScreen> createState() => _IdentityScreenState();
 }
@@ -199,6 +207,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
       }
       if (!mounted || epoch != _actionEpoch) return;
       setState(() => _view = view);
+      widget.onClient?.call(_client);
       if (view.authenticated) _code.clear();
     } catch (error) {
       var code = 'unexpected';
@@ -226,6 +235,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
   }
 
   Future<void> _connect() => _run(() async {
+    widget.onClient?.call(null);
     _client?.cancel();
     _client?.dispose();
     _client = null;
@@ -678,6 +688,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                           ? null
                           : () {
                               _poll?.cancel();
+                              widget.onClient?.call(null);
                               _client!.cancel();
                               _client!.dispose();
                               _client = null;

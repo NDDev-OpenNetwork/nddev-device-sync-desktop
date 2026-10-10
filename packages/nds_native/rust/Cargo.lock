@@ -1872,7 +1872,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.12"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=bc90ebc829525eccf0f9ec0729d720ffeb458b16#bc90ebc829525eccf0f9ec0729d720ffeb458b16"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=5c9eead0fc1fa0458da7b5d8ff10609770be0262#5c9eead0fc1fa0458da7b5d8ff10609770be0262"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -1881,7 +1881,7 @@ dependencies = [
  "jni 0.21.1",
  "jni 0.22.4",
  "keyring-core",
- "nddev-device-sync-domain 0.0.2 (git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=3400a9d766fa2838973fab96981806c9c25eef5d)",
+ "nddev-device-sync-domain",
  "nddev-device-sync-http-signatures",
  "nddev-device-sync-telemetry",
  "opentelemetry",
@@ -1925,12 +1925,12 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=0bd6f3f15d56c788f0121d9ec3912c096d69efad#0bd6f3f15d56c788f0121d9ec3912c096d69efad"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=5588101473ea5e6630923c4ec97a9e67f64bff78#5588101473ea5e6630923c4ec97a9e67f64bff78"
 dependencies = [
  "nddev-device-sync-adapter-io",
  "nddev-device-sync-cleaner",
  "nddev-device-sync-clipboard",
- "nddev-device-sync-domain 0.0.2 (git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=c20834d557fdc875b47bf8c97e221f6a119b62bd)",
+ "nddev-device-sync-domain",
  "nddev-device-sync-gds",
  "nddev-device-sync-rds",
  "nddev-device-sync-sysinfo",
@@ -1964,16 +1964,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-domain"
 version = "0.0.2"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=3400a9d766fa2838973fab96981806c9c25eef5d#3400a9d766fa2838973fab96981806c9c25eef5d"
-dependencies = [
- "serde",
- "thiserror 2.0.21",
-]
-
-[[package]]
-name = "nddev-device-sync-domain"
-version = "0.0.2"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=c20834d557fdc875b47bf8c97e221f6a119b62bd#c20834d557fdc875b47bf8c97e221f6a119b62bd"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=a08d9956715a958d5d2f893e157046c55eb59111#a08d9956715a958d5d2f893e157046c55eb59111"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
@@ -2022,8 +2013,8 @@ dependencies = [
 
 [[package]]
 name = "nddev-device-sync-telemetry"
-version = "0.0.1-alpha.2"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability?rev=7ae68ea764b3f0e639d551b059eb0651a50b5edd#7ae68ea764b3f0e639d551b059eb0651a50b5edd"
+version = "0.0.1-alpha.3"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability?rev=863a0caad5a06a450a0d99a23675bfb5b5959b2e#863a0caad5a06a450a0d99a23675bfb5b5959b2e"
 dependencies = [
  "android_log-sys",
  "chrono",
@@ -2051,12 +2042,12 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git?rev=c6c62ac182b30c5339394f072b64f6360b25ac8e#c6c62ac182b30c5339394f072b64f6360b25ac8e"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git?rev=d64af8ca2ced7f908916d9f5fa2bf09d5c64382e#d64af8ca2ced7f908916d9f5fa2bf09d5c64382e"
 dependencies = [
  "base64 0.22.1",
  "libc",
  "nddev-device-sync-accounts",
- "nddev-device-sync-domain 0.0.2 (git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=3400a9d766fa2838973fab96981806c9c25eef5d)",
+ "nddev-device-sync-domain",
  "ring",
  "rusqlite",
  "serde",
@@ -2076,7 +2067,7 @@ checksum = "27b02d87554356db9e9a873add8782d4ea6e3e58ea071a9adb9a2e8ddb884a8b"
 
 [[package]]
 name = "nds_native"
-version = "0.0.1-alpha.13"
+version = "0.0.1-alpha.14"
 dependencies = [
  "flutter_rust_bridge",
  "jni 0.21.1",
@@ -2085,12 +2076,14 @@ dependencies = [
  "nddev-device-sync-agent",
  "nddev-device-sync-cleaner",
  "nddev-device-sync-clipboard",
+ "nddev-device-sync-domain",
  "nddev-device-sync-gds",
  "nddev-device-sync-rds",
  "nddev-device-sync-sysinfo",
  "nddev-device-sync-telemetry",
  "nddev-device-sync-updater",
  "nddev-device-sync-vault",
+ "time",
  "tokio",
  "tracing",
  "zeroize",

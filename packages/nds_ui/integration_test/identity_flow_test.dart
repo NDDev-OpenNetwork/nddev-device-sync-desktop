@@ -126,8 +126,41 @@ void main() {
         );
         expect(find.text('PRIVATE_UI_VAULT_VALUE'), findsNothing);
         expect(tester.takeException(), isNull);
+        await tester.ensureVisible(find.byKey(const Key('open-synced-state')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('open-synced-state')));
+        await waitFor(tester, find.byKey(const Key('publish-device-state')));
+        await tester.tap(find.byKey(const Key('publish-device-state')));
+        await waitFor(tester, find.text('Email code'));
+        expect(find.text('Acceptance device'), findsOneWidget);
+        expect(tester.takeException(), isNull);
         await tester.pageBack();
         await tester.pumpAndSettle();
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        if (nativeDesktop()) {
+          await tester.tap(find.text('Local modules'));
+          await waitFor(tester, find.byKey(const Key('publish-local-state')));
+          await tester.tap(find.byKey(const Key('publish-local-state')));
+          await waitFor(tester, find.text('Pending: 0 · Conflicts: 0'));
+          await tester.tap(find.text('NDS session'));
+          await tester.pumpAndSettle();
+          await tester.ensureVisible(find.byKey(const Key('open-vault')));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('open-vault')));
+          await waitFor(tester, find.byKey(const Key('open-synced-state')));
+          await tester.ensureVisible(
+            find.byKey(const Key('open-synced-state')),
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('open-synced-state')));
+          await waitFor(tester, find.text('gds'));
+          expect(find.text('rds'), findsOneWidget);
+          await tester.pageBack();
+          await tester.pumpAndSettle();
+          await tester.pageBack();
+          await tester.pumpAndSettle();
+        }
       }
       if (phase == 'persist') {
         await tester.pumpWidget(const SizedBox.shrink());
@@ -173,6 +206,9 @@ void main() {
     },
   );
 }
+
+bool nativeDesktop() =>
+    Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
 Future<void> waitFor(WidgetTester tester, Finder finder) async {
   final deadline = DateTime.now().add(const Duration(seconds: 25));

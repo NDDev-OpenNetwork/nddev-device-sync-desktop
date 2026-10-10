@@ -546,4 +546,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get vaultProofError =>
       'Key transfer or encrypted data could not be authenticated.';
+
+  @override
+  String get syncedState => 'Synced device and module state';
+
+  @override
+  String get publishDeviceState => 'Publish this device and NDS session';
+
+  @override
+  String get publishModuleState => 'Publish observed module state';
+
+  @override
+  String get stateHelp =>
+      'These are encrypted observations from signed devices. Their timestamps describe when they were observed, not current reachability. Sync does not execute tools on another device.';
+
+  @override
+  String get statePublishError =>
+      'State could not be synchronized. Check the session, device and vault connection.';
+
+  @override
+  String get stateDevice => 'Device';
+
+  @override
+  String get stateDevices => 'Devices';
 }
