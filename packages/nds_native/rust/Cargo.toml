@@ -12,9 +12,9 @@ development-http = ["nddev-device-sync-accounts/development-http"]
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = "=2.13.0"
-nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "a01ddbd6dc6e3e236f7dab153c2d09fbac0431d2" }
+nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "9244bda27311c2a03bff4883ffc54f1ed82ed633" }
 tracing = "0.1"
-nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "df4d90053210c44d2c5852ba5b98221b23c540c8" }
+nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "0bd6f3f15d56c788f0121d9ec3912c096d69efad" }
 nddev-device-sync-sysinfo = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-sysinfo", rev = "7a18e05f8a1351988af6903c588b0b3ec776c2b0" }
 nddev-device-sync-clipboard = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-clipboard", rev = "035751a2f8b830add428b588bcf8dca53d327945" }
 nddev-device-sync-cleaner = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-cleaner", rev = "1c1a14dddca3d06456b5abef30570cdb3650aac8" }
