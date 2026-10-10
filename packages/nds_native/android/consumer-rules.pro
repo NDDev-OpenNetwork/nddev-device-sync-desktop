@@ -1,0 +1,2 @@
+-keep class org.rustls.platformverifier.** { *; }
+-keep class ai.nddev.nds.accounts.NativeAccountsPlugin { *; }
