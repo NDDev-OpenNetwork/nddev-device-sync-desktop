@@ -834,6 +834,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Network diagnostics'**
   String get diagnosticsHttp;
+
+  /// No description provided for @diagnosticsIo.
+  ///
+  /// In en, this message translates to:
+  /// **'Local operations'**
+  String get diagnosticsIo;
 }
 
 class _AppLocalizationsDelegate

@@ -414,4 +414,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diagnosticsHttp => 'Network diagnostics';
+
+  @override
+  String get diagnosticsIo => 'Local operations';
 }

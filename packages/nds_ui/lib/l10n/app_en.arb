@@ -151,5 +151,6 @@
     }
   },
   "startupFailed": "NDS could not start. Restart the application. If this continues, check the installation and local diagnostics.",
-  "diagnosticsHttp": "Network diagnostics"
+  "diagnosticsHttp": "Network diagnostics",
+  "diagnosticsIo": "Local operations"
 }

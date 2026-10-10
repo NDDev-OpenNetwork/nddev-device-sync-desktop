@@ -416,4 +416,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get diagnosticsHttp => 'Диагностика сети';
+
+  @override
+  String get diagnosticsIo => 'Локальные операции';
 }

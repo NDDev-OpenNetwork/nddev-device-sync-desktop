@@ -565,7 +565,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                         ),
                         DropdownMenuItem(
                           value: native.DebugScope.io,
-                          child: Text(l.localModules),
+                          child: Text(l.diagnosticsIo),
                         ),
                       ],
                       onChanged: diagnostics.debugEnabled

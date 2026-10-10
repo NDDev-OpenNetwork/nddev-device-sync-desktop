@@ -9,7 +9,7 @@ The same observability SDK used by the server and agent owns event validation,
 redaction, trace context, debug windows and local diagnostics. Flutter framework
 and root-isolate async failures pass only a fixed error class through the generated
 bridge; raw exception text/stacks are omitted from both logs and error widgets.
-Diagnostics work before sign-in. Network and local-module debug scopes expire
+Diagnostics work before sign-in. Network and local-I/O debug scopes expire
 after five minutes or 100 debug events. Normal security/error logging continues.
 The SDK emits process startup and controlled shutdown; a cancelable desktop exit
 waits for bounded shutdown, while mobile background/detach never terminates it.
