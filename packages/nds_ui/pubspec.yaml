@@ -1,0 +1,29 @@
+name: nds_ui
+description: Shared NDDev OpenNetwork identity presentation for native clients.
+version: 0.0.1-alpha.9
+publish_to: none
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.3
+  nds_native:
+    path: ../nds_native
+  nddev_opennetwork_design_system:
+    git:
+      url: https://github.com/NDDev-OpenNetwork/nddev-opennetwork-design-system.git
+      ref: 797d376a9d37f68ff6ad09be0ff4fa0323e6e0f3
+      path: packages/flutter
+  url_launcher: ^6.3.2
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  generate: true

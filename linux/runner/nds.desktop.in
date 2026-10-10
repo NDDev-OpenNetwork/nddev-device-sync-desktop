@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=NDDev OpenNetwork
+Comment=Connect to NDS and inspect local tools
+Comment[ru]=Подключение к NDS и просмотр локальных инструментов
+Exec=@BINARY_NAME@
+Icon=@APPLICATION_ID@
+StartupWMClass=@APPLICATION_ID@
+Categories=Utility;
+Terminal=false

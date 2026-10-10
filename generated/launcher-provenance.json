@@ -1,0 +1,24 @@
+{
+  "files_sha256": {
+    "linux/runner/resources/app_icon.png": "54ebe18cba4d7fdd64a41267f8bceef0f72ff432189532cb5e4f824aff642950",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png": "c05e034e7d92bb669ceb8ea5c4f003f18a9b0cafe2e32a7fe891356467ff650d",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png": "647569113ec90ff54a93c6734356a142ddf107541441aed5ad94c9c8a8119dd8",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png": "d336429d48e7923bad184105e487dbf467e1e6497d86f54bb294f99039112c33",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png": "54ebe18cba4d7fdd64a41267f8bceef0f72ff432189532cb5e4f824aff642950",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png": "d15cb7c493cf40a0fe9cc80a608b9ad3973e0888265583541c1a2ce635059bf3",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png": "797d01a4b32067857c73bc9a883166a1881c60bb97351b0bc671665f2fb45fad",
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png": "1839d988fea564336a2cc7abd311a9ac8306f2b426ea239e790d0492a56e08f1",
+    "windows/runner/resources/app_icon.ico": "1c1a8df5f15415d9b4b86e4e701f714c2aca3e9628b6dd79a36b923c9ef72aa4"
+  },
+  "source": {
+    "commit": "797d376a9d37f68ff6ad09be0ff4fa0323e6e0f3",
+    "inputs_sha256": {
+      "assets/brand-source.json": "9c71e04cf60121340eef9678584384da874703c31aadf029b305b8262f2d15e2",
+      "assets/nddev-mark.svg": "3997b08aa3c47d0d5827484db657c8e18a53dc0a00e1a875cc57eb931c6f4877",
+      "tokens/tokens.json": "e9fd42397d361cf2ac0a3af5d138b0ff43373a6e663af965d492f3053e503536",
+      "tools/generate_launchers.py": "1852eaa1bc24e38529da522d667171d703de5500e2dfcd351112295fc67b7033"
+    },
+    "pillow_version": "12.1.1",
+    "repository": "NDDev-OpenNetwork/nddev-opennetwork-design-system"
+  }
+}

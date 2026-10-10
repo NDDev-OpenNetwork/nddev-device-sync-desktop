@@ -1,0 +1,21 @@
+name: nds_native
+description: Native Rust identity adapter for NDDev OpenNetwork Flutter clients.
+version: 0.0.1-alpha.9
+publish_to: none
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_rust_bridge: 2.13.0
+  flutter_rust_bridge_hooks: 2.13.0
+  logging: 1.3.0
+dev_dependencies:
+  flutter_lints: ^6.0.0
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: ai.nddev.nds.accounts
+        pluginClass: NativeAccountsPlugin
