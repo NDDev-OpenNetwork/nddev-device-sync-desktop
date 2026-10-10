@@ -40,6 +40,7 @@ jobs:
         with:
           python-version: '3.14.4'
       - id: design
+        shell: bash
         run: |
           python - <<'PY'
           import json,os,re
@@ -105,6 +106,7 @@ jobs:
       - run: just generated-check
       - run: just check
       - id: design
+        shell: bash
         run: |
           python - <<'PY'
           import json,os,re
