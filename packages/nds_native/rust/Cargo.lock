@@ -1651,7 +1651,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.10"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=a01ddbd6dc6e3e236f7dab153c2d09fbac0431d2#a01ddbd6dc6e3e236f7dab153c2d09fbac0431d2"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts?rev=9244bda27311c2a03bff4883ffc54f1ed82ed633#9244bda27311c2a03bff4883ffc54f1ed82ed633"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -1700,7 +1700,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=df4d90053210c44d2c5852ba5b98221b23c540c8#df4d90053210c44d2c5852ba5b98221b23c540c8"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent?rev=0bd6f3f15d56c788f0121d9ec3912c096d69efad#0bd6f3f15d56c788f0121d9ec3912c096d69efad"
 dependencies = [
  "nddev-device-sync-adapter-io",
  "nddev-device-sync-cleaner",
@@ -1738,8 +1738,8 @@ dependencies = [
 
 [[package]]
 name = "nddev-device-sync-domain"
-version = "0.0.1"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=9bc379e0a0d921b8478fb2e736d97280ce3dc0aa#9bc379e0a0d921b8478fb2e736d97280ce3dc0aa"
+version = "0.0.2"
+source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=c20834d557fdc875b47bf8c97e221f6a119b62bd#c20834d557fdc875b47bf8c97e221f6a119b62bd"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
