@@ -25,45 +25,48 @@ class _NdsAppState extends State<NdsApp> {
   Locale? _locale;
   int _page = 0;
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'NDDev OpenNetwork',
-    theme: OpenNetworkTheme.dark(),
-    locale: _locale,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: Builder(
-      builder: (context) {
-        final identity = _IdentityScreen(
-          onLocale: (locale) => setState(() => _locale = locale),
-        );
-        if (!native.supportsLocalAgent()) return identity;
-        final l = AppLocalizations.of(context)!;
-        return Scaffold(
-          body: IndexedStack(
-            index: _page,
-            children: [
-              identity,
-              ModulesScreen(
-                onLocale: (locale) => setState(() => _locale = locale),
-              ),
-            ],
-          ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _page,
-            onDestinationSelected: (page) => setState(() => _page = page),
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.account_circle_outlined),
-                label: l.sessionTab,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.devices),
-                label: l.localModules,
-              ),
-            ],
-          ),
-        );
-      },
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => MaterialApp(
+      title: 'NDDev OpenNetwork',
+      debugShowCheckedModeBanner: false,
+      theme: OpenNetworkTheme.dark(width: constraints.maxWidth),
+      locale: _locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Builder(
+        builder: (context) {
+          final identity = _IdentityScreen(
+            onLocale: (locale) => setState(() => _locale = locale),
+          );
+          if (!native.supportsLocalAgent()) return identity;
+          final l = AppLocalizations.of(context)!;
+          return Scaffold(
+            body: IndexedStack(
+              index: _page,
+              children: [
+                identity,
+                ModulesScreen(
+                  onLocale: (locale) => setState(() => _locale = locale),
+                ),
+              ],
+            ),
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: _page,
+              onDestinationSelected: (page) => setState(() => _page = page),
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.account_circle_outlined),
+                  label: l.sessionTab,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.devices),
+                  label: l.localModules,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     ),
   );
 }
@@ -274,7 +277,9 @@ class _IdentityScreenState extends State<_IdentityScreen>
     final diagnostics = native.clientDiagnostics();
     return Scaffold(
       appBar: AppBar(
-        title: Text(l.appTitle),
+        title: const OpenNetworkBrand(),
+        toolbarHeight:
+            OpenNetworkBrand.heightOf(context) + OpenNetworkSpacing.four,
         actions: [
           PopupMenuButton<String>(
             tooltip: 'English / Русский',

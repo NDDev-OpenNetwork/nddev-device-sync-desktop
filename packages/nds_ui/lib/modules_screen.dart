@@ -344,7 +344,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
         );
     return Scaffold(
       appBar: AppBar(
-        title: Text(l.localModules),
+        title: const OpenNetworkBrand(),
+        toolbarHeight:
+            OpenNetworkBrand.heightOf(context) + OpenNetworkSpacing.four,
         actions: [
           PopupMenuButton<String>(
             tooltip: 'English / Русский',
@@ -372,6 +374,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   if (_modules.isNotEmpty)
                     DropdownButtonFormField<String>(
                       key: const Key('module-selector'),
+                      isExpanded: true,
+                      isDense: false,
+                      itemHeight: null,
                       initialValue: _selected,
                       items: _modules
                           .map(
