@@ -17,6 +17,14 @@ source = Path(__file__).resolve().parents[1]
 app = Path.cwd()
 spec = app / 'pubspec.yaml'
 original = spec.read_bytes()
+arguments = list(args.flutter_arguments)
+# Apple bundle versions are numeric. Keep the candidate/build number in the
+# owning pubspec instead of duplicating alpha build numbers in CI commands.
+if arguments[0] in ('ios', 'macos') and not any(arg.startswith('--build-name') for arg in arguments):
+    version = re.search(r'^version: (\d+\.\d+\.\d+)(?:-[0-9A-Za-z.-]+)?(?:\+\d+)?\s*$', original.decode(), re.MULTILINE)
+    if version is None:
+        raise SystemExit('Expected an explicit native application version')
+    arguments.append('--build-name=' + version[1])
 if re.search(r'^hooks:', original.decode(), re.MULTILINE):
     raise SystemExit('Refuse to replace existing hook configuration')
 commit = subprocess.check_output(['git','rev-parse','HEAD'], cwd=source, text=True).strip()
@@ -38,7 +46,7 @@ try:
     executable = shutil.which('flutter')
     if executable is None:
         raise SystemExit('Flutter is unavailable')
-    process = subprocess.Popen([executable,'build',*args.flutter_arguments],
+    process = subprocess.Popen([executable,'build',*arguments],
         env=environment, start_new_session=os.name != 'nt')
     try:
         status = process.wait(timeout=1800)

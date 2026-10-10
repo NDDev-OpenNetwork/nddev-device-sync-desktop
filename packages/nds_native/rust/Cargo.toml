@@ -1,6 +1,6 @@
 [package]
 name = "nds_native"
-version = "0.0.1-alpha.10"
+version = "0.0.1-alpha.11"
 edition = "2024"
 rust-version = "1.99"
 license = "AGPL-3.0-only"
@@ -12,16 +12,16 @@ development-http = ["nddev-device-sync-accounts/development-http"]
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = "=2.13.0"
-nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "7635fb8322a6658dc87829ac8bfec5255b474db9" }
+nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "a01ddbd6dc6e3e236f7dab153c2d09fbac0431d2" }
 tracing = "0.1"
-nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "e744e0fc90c3a573c86447bc8d4ed185d6ded716" }
+nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "df4d90053210c44d2c5852ba5b98221b23c540c8" }
 nddev-device-sync-sysinfo = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-sysinfo", rev = "7a18e05f8a1351988af6903c588b0b3ec776c2b0" }
 nddev-device-sync-clipboard = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-clipboard", rev = "035751a2f8b830add428b588bcf8dca53d327945" }
 nddev-device-sync-cleaner = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-cleaner", rev = "1c1a14dddca3d06456b5abef30570cdb3650aac8" }
 nddev-device-sync-updater = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-updater", rev = "f228b0da9fa737454bd4334f442194f615d56586" }
 nddev-device-sync-gds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-gds", rev = "ecbfb40eeeed21c8e53794f4caff603cee226d32" }
 nddev-device-sync-rds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-rds", rev = "9f12f64578722f808935ee1ded1c0246a248945d" }
-nddev-device-sync-telemetry = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability", rev = "f5a03884aba9ebeb491e2a64eb06a96a7347937b" }
+nddev-device-sync-telemetry = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability", rev = "7ae68ea764b3f0e639d551b059eb0651a50b5edd" }
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
 

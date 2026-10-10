@@ -8,18 +8,9 @@ import '../third_party/nddev_device_sync_accounts/view.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`
-
-ClientDiagnostics clientDiagnostics() =>
-    RustLib.instance.api.crateApiIdentityClientDiagnostics();
-
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>>
 abstract class NdsClient implements RustOpaqueInterface {
   void cancel();
-
-  bool debugEnabled();
-
-  void enableDebug({required int seconds});
 
   Future<View> logout();
 
@@ -38,48 +29,4 @@ abstract class NdsClient implements RustOpaqueInterface {
   Future<View> startGithub({required String locale});
 
   Future<View> verifyEmail({required String code});
-}
-
-/// Read-only presentation of common SDK health, never a delivery receipt.
-class ClientDiagnostics {
-  final bool sinkInitialized;
-  final BigInt? rejectedFieldsOrEvents;
-  final BigInt? droppedEvents;
-  final BigInt? pendingEvents;
-  final BigInt? writeFailures;
-  final bool? terminating;
-  final bool? shutdownIncomplete;
-
-  const ClientDiagnostics({
-    required this.sinkInitialized,
-    this.rejectedFieldsOrEvents,
-    this.droppedEvents,
-    this.pendingEvents,
-    this.writeFailures,
-    this.terminating,
-    this.shutdownIncomplete,
-  });
-
-  @override
-  int get hashCode =>
-      sinkInitialized.hashCode ^
-      rejectedFieldsOrEvents.hashCode ^
-      droppedEvents.hashCode ^
-      pendingEvents.hashCode ^
-      writeFailures.hashCode ^
-      terminating.hashCode ^
-      shutdownIncomplete.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ClientDiagnostics &&
-          runtimeType == other.runtimeType &&
-          sinkInitialized == other.sinkInitialized &&
-          rejectedFieldsOrEvents == other.rejectedFieldsOrEvents &&
-          droppedEvents == other.droppedEvents &&
-          pendingEvents == other.pendingEvents &&
-          writeFailures == other.writeFailures &&
-          terminating == other.terminating &&
-          shutdownIncomplete == other.shutdownIncomplete;
 }

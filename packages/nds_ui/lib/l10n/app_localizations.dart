@@ -822,6 +822,24 @@ abstract class AppLocalizations {
     String failures,
     String pending,
   );
+
+  /// No description provided for @startupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'NDS could not start. Restart the application. If this continues, check the installation and local diagnostics.'**
+  String get startupFailed;
+
+  /// No description provided for @diagnosticsHttp.
+  ///
+  /// In en, this message translates to:
+  /// **'Network diagnostics'**
+  String get diagnosticsHttp;
+
+  /// No description provided for @diagnosticsIo.
+  ///
+  /// In en, this message translates to:
+  /// **'Local operations'**
+  String get diagnosticsIo;
 }
 
 class _AppLocalizationsDelegate

@@ -407,4 +407,14 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'Diagnostics: rejected $rejected, dropped $dropped, write failures $failures, pending $pending.';
   }
+
+  @override
+  String get startupFailed =>
+      'NDS could not start. Restart the application. If this continues, check the installation and local diagnostics.';
+
+  @override
+  String get diagnosticsHttp => 'Network diagnostics';
+
+  @override
+  String get diagnosticsIo => 'Local operations';
 }
