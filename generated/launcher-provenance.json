@@ -11,7 +11,7 @@
     "windows/runner/resources/app_icon.ico": "b323bb7844dfeae1bd562741a9f960aca5fd8d7319770fe88d592df94b33a9a4"
   },
   "source": {
-    "commit": "1ee1fece90b1d29d2493e8cfdce8b4e7f884d70f",
+    "commit": "b9e989b14e7196d7292c20847869fa92964bec21",
     "inputs_sha256": {
       ".gitattributes": "1aa4dff82b46fab86daa00edfe5180a952bdd2de760ddc6a19d54f4f2ddbd675",
       "assets/brand-source.json": "d512d54c78c672356593942cb6d4c5361135e6df90026c233c803757c1091e6a",
