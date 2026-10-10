@@ -464,4 +464,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keepDevice => 'Keep device';
+
+  @override
+  String get vaultTitle => 'Vault and sync';
+
+  @override
+  String get vaultHelp =>
+      'Keys stay in native secure storage. Only encrypted records reach the server. Lost keys cannot be recovered.';
+
+  @override
+  String get vaultLocked =>
+      'Vault key is unavailable. Pair with a trusted device.';
+
+  @override
+  String get vaultUnlocked => 'Native vault key is available.';
+
+  @override
+  String get vaultExisting =>
+      'An existing vault key cannot be replaced. Pair with a trusted device.';
+
+  @override
+  String vaultCounts(int pending, int conflicts) {
+    return 'Pending: $pending · Conflicts: $conflicts';
+  }
+
+  @override
+  String get vaultKeyIdentity => 'Key identity';
+
+  @override
+  String get vaultCreate => 'Create the initial vault';
+
+  @override
+  String get vaultPairStart => 'Request a key from a trusted device';
+
+  @override
+  String get vaultRecordTitle => 'Record title';
+
+  @override
+  String get vaultUsername => 'Username or account label';
+
+  @override
+  String get vaultSecret => 'Secret value';
+
+  @override
+  String get vaultSave => 'Encrypt and synchronize';
+
+  @override
+  String vaultRevision(String revision) {
+    return 'Revision $revision';
+  }
+
+  @override
+  String get vaultConflict =>
+      'Unresolved conflict. Both versions are retained.';
+
+  @override
+  String get vaultPairHelp =>
+      'Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.';
+
+  @override
+  String get vaultPairCode => 'Invitation or wrapped response';
+
+  @override
+  String get vaultGrant => 'Confirm trusted key transfer';
+
+  @override
+  String vaultGrantConfirm(String name, String deviceId, String fingerprint) {
+    return 'Confirm access for $name ($deviceId). Compare this invitation fingerprint on both devices: $fingerprint. Approve only if they match.';
+  }
+
+  @override
+  String get vaultImport => 'Accept the wrapped key response';
+
+  @override
+  String get vaultSync => 'Synchronize now';
+
+  @override
+  String get vaultInputError =>
+      'Check the record fields or the complete pairing code.';
+
+  @override
+  String get vaultProofError =>
+      'Key transfer or encrypted data could not be authenticated.';
 }

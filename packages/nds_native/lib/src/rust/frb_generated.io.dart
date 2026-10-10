@@ -24,6 +24,7 @@ import 'third_party/nddev_device_sync_rds/view.dart';
 import 'third_party/nddev_device_sync_sysinfo/view.dart';
 import 'third_party/nddev_device_sync_telemetry/view.dart';
 import 'third_party/nddev_device_sync_updater/view.dart';
+import 'third_party/nddev_device_sync_vault/view.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -248,6 +249,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<RecordView> dco_decode_list_record_view(dynamic raw);
+
+  @protected
   List<RemoteSession> dco_decode_list_remote_session(dynamic raw);
 
   @protected
@@ -293,10 +297,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Page dco_decode_page(dynamic raw);
 
   @protected
+  PairingPeer dco_decode_pairing_peer(dynamic raw);
+
+  @protected
   Plan dco_decode_plan(dynamic raw);
 
   @protected
   Reachability dco_decode_reachability(dynamic raw);
+
+  @protected
+  RecordView dco_decode_record_view(dynamic raw);
 
   @protected
   RemoteSession dco_decode_remote_session(dynamic raw);
@@ -333,6 +343,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt dco_decode_usize(dynamic raw);
+
+  @protected
+  VaultError dco_decode_vault_error(dynamic raw);
+
+  @protected
+  VaultView dco_decode_vault_view(dynamic raw);
 
   @protected
   View dco_decode_view(dynamic raw);
@@ -540,6 +556,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<RecordView> sse_decode_list_record_view(SseDeserializer deserializer);
+
+  @protected
   List<RemoteSession> sse_decode_list_remote_session(
     SseDeserializer deserializer,
   );
@@ -593,10 +612,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Page sse_decode_page(SseDeserializer deserializer);
 
   @protected
+  PairingPeer sse_decode_pairing_peer(SseDeserializer deserializer);
+
+  @protected
   Plan sse_decode_plan(SseDeserializer deserializer);
 
   @protected
   Reachability sse_decode_reachability(SseDeserializer deserializer);
+
+  @protected
+  RecordView sse_decode_record_view(SseDeserializer deserializer);
 
   @protected
   RemoteSession sse_decode_remote_session(SseDeserializer deserializer);
@@ -633,6 +658,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
+  VaultError sse_decode_vault_error(SseDeserializer deserializer);
+
+  @protected
+  VaultView sse_decode_vault_view(SseDeserializer deserializer);
 
   @protected
   View sse_decode_view(SseDeserializer deserializer);
@@ -879,6 +910,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_record_view(
+    List<RecordView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_remote_session(
     List<RemoteSession> self,
     SseSerializer serializer,
@@ -939,10 +976,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_page(Page self, SseSerializer serializer);
 
   @protected
+  void sse_encode_pairing_peer(PairingPeer self, SseSerializer serializer);
+
+  @protected
   void sse_encode_plan(Plan self, SseSerializer serializer);
 
   @protected
   void sse_encode_reachability(Reachability self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_view(RecordView self, SseSerializer serializer);
 
   @protected
   void sse_encode_remote_session(RemoteSession self, SseSerializer serializer);
@@ -988,6 +1031,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_vault_error(VaultError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_vault_view(VaultView self, SseSerializer serializer);
 
   @protected
   void sse_encode_view(View self, SseSerializer serializer);
