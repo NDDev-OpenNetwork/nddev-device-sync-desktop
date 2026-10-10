@@ -8,15 +8,26 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'l10n/app_localizations.dart';
 import 'modules_screen.dart';
+import 'diagnostics.dart';
 
 Future<void> runNdsApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await native.RustLib.init();
-  runApp(const NdsApp());
+  final diagnostics = ApplicationDiagnostics();
+  var nativeReady = false;
+  try {
+    await native.RustLib.init();
+    diagnostics.nativeInitialized();
+    nativeReady = true;
+  } catch (_) {
+    diagnostics.reportFailure(native.FailureKind.nativeBridge);
+  }
+  runApp(NdsApp(diagnostics: diagnostics, nativeReady: nativeReady));
 }
 
 class NdsApp extends StatefulWidget {
-  const NdsApp({super.key});
+  const NdsApp({super.key, this.diagnostics, this.nativeReady = true});
+  final ApplicationDiagnostics? diagnostics;
+  final bool nativeReady;
   @override
   State<NdsApp> createState() => _NdsAppState();
 }
@@ -24,6 +35,20 @@ class NdsApp extends StatefulWidget {
 class _NdsAppState extends State<NdsApp> {
   Locale? _locale;
   int _page = 0;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.nativeReady) widget.diagnostics?.clientReady();
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.diagnostics?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => MaterialApp(
@@ -35,8 +60,26 @@ class _NdsAppState extends State<NdsApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {
+          widget.diagnostics?.locale = Localizations.localeOf(context);
+          if (!widget.nativeReady) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const OpenNetworkBrand(),
+                toolbarHeight:
+                    OpenNetworkBrand.heightOf(context) +
+                    OpenNetworkSpacing.four,
+              ),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(OpenNetworkSpacing.six),
+                  child: Text(AppLocalizations.of(context)!.startupFailed),
+                ),
+              ),
+            );
+          }
           final identity = _IdentityScreen(
             onLocale: (locale) => setState(() => _locale = locale),
+            diagnostics: widget.diagnostics,
           );
           if (!native.supportsLocalAgent()) return identity;
           final l = AppLocalizations.of(context)!;
@@ -47,6 +90,7 @@ class _NdsAppState extends State<NdsApp> {
                 identity,
                 ModulesScreen(
                   onLocale: (locale) => setState(() => _locale = locale),
+                  diagnostics: widget.diagnostics,
                 ),
               ],
             ),
@@ -72,8 +116,9 @@ class _NdsAppState extends State<NdsApp> {
 }
 
 class _IdentityScreen extends StatefulWidget {
-  const _IdentityScreen({required this.onLocale});
+  const _IdentityScreen({required this.onLocale, this.diagnostics});
   final ValueChanged<Locale> onLocale;
+  final ApplicationDiagnostics? diagnostics;
   @override
   State<_IdentityScreen> createState() => _IdentityScreenState();
 }
@@ -94,14 +139,15 @@ class _IdentityScreenState extends State<_IdentityScreen>
   String? _error;
   Timer? _poll;
   Timer? _clock;
+  native.DebugScope _debugScope = native.DebugScope.http;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _clock = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted && !_paused && _client != null) {
-        setState(() => _view = _client!.snapshot());
+      if (mounted && !_paused) {
+        setState(() => _view = _client?.snapshot());
       }
     });
   }
@@ -149,6 +195,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
       if (error is native.ClientError) {
         code = await error.code();
         error.dispose();
+      } else {
+        widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
       }
       if (mounted && epoch == _actionEpoch) {
         setState(() {
@@ -229,6 +277,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
       _browserOpened = true;
       _schedulePoll();
     } catch (_) {
+      widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
       if (mounted) setState(() => _error = 'browser_unavailable');
     }
   }
@@ -260,6 +309,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     'invalid_response' => l.responseError,
     'browser_unavailable' => l.launchError,
     'method_unavailable' => l.unavailable,
+    'diagnostics_unavailable' => l.diagnosticsUnavailable,
     _ => l.genericError,
   };
 
@@ -501,26 +551,56 @@ class _IdentityScreenState extends State<_IdentityScreen>
                             },
                       child: Text(l.changeServer),
                     ),
-                    TextButton(
-                      onPressed: !diagnostics.sinkInitialized
+                  ],
+                  if (diagnostics.sinkInitialized) ...[
+                    DropdownButton<native.DebugScope>(
+                      isExpanded: true,
+                      isDense: false,
+                      itemHeight: null,
+                      value: diagnostics.debugScope ?? _debugScope,
+                      items: [
+                        DropdownMenuItem(
+                          value: native.DebugScope.http,
+                          child: Text(l.diagnosticsHttp),
+                        ),
+                        DropdownMenuItem(
+                          value: native.DebugScope.io,
+                          child: Text(l.diagnosticsIo),
+                        ),
+                      ],
+                      onChanged: diagnostics.debugEnabled
                           ? null
-                          : () {
-                              _client!.enableDebug(
-                                seconds: _client?.debugEnabled() == true
-                                    ? 0
-                                    : 300,
-                              );
-                              setState(() => _view = _client!.snapshot());
+                          : (scope) {
+                              if (scope != null) {
+                                setState(() => _debugScope = scope);
+                              }
                             },
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        try {
+                          native.configureDebug(
+                            scope: _debugScope,
+                            seconds: diagnostics.debugEnabled ? 0 : 300,
+                          );
+                        } catch (_) {
+                          widget.diagnostics?.reportFailure(
+                            native.FailureKind.nativeBridge,
+                          );
+                          setState(() => _error = 'diagnostics_unavailable');
+                        }
+                        setState(() {});
+                      },
                       child: Text(
-                        _client?.debugEnabled() == true
+                        diagnostics.debugEnabled
                             ? l.diagnosticsOff
                             : l.diagnostics,
                       ),
                     ),
                   ],
                   Text(
-                    diagnostics.sinkInitialized
+                    diagnostics.sinkInitialized &&
+                            widget.diagnostics?.reportingUnavailable != true
                         ? l.localDiagnosticsOnly
                         : l.diagnosticsUnavailable,
                     key: const Key('diagnostics-status'),

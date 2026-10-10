@@ -409,4 +409,14 @@ class AppLocalizationsRu extends AppLocalizations {
   ) {
     return 'Диагностика: отклонено $rejected, потеряно $dropped, ошибок записи $failures, в очереди $pending.';
   }
+
+  @override
+  String get startupFailed =>
+      'Не удалось запустить NDS. Перезапустите приложение. Если ошибка повторится, проверьте установку и локальную диагностику.';
+
+  @override
+  String get diagnosticsHttp => 'Диагностика сети';
+
+  @override
+  String get diagnosticsIo => 'Локальные операции';
 }
