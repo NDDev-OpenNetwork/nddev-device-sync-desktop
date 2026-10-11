@@ -259,13 +259,17 @@ class _IdentityScreenState extends State<_IdentityScreen>
     if (!_browserOpened ||
         _paused ||
         _busy ||
-        _view?.flow != 'github' ||
+        !{'github', 'passkey', 'passkey_registration'}.contains(_view?.flow) ||
         _view!.expiresInSeconds == 0) {
       return;
     }
     _poll = Timer(Duration(seconds: _view!.retryAfterSeconds.clamp(1, 30)), () {
       if (mounted && !_paused && _client != null) {
-        _run(() => _client!.pollGithub());
+        _run(
+          () => _view?.flow == 'github'
+              ? _client!.pollGithub()
+              : _client!.pollPasskey(),
+        );
       }
     });
   }
@@ -276,17 +280,36 @@ class _IdentityScreenState extends State<_IdentityScreen>
     return _run(() => _client!.startGithub(locale: _locale));
   }
 
+  Future<void> _startPasskey(bool registration) {
+    _browserOpened = false;
+    _poll?.cancel();
+    return _run(
+      () => _client!.startPasskey(registration: registration, locale: _locale),
+    );
+  }
+
   Future<void> _openGithub() async {
     final epoch = _actionEpoch;
     final uri = Uri.tryParse(_view?.authorizationUrl ?? '');
     // Defense in depth for the only externally launched authorization URL.
+    final endpoint = Uri.tryParse(_endpoint.text.trim());
+    final passkey = _view?.flow != 'github';
+    final validPasskey =
+        endpoint != null &&
+        uri != null &&
+        uri.origin == endpoint.origin &&
+        uri.path == '/v2/auth/passkeys/browser' &&
+        uri.userInfo.isEmpty &&
+        !uri.hasFragment;
     if (uri == null ||
-        uri.scheme != 'https' ||
-        uri.host != 'github.com' ||
-        uri.path != '/login/oauth/authorize' ||
-        uri.userInfo.isNotEmpty ||
-        uri.hasFragment ||
-        uri.port != 443) {
+        (passkey
+            ? !validPasskey
+            : (uri.scheme != 'https' ||
+                  uri.host != 'github.com' ||
+                  uri.path != '/login/oauth/authorize' ||
+                  uri.userInfo.isNotEmpty ||
+                  uri.hasFragment ||
+                  uri.port != 443))) {
       setState(() => _error = 'invalid_response');
       return;
     }
@@ -421,7 +444,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
                           : () => _run(() => _client!.refresh()),
                       child: Text(l.refresh),
                     ),
-                  ] else if (v.authenticated) ...[
+                  ] else if (v.authenticated &&
+                      v.flow != 'passkey_registration') ...[
                     if (!v.sessionVerified) ...[
                       Text(l.unverified),
                       const SizedBox(height: OpenNetworkSpacing.four),
@@ -543,6 +567,13 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       ),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(
+                      key: const Key('register-passkey'),
+                      onPressed: _busy || !v.sessionVerified
+                          ? null
+                          : () => _startPasskey(true),
+                      child: Text(l.registerPasskey),
+                    ),
+                    OutlinedButton(
                       key: const Key('refresh'),
                       onPressed: _busy
                           ? null
@@ -556,8 +587,12 @@ class _IdentityScreenState extends State<_IdentityScreen>
                           : () => _run(() => _client!.logout()),
                       child: Text(l.logout),
                     ),
-                  ] else if (v.flow == 'github') ...[
-                    Text(l.githubHelp),
+                  ] else if ({
+                    'github',
+                    'passkey',
+                    'passkey_registration',
+                  }.contains(v.flow)) ...[
+                    Text(v.flow == 'github' ? l.githubHelp : l.passkeyHelp),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     SelectableText(
                       v.verificationCode,
@@ -567,7 +602,9 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     const SizedBox(height: OpenNetworkSpacing.four),
                     FilledButton(
                       onPressed: _busy ? null : _openGithub,
-                      child: Text(l.openGithub),
+                      child: Text(
+                        v.flow == 'github' ? l.openGithub : l.openPasskey,
+                      ),
                     ),
                     if (_browserOpened) Text(l.awaitApproval),
                     TextButton(onPressed: _cancel, child: Text(l.cancel)),
@@ -639,6 +676,13 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       child: Text(l.github),
                     ),
                     if (!v.githubAvailable) Text(l.unavailable),
+                    OutlinedButton(
+                      key: const Key('passkey'),
+                      onPressed: _busy || !v.passkeyAvailable
+                          ? null
+                          : () => _startPasskey(false),
+                      child: Text(l.passkey),
+                    ),
                     if (v.flow.isNotEmpty)
                       TextButton(onPressed: _cancel, child: Text(l.cancel)),
                   ],

@@ -62,6 +62,7 @@ class View {
   final PlatformInt64 devicesCheckedAt;
   final bool emailAvailable;
   final bool githubAvailable;
+  final bool passkeyAvailable;
   final bool credentialStoreReady;
   final String serverVersion;
   final bool authenticated;
@@ -84,6 +85,7 @@ class View {
     required this.devicesCheckedAt,
     required this.emailAvailable,
     required this.githubAvailable,
+    required this.passkeyAvailable,
     required this.credentialStoreReady,
     required this.serverVersion,
     required this.authenticated,
@@ -111,6 +113,7 @@ class View {
       devicesCheckedAt.hashCode ^
       emailAvailable.hashCode ^
       githubAvailable.hashCode ^
+      passkeyAvailable.hashCode ^
       credentialStoreReady.hashCode ^
       serverVersion.hashCode ^
       authenticated.hashCode ^
@@ -137,6 +140,7 @@ class View {
           devicesCheckedAt == other.devicesCheckedAt &&
           emailAvailable == other.emailAvailable &&
           githubAvailable == other.githubAvailable &&
+          passkeyAvailable == other.passkeyAvailable &&
           credentialStoreReady == other.credentialStoreReady &&
           serverVersion == other.serverVersion &&
           authenticated == other.authenticated &&

@@ -553,4 +553,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncCaughtUp => 'Caught up at the last successful check.';
+
+  @override
+  String get passkey => 'Sign in with passkey';
+
+  @override
+  String get registerPasskey => 'Create passkey';
+
+  @override
+  String get openPasskey => 'Open passkey verification';
+
+  @override
+  String get passkeyHelp =>
+      'Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in.';
 }

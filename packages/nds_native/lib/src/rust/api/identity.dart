@@ -26,6 +26,8 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> pollGithub();
 
+  Future<View> pollPasskey();
+
   Future<View> prepareDevice({required String name});
 
   Future<VaultView> publishDeviceState();
@@ -45,6 +47,11 @@ abstract class NdsClient implements RustOpaqueInterface {
   View snapshot();
 
   Future<View> startGithub({required String locale});
+
+  Future<View> startPasskey({
+    required bool registration,
+    required String locale,
+  });
 
   Future<StatePage> syncStates({required String after});
 

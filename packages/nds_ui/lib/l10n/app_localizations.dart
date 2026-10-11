@@ -1080,6 +1080,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Caught up at the last successful check.'**
   String get syncCaughtUp;
+
+  /// No description provided for @passkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with passkey'**
+  String get passkey;
+
+  /// No description provided for @registerPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Create passkey'**
+  String get registerPasskey;
+
+  /// No description provided for @openPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Open passkey verification'**
+  String get openPasskey;
+
+  /// No description provided for @passkeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in.'**
+  String get passkeyHelp;
 }
 
 class _AppLocalizationsDelegate

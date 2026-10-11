@@ -216,5 +216,9 @@
   "vaultRegistrationRequired": "An existing vault key must first be registered by an updated installation that already has it.",
   "syncCatchingUp": "Catching up with the server…",
   "syncNotObserved": "Synchronization has not been observed yet.",
-  "syncCaughtUp": "Caught up at the last successful check."
+  "syncCaughtUp": "Caught up at the last successful check.",
+  "passkey": "Sign in with passkey",
+  "registerPasskey": "Create passkey",
+  "openPasskey": "Open passkey verification",
+  "passkeyHelp": "Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in."
 }
