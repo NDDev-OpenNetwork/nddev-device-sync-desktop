@@ -30,6 +30,8 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   String? _error;
   bool _busy = false, _paused = false;
   Timer? _refresh;
+  Completer<void>? _backgroundRead;
+  int _actionEpoch = 0;
 
   @override
   void initState() {
@@ -40,7 +42,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
           !_paused &&
           !_busy &&
           ModalRoute.of(context)?.isCurrent == true) {
-        unawaited(_run(() => widget.client.vaultSnapshot()));
+        unawaited(_run(() => widget.client.vaultSnapshot(), background: true));
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -69,15 +71,26 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     Future<native.VaultView> Function() action, {
     bool reload = false,
     String? after,
+    bool background = false,
   }) async {
-    if (_busy) return;
-    setState(() {
-      _busy = true;
-      if (reload) _error = null;
-    });
+    if (_busy || (background && _backgroundRead != null)) return;
+    final epoch = background ? _actionEpoch : ++_actionEpoch;
+    final completion = background ? Completer<void>() : null;
+    if (background) {
+      _backgroundRead = completion;
+    } else {
+      setState(() {
+        _busy = true;
+        if (reload) _error = null;
+      });
+    }
     try {
-      final view = await action();
+      // A user action has priority over the result of an older background read.
+      // Finish that bounded read before acquiring the native mutation gate.
+      if (!background) await _backgroundRead?.future;
       if (!mounted) return;
+      final view = await action();
+      if (!mounted || epoch != _actionEpoch) return;
       setState(() {
         _view = view;
         if (view.syncError.isNotEmpty) _error = view.syncError;
@@ -94,7 +107,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
       if (reload || _loadedCursor != view.cursor) {
         final cursor = after ?? _after;
         final page = await widget.client.vaultRecords(after: cursor);
-        if (!mounted) return;
+        if (!mounted || epoch != _actionEpoch) return;
         setState(() {
           _records = page.items;
           _loadedCursor = page.observedSeq;
@@ -107,7 +120,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     } catch (error) {
       var code = 'unexpected';
       if (error is native.VaultError) code = await error.code();
-      if (mounted) {
+      if (mounted && epoch == _actionEpoch) {
         setState(() {
           if (code != 'vault_busy' || reload) _error = code;
           if (code == 'vault_locked') {
@@ -118,7 +131,12 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
         });
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (background) {
+        _backgroundRead = null;
+        completion!.complete();
+      } else if (mounted) {
+        setState(() => _busy = false);
+      }
     }
   }
 
