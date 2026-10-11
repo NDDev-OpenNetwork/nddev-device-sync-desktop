@@ -934,7 +934,7 @@ abstract class AppLocalizations {
   /// No description provided for @vaultHelp.
   ///
   /// In en, this message translates to:
-  /// **'Keys stay in native secure storage. Only encrypted records reach the server. Lost keys cannot be recovered.'**
+  /// **'Your vault opens automatically after sign-in. Changes synchronize through the server; secret values stay in native storage and encrypted records.'**
   String get vaultHelp;
 
   /// No description provided for @vaultLocked.
@@ -949,12 +949,6 @@ abstract class AppLocalizations {
   /// **'Native vault key is available.'**
   String get vaultUnlocked;
 
-  /// No description provided for @vaultExisting.
-  ///
-  /// In en, this message translates to:
-  /// **'An existing vault key cannot be replaced. Pair with a trusted device.'**
-  String get vaultExisting;
-
   /// No description provided for @vaultCounts.
   ///
   /// In en, this message translates to:
@@ -966,18 +960,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Key identity'**
   String get vaultKeyIdentity;
-
-  /// No description provided for @vaultCreate.
-  ///
-  /// In en, this message translates to:
-  /// **'Create the initial vault'**
-  String get vaultCreate;
-
-  /// No description provided for @vaultPairStart.
-  ///
-  /// In en, this message translates to:
-  /// **'Request a key from a trusted device'**
-  String get vaultPairStart;
 
   /// No description provided for @vaultRecordTitle.
   ///
@@ -1015,36 +997,6 @@ abstract class AppLocalizations {
   /// **'Unresolved conflict. Both versions are retained.'**
   String get vaultConflict;
 
-  /// No description provided for @vaultPairHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.'**
-  String get vaultPairHelp;
-
-  /// No description provided for @vaultPairCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Invitation or wrapped response'**
-  String get vaultPairCode;
-
-  /// No description provided for @vaultGrant.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm trusted key transfer'**
-  String get vaultGrant;
-
-  /// No description provided for @vaultGrantConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm access for {name} ({deviceId}). Compare this invitation fingerprint on both devices: {fingerprint}. Approve only if they match.'**
-  String vaultGrantConfirm(String name, String deviceId, String fingerprint);
-
-  /// No description provided for @vaultImport.
-  ///
-  /// In en, this message translates to:
-  /// **'Accept the wrapped key response'**
-  String get vaultImport;
-
   /// No description provided for @vaultSync.
   ///
   /// In en, this message translates to:
@@ -1054,13 +1006,13 @@ abstract class AppLocalizations {
   /// No description provided for @vaultInputError.
   ///
   /// In en, this message translates to:
-  /// **'Check the record fields or the complete pairing code.'**
+  /// **'Check the record fields.'**
   String get vaultInputError;
 
   /// No description provided for @vaultProofError.
   ///
   /// In en, this message translates to:
-  /// **'Key transfer or encrypted data could not be authenticated.'**
+  /// **'The vault key or record could not be verified.'**
   String get vaultProofError;
 
   /// No description provided for @syncedState.
@@ -1104,6 +1056,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Devices'**
   String get stateDevices;
+
+  /// No description provided for @vaultRegistrationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'An existing vault key must first be registered by an updated installation that already has it.'**
+  String get vaultRegistrationRequired;
+
+  /// No description provided for @syncCatchingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Catching up with the server…'**
+  String get syncCatchingUp;
+
+  /// No description provided for @syncNotObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Synchronization has not been observed yet.'**
+  String get syncNotObserved;
+
+  /// No description provided for @syncCaughtUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Caught up at the last successful check.'**
+  String get syncCaughtUp;
 }
 
 class _AppLocalizationsDelegate

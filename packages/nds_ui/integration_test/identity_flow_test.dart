@@ -70,16 +70,6 @@ void main() {
       await waitFor(tester, find.byKey(const Key('logout')));
       expect(find.byKey(const Key('otp')), findsNothing);
       expect(tester.takeException(), isNull);
-      await tester.ensureVisible(find.byKey(const Key('device-name')));
-      await tester.enterText(
-        find.byKey(const Key('device-name')),
-        'Acceptance device',
-      );
-      FocusManager.instance.primaryFocus?.unfocus();
-      await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byKey(const Key('enroll-device')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('enroll-device')));
       await waitFor(tester, find.text('This installation'));
       Finder currentCard() => find.ancestor(
         of: find.text('This installation'),
@@ -96,8 +86,6 @@ void main() {
       if (vault) {
         await tester.ensureVisible(find.byKey(const Key('open-vault')));
         await tester.tap(find.byKey(const Key('open-vault')));
-        await waitFor(tester, find.byKey(const Key('vault-create')));
-        await tester.tap(find.byKey(const Key('vault-create')));
         await waitFor(tester, find.byKey(const Key('vault-title')));
         await tester.enterText(
           find.byKey(const Key('vault-title')),

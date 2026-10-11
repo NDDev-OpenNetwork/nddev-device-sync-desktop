@@ -7,31 +7,7 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
-
-class PairingPeer {
-  final String deviceId;
-  final String name;
-  final String fingerprint;
-
-  const PairingPeer({
-    required this.deviceId,
-    required this.name,
-    required this.fingerprint,
-  });
-
-  @override
-  int get hashCode => deviceId.hashCode ^ name.hashCode ^ fingerprint.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PairingPeer &&
-          runtimeType == other.runtimeType &&
-          deviceId == other.deviceId &&
-          name == other.name &&
-          fingerprint == other.fingerprint;
-}
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
 
 class RecordView {
   final String id;
@@ -169,7 +145,7 @@ enum VaultError {
   authentication,
   unavailable,
   busy,
-  keyExists;
+  registrationRequired;
 
   /// Stable presentation class; never an underlying driver/secret message.
   Future<String> code() =>
@@ -183,8 +159,8 @@ class VaultView {
   final int conflicts;
   final BigInt cursor;
   final BigInt lastSyncAt;
-  final String pairingCode;
-  final String pairingFingerprint;
+  final bool catchingUp;
+  final String syncError;
 
   const VaultView({
     required this.unlocked,
@@ -193,8 +169,8 @@ class VaultView {
     required this.conflicts,
     required this.cursor,
     required this.lastSyncAt,
-    required this.pairingCode,
-    required this.pairingFingerprint,
+    required this.catchingUp,
+    required this.syncError,
   });
 
   static Future<VaultView> default_() =>
@@ -208,8 +184,8 @@ class VaultView {
       conflicts.hashCode ^
       cursor.hashCode ^
       lastSyncAt.hashCode ^
-      pairingCode.hashCode ^
-      pairingFingerprint.hashCode;
+      catchingUp.hashCode ^
+      syncError.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -222,6 +198,6 @@ class VaultView {
           conflicts == other.conflicts &&
           cursor == other.cursor &&
           lastSyncAt == other.lastSyncAt &&
-          pairingCode == other.pairingCode &&
-          pairingFingerprint == other.pairingFingerprint;
+          catchingUp == other.catchingUp &&
+          syncError == other.syncError;
 }

@@ -139,9 +139,6 @@ class _IdentityScreenState extends State<_IdentityScreen>
   );
   final _email = TextEditingController();
   final _code = TextEditingController();
-  final _deviceName = TextEditingController(
-    text: const String.fromEnvironment('NDS_DEVICE_NAME'),
-  );
   native.NdsClient? _client;
   native.View? _view;
   bool _busy = false;
@@ -157,6 +154,9 @@ class _IdentityScreenState extends State<_IdentityScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _endpoint.text.trim().isNotEmpty) unawaited(_connect());
+    });
     _clock = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && !_paused) {
         setState(() => _view = _client?.snapshot());
@@ -167,6 +167,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _paused = state != AppLifecycleState.resumed;
+    _client?.setForeground(active: !_paused);
     if (_paused) {
       _poll?.cancel();
     } else {
@@ -185,7 +186,6 @@ class _IdentityScreenState extends State<_IdentityScreen>
     _email.dispose();
     _code.clear();
     _code.dispose();
-    _deviceName.dispose();
     super.dispose();
   }
 
@@ -200,10 +200,10 @@ class _IdentityScreenState extends State<_IdentityScreen>
     });
     try {
       var view = await action();
-      if (view.authenticated &&
-          view.sessionVerified &&
-          view.devicesCheckedAt == 0) {
-        view = await _client!.refreshDevices();
+      if (view.authenticated && view.sessionVerified) {
+        view = await _client!.prepareDevice(
+          name: const String.fromEnvironment('NDS_DEVICE_NAME'),
+        );
       }
       if (!mounted || epoch != _actionEpoch) return;
       setState(() => _view = view);
@@ -249,6 +249,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
       client.dispose();
       throw StateError('cancelled');
     }
+    client.setForeground(active: !_paused);
     _client = client;
     return client.refresh();
   });
@@ -440,26 +441,6 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     Text(l.devicesHelp),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     if (v.devicesCheckedAt == 0) Text(l.devicesUnverified),
-                    if (v.currentDeviceId.isEmpty) ...[
-                      TextField(
-                        key: const Key('device-name'),
-                        controller: _deviceName,
-                        enabled: !_busy && v.sessionVerified,
-                        maxLength: 128,
-                        decoration: InputDecoration(labelText: l.deviceName),
-                      ),
-                      FilledButton(
-                        key: const Key('enroll-device'),
-                        onPressed: _busy || !v.sessionVerified
-                            ? null
-                            : () => _run(
-                                () => _client!.enrollDevice(
-                                  name: _deviceName.text.trim(),
-                                ),
-                              ),
-                        child: Text(l.enrollDevice),
-                      ),
-                    ],
                     for (final device in v.devices)
                       Card(
                         child: Padding(

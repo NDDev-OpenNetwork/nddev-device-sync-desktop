@@ -1,6 +1,6 @@
 [package]
 name = "nds_native"
-version = "0.0.1-alpha.14"
+version = "0.0.1-alpha.15"
 edition = "2024"
 rust-version = "1.99"
 license = "AGPL-3.0-only"
@@ -9,17 +9,17 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
-nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "d64af8ca2ced7f908916d9f5fa2bf09d5c64382e" }
-tokio = { version = "1.53", features = ["sync"] }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "b007cd3d16d6105c978a54b6d015e5627583a67a" }
+tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = "=2.13.0"
-nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "5c9eead0fc1fa0458da7b5d8ff10609770be0262" }
-nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="a08d9956715a958d5d2f893e157046c55eb59111"}
+nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "66795c6dfc074675082b0f80e6d0681693388618" }
+nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="e87368c53bd524caeabc1e14743c96fcfd87da77"}
 time = {version="0.3",features=["parsing"]}
 tracing = "0.1"
-nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "5588101473ea5e6630923c4ec97a9e67f64bff78" }
+nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "9c3457f237fa299a8072a6884a6af35dd05da830" }
 nddev-device-sync-sysinfo = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-sysinfo", rev = "7a18e05f8a1351988af6903c588b0b3ec776c2b0" }
 nddev-device-sync-clipboard = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-clipboard", rev = "035751a2f8b830add428b588bcf8dca53d327945" }
 nddev-device-sync-cleaner = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-cleaner", rev = "1c1a14dddca3d06456b5abef30570cdb3650aac8" }

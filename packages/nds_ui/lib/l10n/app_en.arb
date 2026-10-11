@@ -175,28 +175,20 @@
     }
   },
   "vaultTitle": "Vault and sync",
-  "vaultHelp": "Keys stay in native secure storage. Only encrypted records reach the server. Lost keys cannot be recovered.",
+  "vaultHelp": "Your vault opens automatically after sign-in. Changes synchronize through the server; secret values stay in native storage and encrypted records.",
   "vaultLocked": "Vault key is unavailable. Pair with a trusted device.",
   "vaultUnlocked": "Native vault key is available.",
-  "vaultExisting": "An existing vault key cannot be replaced. Pair with a trusted device.",
   "vaultCounts": "Pending: {pending} · Conflicts: {conflicts}",
   "vaultKeyIdentity": "Key identity",
-  "vaultCreate": "Create the initial vault",
-  "vaultPairStart": "Request a key from a trusted device",
   "vaultRecordTitle": "Record title",
   "vaultUsername": "Username or account label",
   "vaultSecret": "Secret value",
   "vaultSave": "Encrypt and synchronize",
   "vaultRevision": "Revision {revision}",
   "vaultConflict": "Unresolved conflict. Both versions are retained.",
-  "vaultPairHelp": "Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.",
-  "vaultPairCode": "Invitation or wrapped response",
-  "vaultGrant": "Confirm trusted key transfer",
-  "vaultGrantConfirm": "Confirm access for {name} ({deviceId}). Compare this invitation fingerprint on both devices: {fingerprint}. Approve only if they match.",
-  "vaultImport": "Accept the wrapped key response",
   "vaultSync": "Synchronize now",
-  "vaultInputError": "Check the record fields or the complete pairing code.",
-  "vaultProofError": "Key transfer or encrypted data could not be authenticated.",
+  "vaultInputError": "Check the record fields.",
+  "vaultProofError": "The vault key or record could not be verified.",
   "@vaultCounts": {
     "placeholders": {
       "pending": {
@@ -214,24 +206,15 @@
       }
     }
   },
-  "@vaultGrantConfirm": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "deviceId": {
-        "type": "String"
-      },
-      "fingerprint": {
-        "type": "String"
-      }
-    }
-  },
   "syncedState": "Synced device and module state",
   "publishDeviceState": "Publish this device and NDS session",
   "publishModuleState": "Publish observed module state",
   "stateHelp": "These are encrypted observations from signed devices. Their timestamps describe when they were observed, not current reachability. Sync does not execute tools on another device.",
   "statePublishError": "State could not be synchronized. Check the session, device and vault connection.",
   "stateDevice": "Device",
-  "stateDevices": "Devices"
+  "stateDevices": "Devices",
+  "vaultRegistrationRequired": "An existing vault key must first be registered by an updated installation that already has it.",
+  "syncCatchingUp": "Catching up with the server…",
+  "syncNotObserved": "Synchronization has not been observed yet.",
+  "syncCaughtUp": "Caught up at the last successful check."
 }

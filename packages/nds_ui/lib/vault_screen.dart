@@ -20,8 +20,6 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   final _title = TextEditingController();
   final _username = TextEditingController();
   final _secret = TextEditingController();
-  final _code = TextEditingController();
-  String? _outputCode;
   String? _error;
   bool _busy = false;
   bool _paused = false;
@@ -31,13 +29,13 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _refresh = Timer.periodic(const Duration(seconds: 15), (_) {
-      if (mounted && !_paused && !_busy && _view?.unlocked == true) {
-        _run(() => widget.client.vaultSync());
+    _refresh = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted && !_paused && !_busy) {
+        _run(() => widget.client.vaultSnapshot());
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _run(() => widget.client.vaultRefresh());
+      if (mounted) _run(() => widget.client.vaultSnapshot());
     });
   }
 
@@ -51,7 +49,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _refresh?.cancel();
     _secret.clear();
-    for (final controller in [_title, _username, _secret, _code]) {
+    for (final controller in [_title, _username, _secret]) {
       controller.dispose();
     }
     super.dispose();
@@ -72,6 +70,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
         setState(() {
           _view = view;
           _records = records;
+          _error = view.syncError.isEmpty ? null : view.syncError;
         });
       }
     } catch (error) {
@@ -79,7 +78,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
       if (error is native.VaultError) {
         code = await error.code();
       }
-      if (mounted) setState(() => _error = code);
+      if (code != 'vault_busy' && mounted) setState(() => _error = code);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -101,45 +100,9 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     }
   });
 
-  Future<void> _pair({required bool grant}) => _run(() async {
-    if (grant) {
-      final invitation = _code.text.trim();
-      final peer = await widget.client.vaultPairingPreview(code: invitation);
-      if (!mounted) return widget.client.vaultRefresh();
-      final l = AppLocalizations.of(context)!;
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(l.vaultGrant),
-          content: SelectableText(
-            l.vaultGrantConfirm(peer.name, peer.deviceId, peer.fingerprint),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(l.keepDevice),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(l.vaultGrant),
-            ),
-          ],
-        ),
-      );
-      if (confirmed != true) return widget.client.vaultRefresh();
-      final code = await widget.client.vaultPairingGrant(code: invitation);
-      if (mounted) setState(() => _outputCode = code);
-      _code.clear();
-      return widget.client.vaultRefresh();
-    }
-    await widget.client.vaultPairingImport(code: _code.text.trim());
-    _code.clear();
-    return widget.client.vaultSync();
-  });
-
   String _message(AppLocalizations l) => switch (_error) {
     'vault_locked' => l.vaultLocked,
-    'vault_key_exists' => l.vaultExisting,
+    'vault_key_registration_required' => l.vaultRegistrationRequired,
     'vault_invalid_input' => l.vaultInputError,
     'vault_authentication_failed' => l.vaultProofError,
     'vault_busy' => l.rateError,
@@ -171,29 +134,16 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                       key: const Key('vault-state'),
                     ),
                     Text(l.vaultCounts(view.pending, view.conflicts)),
+                    Text(
+                      view.catchingUp
+                          ? l.syncCatchingUp
+                          : view.lastSyncAt == BigInt.zero
+                          ? l.syncNotObserved
+                          : l.syncCaughtUp,
+                    ),
                     if (view.keyId.isNotEmpty)
                       SelectableText('${l.vaultKeyIdentity}: ${view.keyId}'),
-                    if (!view.unlocked) ...[
-                      FilledButton(
-                        key: const Key('vault-create'),
-                        onPressed: _busy
-                            ? null
-                            : () => _run(() => widget.client.vaultCreate()),
-                        child: Text(l.vaultCreate),
-                      ),
-                      OutlinedButton(
-                        key: const Key('vault-pair-start'),
-                        onPressed: _busy
-                            ? null
-                            : () => _run(() async {
-                                final code = await widget.client
-                                    .vaultPairingStart();
-                                if (mounted) setState(() => _outputCode = code);
-                                return widget.client.vaultRefresh();
-                              }),
-                        child: Text(l.vaultPairStart),
-                      ),
-                    ] else ...[
+                    if (view.unlocked) ...[
                       OutlinedButton(
                         key: const Key('open-synced-state'),
                         onPressed: _busy
@@ -267,40 +217,6 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                     ],
                   ],
                   const SizedBox(height: OpenNetworkSpacing.six),
-                  Text(l.vaultPairHelp),
-                  TextField(
-                    key: const Key('vault-pair-code'),
-                    controller: _code,
-                    enabled: !_busy,
-                    maxLength: 2048,
-                    minLines: 2,
-                    maxLines: 5,
-                    autocorrect: false,
-                    decoration: InputDecoration(labelText: l.vaultPairCode),
-                  ),
-                  if (view?.unlocked == true)
-                    OutlinedButton(
-                      key: const Key('vault-pair-grant'),
-                      onPressed: _busy ? null : () => _pair(grant: true),
-                      child: Text(l.vaultGrant),
-                    )
-                  else
-                    OutlinedButton(
-                      key: const Key('vault-pair-import'),
-                      onPressed: _busy ? null : () => _pair(grant: false),
-                      child: Text(l.vaultImport),
-                    ),
-                  if (_outputCode != null)
-                    SelectableText(
-                      _outputCode!,
-                      key: const Key('vault-pair-output'),
-                    ),
-                  if (view?.pairingFingerprint.isNotEmpty == true)
-                    SelectableText(
-                      view!.pairingFingerprint,
-                      key: const Key('vault-pair-fingerprint'),
-                    ),
-                  const SizedBox(height: OpenNetworkSpacing.four),
                   OutlinedButton(
                     key: const Key('vault-sync'),
                     onPressed: _busy
