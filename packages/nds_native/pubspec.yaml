@@ -1,6 +1,6 @@
 name: nds_native
 description: Native Rust identity adapter for NDDev OpenNetwork Flutter clients.
-version: 0.0.1-alpha.13
+version: 0.0.1-alpha.15
 publish_to: none
 environment:
   sdk: ">=3.13.0 <4.0.0"

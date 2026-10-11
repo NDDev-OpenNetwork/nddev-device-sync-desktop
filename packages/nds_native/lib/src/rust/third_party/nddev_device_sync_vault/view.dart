@@ -7,31 +7,7 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
-
-class PairingPeer {
-  final String deviceId;
-  final String name;
-  final String fingerprint;
-
-  const PairingPeer({
-    required this.deviceId,
-    required this.name,
-    required this.fingerprint,
-  });
-
-  @override
-  int get hashCode => deviceId.hashCode ^ name.hashCode ^ fingerprint.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PairingPeer &&
-          runtimeType == other.runtimeType &&
-          deviceId == other.deviceId &&
-          name == other.name &&
-          fingerprint == other.fingerprint;
-}
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
 
 class RecordView {
   final String id;
@@ -68,13 +44,108 @@ class RecordView {
           conflicted == other.conflicted;
 }
 
+class StatePage {
+  final List<StateView> items;
+  final String nextAfter;
+  final bool hasMore;
+
+  const StatePage({
+    required this.items,
+    required this.nextAfter,
+    required this.hasMore,
+  });
+
+  @override
+  int get hashCode => items.hashCode ^ nextAfter.hashCode ^ hasMore.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StatePage &&
+          runtimeType == other.runtimeType &&
+          items == other.items &&
+          nextAfter == other.nextAfter &&
+          hasMore == other.hasMore;
+}
+
+class StateView {
+  final String kind;
+  final String id;
+  final String deviceId;
+  final String label;
+  final String version;
+  final String platform;
+  final String reachability;
+  final bool configured;
+  final BigInt checkedAtMs;
+  final BigInt observedAtMs;
+  final BigInt expiresAtMs;
+  final String errorClass;
+  final BigInt revision;
+  final bool conflicted;
+
+  const StateView({
+    required this.kind,
+    required this.id,
+    required this.deviceId,
+    required this.label,
+    required this.version,
+    required this.platform,
+    required this.reachability,
+    required this.configured,
+    required this.checkedAtMs,
+    required this.observedAtMs,
+    required this.expiresAtMs,
+    required this.errorClass,
+    required this.revision,
+    required this.conflicted,
+  });
+
+  @override
+  int get hashCode =>
+      kind.hashCode ^
+      id.hashCode ^
+      deviceId.hashCode ^
+      label.hashCode ^
+      version.hashCode ^
+      platform.hashCode ^
+      reachability.hashCode ^
+      configured.hashCode ^
+      checkedAtMs.hashCode ^
+      observedAtMs.hashCode ^
+      expiresAtMs.hashCode ^
+      errorClass.hashCode ^
+      revision.hashCode ^
+      conflicted.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StateView &&
+          runtimeType == other.runtimeType &&
+          kind == other.kind &&
+          id == other.id &&
+          deviceId == other.deviceId &&
+          label == other.label &&
+          version == other.version &&
+          platform == other.platform &&
+          reachability == other.reachability &&
+          configured == other.configured &&
+          checkedAtMs == other.checkedAtMs &&
+          observedAtMs == other.observedAtMs &&
+          expiresAtMs == other.expiresAtMs &&
+          errorClass == other.errorClass &&
+          revision == other.revision &&
+          conflicted == other.conflicted;
+}
+
 enum VaultError {
   invalid,
   locked,
   authentication,
   unavailable,
   busy,
-  keyExists;
+  registrationRequired;
 
   /// Stable presentation class; never an underlying driver/secret message.
   Future<String> code() =>
@@ -88,8 +159,8 @@ class VaultView {
   final int conflicts;
   final BigInt cursor;
   final BigInt lastSyncAt;
-  final String pairingCode;
-  final String pairingFingerprint;
+  final bool catchingUp;
+  final String syncError;
 
   const VaultView({
     required this.unlocked,
@@ -98,8 +169,8 @@ class VaultView {
     required this.conflicts,
     required this.cursor,
     required this.lastSyncAt,
-    required this.pairingCode,
-    required this.pairingFingerprint,
+    required this.catchingUp,
+    required this.syncError,
   });
 
   static Future<VaultView> default_() =>
@@ -113,8 +184,8 @@ class VaultView {
       conflicts.hashCode ^
       cursor.hashCode ^
       lastSyncAt.hashCode ^
-      pairingCode.hashCode ^
-      pairingFingerprint.hashCode;
+      catchingUp.hashCode ^
+      syncError.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -127,6 +198,6 @@ class VaultView {
           conflicts == other.conflicts &&
           cursor == other.cursor &&
           lastSyncAt == other.lastSyncAt &&
-          pairingCode == other.pairingCode &&
-          pairingFingerprint == other.pairingFingerprint;
+          catchingUp == other.catchingUp &&
+          syncError == other.syncError;
 }

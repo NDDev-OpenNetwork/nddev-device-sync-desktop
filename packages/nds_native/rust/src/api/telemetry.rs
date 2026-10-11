@@ -26,7 +26,7 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
             repository: "NDDev-OpenNetwork/nddev-device-sync-desktop".into(),
             commit: crate::provenance::source_commit().into(),
             channel: "alpha".into(),
-            standards: "v0.0.1-alpha.9".into(),
+            standards: "unreleased".into(),
             environment: if cfg!(debug_assertions)
                 || crate::provenance::source_commit() == "unknown"
             {

@@ -17,9 +17,15 @@ import 'diagnostics.dart';
 /// Presentation over canonical native responses. Local tools retain their state
 /// and safety policies; this screen exposes bounded read/preview operations.
 class ModulesScreen extends StatefulWidget {
-  const ModulesScreen({super.key, required this.onLocale, this.diagnostics});
+  const ModulesScreen({
+    super.key,
+    required this.onLocale,
+    this.diagnostics,
+    this.client,
+  });
   final ValueChanged<Locale> onLocale;
   final ApplicationDiagnostics? diagnostics;
+  final native.NdsClient? client;
   @override
   State<ModulesScreen> createState() => _ModulesScreenState();
 }
@@ -34,6 +40,34 @@ class _ModulesScreenState extends State<ModulesScreen> {
   bool _cancelled = false;
   int _epoch = 0;
   final _repository = TextEditingController();
+  String? _published;
+
+  Future<void> _publish() async {
+    final client = widget.client;
+    final agent = _agent;
+    if (_busy || client == null || agent == null) return;
+    setState(() {
+      _busy = true;
+      _published = null;
+      _error = null;
+    });
+    try {
+      final view = await client.publishLocalState(agent: agent);
+      if (mounted && widget.client == client) {
+        setState(
+          () =>
+              _published = AppLocalizations.of(context)!
+                  .vaultCounts(view.pending, view.conflicts),
+        );
+      }
+    } catch (_) {
+      if (mounted && widget.client == client) {
+        setState(() => _error = 'publish');
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   @override
   void initState() {
@@ -142,6 +176,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
     'cancelled' => l.moduleCancelled,
     'invalidInput' => l.moduleInputError,
     'invalidResponse' || 'invalidContract' => l.moduleResponseError,
+    'publish' => l.statePublishError,
     _ => l.providerFailed,
   };
 
@@ -378,6 +413,15 @@ class _ModulesScreenState extends State<ModulesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(l.localReadOnly),
+                  if (widget.client?.snapshot().currentDeviceId.isNotEmpty ==
+                      true) ...[
+                    OutlinedButton(
+                      key: const Key('publish-local-state'),
+                      onPressed: _busy ? null : _publish,
+                      child: Text(l.publishModuleState),
+                    ),
+                    if (_published != null) Text(_published!),
+                  ],
                   const SizedBox(height: OpenNetworkSpacing.four),
                   if (_modules.isNotEmpty)
                     DropdownButtonFormField<String>(

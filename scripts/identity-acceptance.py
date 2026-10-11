@@ -22,8 +22,8 @@ parser.add_argument("--cold-restart", action="store_true",
 parser.add_argument("--isolated-android", action="store_true",
                     help="Use a unique test applicationId on an explicitly selected Android device")
 parser.add_argument("--vault", action="store_true", help="Exercise real native vault creation and encrypted sync")
-parser.add_argument("--pairing-role", choices=["owner", "recipient"])
-parser.add_argument("--relay-url", help="Owned loopback relay for public invitations and encrypted grants only")
+parser.add_argument("--sync-role", choices=["owner", "recipient"])
+parser.add_argument("--resume", action="store_true", help="Verify a retained desktop session after another device changed the server")
 args = parser.parse_args()
 app = args.app.resolve()
 app_id = None
@@ -61,21 +61,15 @@ for key in ["base_url", "mailpit_url"]:
 if fixture.get("status") != "running":
     raise SystemExit("Fixture is not running")
 source = Path(__file__).resolve().parents[1] / "packages/nds_ui/integration_test" / (
-    "vault_pairing_flow_test.dart" if args.pairing_role else "identity_flow_test.dart")
-if args.pairing_role:
-    relay = urlparse(args.relay_url or "")
-    if relay.scheme != "http" or relay.hostname != "127.0.0.1" or relay.path not in ["", "/"]:
-        raise SystemExit("Pairing acceptance requires an explicitly owned loopback relay origin")
+    "server_replica_flow_test.dart" if args.sync_role else "identity_flow_test.dart")
 target = app / "integration_test/identity_acceptance_generated_test.dart"
 if target.exists():
     raise SystemExit("Refuse to overwrite existing generated test target")
 target.parent.mkdir(exist_ok=True)
 ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]]
-if args.pairing_role:
-    ports.append(str(relay.port))
 log = args.fixture.parent / ("flutter-" + args.device + ".log")
-if args.pairing_role:
-    log = log.with_stem(log.stem + "-pair-" + args.pairing_role)
+if args.sync_role:
+    log = log.with_stem(log.stem + "-sync-" + args.sync_role)
 runner = ExitStack()
 try:
     if temporary_gradle is not None:
@@ -86,19 +80,19 @@ try:
         for port in ports:
             subprocess.run(["adb", "-s", args.device, "reverse", "tcp:" + port, "tcp:" + port], check=True, timeout=10)
     command = ["flutter", "test", str(target), "-d", args.device,
-        "--timeout=5m" if args.pairing_role else "--timeout=3m", "--no-pub",
+        "--timeout=5m" if args.sync_role else "--timeout=3m", "--no-pub",
         "--dart-define=NDS_TEST_SERVER=" + fixture["base_url"],
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
-        "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"]]
+        "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"],
+        "--dart-define=NDS_DEVICE_NAME=" + ("Sync " + args.sync_role if args.sync_role else "Acceptance device")]
     if args.vault:
         command.append("--dart-define=NDS_TEST_VAULT=true")
-    if args.pairing_role:
-        command.extend(["--dart-define=NDS_TEST_PAIRING_ROLE=" + args.pairing_role,
-                        "--dart-define=NDS_TEST_RELAY=" + args.relay_url])
+    if args.sync_role:
+        command.append("--dart-define=NDS_TEST_SYNC_ROLE=" + args.sync_role)
     environment = os.environ.copy()
     environment["CARGO_BUILD_JOBS"] = "4"
     status = 0
-    for phase in (["persist", "restore"] if args.cold_restart else ["complete"]):
+    for phase in (["persist", "restore"] if args.cold_restart else ["restore"] if args.resume else ["complete"]):
         phase_log = log.with_stem(log.stem + "-" + phase) if args.cold_restart else log
         with phase_log.open("w") as output:
             phase_command = command + ["--dart-define=NDS_TEST_PHASE=" + phase]
