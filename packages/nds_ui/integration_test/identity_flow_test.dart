@@ -95,6 +95,30 @@ void main() {
         await tester.ensureVisible(find.byKey(const Key('open-vault')));
         await tester.tap(find.byKey(const Key('open-vault')));
         await waitFor(tester, find.byKey(const Key('vault-title')));
+        final titleEditor = find.byKey(const Key('vault-title'));
+        await tester.ensureVisible(titleEditor);
+        await tester.pumpAndSettle();
+        await tester.tap(titleEditor);
+        await tester.pump();
+        final focus = tester
+            .widget<EditableText>(
+              find.descendant(
+                of: titleEditor,
+                matching: find.byType(EditableText),
+              ),
+            )
+            .focusNode;
+        expect(focus.hasFocus, isTrue);
+        // Cross multiple actual background snapshot ticks with the editor active.
+        for (var tick = 0; tick < 25; tick++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          expect(
+            focus.hasFocus,
+            isTrue,
+            reason: 'Background refresh must retain text-entry focus',
+          );
+        }
         await tester.enterText(
           find.byKey(const Key('vault-title')),
           'UI encrypted record',

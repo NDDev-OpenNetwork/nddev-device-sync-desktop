@@ -72,6 +72,8 @@ Vault records use bounded native cursor pages. The UI supports create/edit,
 encrypted tombstones and explicit conflict choices guarded by the displayed
 revision and observed sequence. A save confirms a durable local outbox receipt;
 the UI separately shows pending changes and the last fully caught-up timestamp.
+Background reads keep editors enabled and retain keyboard focus. A user action
+waits for an already running read and supersedes its presentation result.
 Secret values are copied through native clipboard operations and are never
 returned by the bridge. Shared text is explicit, bounded to 8 KiB and encrypted.
 Android refuses private/unsupported input and marks delivered values sensitive
