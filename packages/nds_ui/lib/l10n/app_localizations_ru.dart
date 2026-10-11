@@ -472,7 +472,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vaultHelp =>
-      'Ключи остаются в нативном защищённом хранилище. Сервер получает только зашифрованные записи. Потерянные ключи восстановить нельзя.';
+      'Vault открывается автоматически после входа. Изменения синхронизируются через сервер; значения секретов остаются в нативном хранилище и зашифрованных записях.';
 
   @override
   String get vaultLocked =>
@@ -482,22 +482,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vaultUnlocked => 'Нативный ключ vault доступен.';
 
   @override
-  String get vaultExisting =>
-      'Существующий ключ vault нельзя заменить. Подключитесь через доверенное устройство.';
-
-  @override
   String vaultCounts(int pending, int conflicts) {
     return 'В очереди: $pending · Конфликты: $conflicts';
   }
 
   @override
   String get vaultKeyIdentity => 'Идентичность ключа';
-
-  @override
-  String get vaultCreate => 'Создать первоначальный vault';
-
-  @override
-  String get vaultPairStart => 'Запросить ключ у доверенного устройства';
 
   @override
   String get vaultRecordTitle => 'Название записи';
@@ -520,31 +510,49 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vaultConflict => 'Конфликт не разрешён. Обе версии сохранены.';
 
   @override
-  String get vaultPairHelp =>
-      'Передайте код приглашения доверенному устройству, подтвердите получателя и перенесите зашифрованный ответ обратно. Приглашение действует пять минут.';
-
-  @override
-  String get vaultPairCode => 'Приглашение или зашифрованный ответ';
-
-  @override
-  String get vaultGrant => 'Подтвердить доверенную передачу ключа';
-
-  @override
-  String vaultGrantConfirm(String name, String deviceId, String fingerprint) {
-    return 'Подтвердите доступ для $name ($deviceId). Сравните отпечаток приглашения на обоих устройствах: $fingerprint. Подтверждайте только при совпадении.';
-  }
-
-  @override
-  String get vaultImport => 'Принять зашифрованный ответ с ключом';
-
-  @override
   String get vaultSync => 'Синхронизировать сейчас';
 
   @override
-  String get vaultInputError =>
-      'Проверьте поля записи или полный код подключения.';
+  String get vaultInputError => 'Проверьте поля записи.';
 
   @override
-  String get vaultProofError =>
-      'Не удалось подтвердить передачу ключа или подлинность зашифрованных данных.';
+  String get vaultProofError => 'Не удалось проверить ключ или запись vault.';
+
+  @override
+  String get syncedState => 'Состояние устройств и модулей';
+
+  @override
+  String get publishDeviceState =>
+      'Отправить состояние устройства и NDS-сессии';
+
+  @override
+  String get publishModuleState => 'Отправить наблюдаемое состояние модулей';
+
+  @override
+  String get stateHelp =>
+      'Это зашифрованные наблюдения подписанных устройств. Время показывает момент наблюдения, а не текущую доступность. Синхронизация не запускает инструменты на другом устройстве.';
+
+  @override
+  String get statePublishError =>
+      'Состояние не удалось синхронизировать. Проверьте сессию, устройство и подключение к vault.';
+
+  @override
+  String get stateDevice => 'Устройство';
+
+  @override
+  String get stateDevices => 'Устройства';
+
+  @override
+  String get vaultRegistrationRequired =>
+      'Существующий ключ vault сначала должен зарегистрировать обновлённый клиент, у которого этот ключ уже есть.';
+
+  @override
+  String get syncCatchingUp => 'Получаем изменения с сервера…';
+
+  @override
+  String get syncNotObserved => 'Синхронизация ещё не подтверждена.';
+
+  @override
+  String get syncCaughtUp =>
+      'Изменения получены при последней успешной проверке.';
 }

@@ -470,7 +470,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vaultHelp =>
-      'Keys stay in native secure storage. Only encrypted records reach the server. Lost keys cannot be recovered.';
+      'Your vault opens automatically after sign-in. Changes synchronize through the server; secret values stay in native storage and encrypted records.';
 
   @override
   String get vaultLocked =>
@@ -480,22 +480,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vaultUnlocked => 'Native vault key is available.';
 
   @override
-  String get vaultExisting =>
-      'An existing vault key cannot be replaced. Pair with a trusted device.';
-
-  @override
   String vaultCounts(int pending, int conflicts) {
     return 'Pending: $pending · Conflicts: $conflicts';
   }
 
   @override
   String get vaultKeyIdentity => 'Key identity';
-
-  @override
-  String get vaultCreate => 'Create the initial vault';
-
-  @override
-  String get vaultPairStart => 'Request a key from a trusted device';
 
   @override
   String get vaultRecordTitle => 'Record title';
@@ -519,31 +509,48 @@ class AppLocalizationsEn extends AppLocalizations {
       'Unresolved conflict. Both versions are retained.';
 
   @override
-  String get vaultPairHelp =>
-      'Transfer the invitation code to your trusted device, confirm the recipient, then transfer its wrapped response back. The invitation expires after five minutes.';
-
-  @override
-  String get vaultPairCode => 'Invitation or wrapped response';
-
-  @override
-  String get vaultGrant => 'Confirm trusted key transfer';
-
-  @override
-  String vaultGrantConfirm(String name, String deviceId, String fingerprint) {
-    return 'Confirm access for $name ($deviceId). Compare this invitation fingerprint on both devices: $fingerprint. Approve only if they match.';
-  }
-
-  @override
-  String get vaultImport => 'Accept the wrapped key response';
-
-  @override
   String get vaultSync => 'Synchronize now';
 
   @override
-  String get vaultInputError =>
-      'Check the record fields or the complete pairing code.';
+  String get vaultInputError => 'Check the record fields.';
 
   @override
   String get vaultProofError =>
-      'Key transfer or encrypted data could not be authenticated.';
+      'The vault key or record could not be verified.';
+
+  @override
+  String get syncedState => 'Synced device and module state';
+
+  @override
+  String get publishDeviceState => 'Publish this device and NDS session';
+
+  @override
+  String get publishModuleState => 'Publish observed module state';
+
+  @override
+  String get stateHelp =>
+      'These are encrypted observations from signed devices. Their timestamps describe when they were observed, not current reachability. Sync does not execute tools on another device.';
+
+  @override
+  String get statePublishError =>
+      'State could not be synchronized. Check the session, device and vault connection.';
+
+  @override
+  String get stateDevice => 'Device';
+
+  @override
+  String get stateDevices => 'Devices';
+
+  @override
+  String get vaultRegistrationRequired =>
+      'An existing vault key must first be registered by an updated installation that already has it.';
+
+  @override
+  String get syncCatchingUp => 'Catching up with the server…';
+
+  @override
+  String get syncNotObserved => 'Synchronization has not been observed yet.';
+
+  @override
+  String get syncCaughtUp => 'Caught up at the last successful check.';
 }

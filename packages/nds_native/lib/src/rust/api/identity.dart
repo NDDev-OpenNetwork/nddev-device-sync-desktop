@@ -6,16 +6,17 @@
 import '../frb_generated.dart';
 import '../third_party/nddev_device_sync_accounts/view.dart';
 import '../third_party/nddev_device_sync_vault/view.dart';
+import 'modules.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `data_directory`, `observe`, `vault`
+// These functions are ignored because they are not marked as `pub`: `data_directory`, `device_observations`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Replica`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `drop`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>>
 abstract class NdsClient implements RustOpaqueInterface {
   void cancel();
-
-  Future<View> enrollDevice({required String name});
 
   Future<View> logout();
 
@@ -25,6 +26,12 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> pollGithub();
 
+  Future<View> prepareDevice({required String name});
+
+  Future<VaultView> publishDeviceState();
+
+  Future<VaultView> publishLocalState({required LocalAgent agent});
+
   Future<View> refresh();
 
   Future<View> refreshDevices();
@@ -33,19 +40,13 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> revokeDevice({required String id});
 
+  void setForeground({required bool active});
+
   View snapshot();
 
   Future<View> startGithub({required String locale});
 
-  Future<VaultView> vaultCreate();
-
-  Future<String> vaultPairingGrant({required String code});
-
-  Future<VaultView> vaultPairingImport({required String code});
-
-  Future<PairingPeer> vaultPairingPreview({required String code});
-
-  Future<String> vaultPairingStart();
+  Future<StatePage> syncStates({required String after});
 
   Future<List<RecordView>> vaultRecords();
 
@@ -57,6 +58,8 @@ abstract class NdsClient implements RustOpaqueInterface {
     required String username,
     required String secret,
   });
+
+  Future<VaultView> vaultSnapshot();
 
   Future<VaultView> vaultSync();
 
