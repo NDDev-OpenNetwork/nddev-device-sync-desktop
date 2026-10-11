@@ -19,7 +19,11 @@ shows a safe localized startup screen; a missing sink remains explicitly degrade
 `just check` includes real framework/root-isolate failure tests using the native
 library. The observability repository's isolated pipeline can additionally consume
 that private test log through `NDS_CLIENT_EVENTS_FILE` and verify searchable
-failure records in OpenObserve. This does not configure live client export.
+failure records in OpenObserve. Authenticated clients use the shared native
+accounts sender for signed event and OTLP span delivery; the server applies its
+operator policy and binds tenant/user/device identity. Clipboard and alerts
+shows per-signal acknowledgements, losses, policy and last successful receipt.
+Pause/resume, bounded retention and cancellation belong to the shared sender.
 
 Use Flutter 3.47.7/Dart 3.13.5, Rust 1.99.0 and flutter_rust_bridge_codegen 2.13.0.
 Install the Rust target matching the platform being built. `flutter pub get
@@ -63,3 +67,24 @@ Windows. Those builds are separate from native credential/provider interaction
 acceptance. `scripts/check-artifact.py` rejects integration entrypoints and
 native test plugins in debug bundles. Integration dependencies exist only
 inside the acceptance driver's temporary scope.
+
+Vault records use bounded native cursor pages. The UI supports create/edit,
+encrypted tombstones and explicit conflict choices guarded by the displayed
+revision and observed sequence. A save confirms a durable local outbox receipt;
+the UI separately shows pending changes and the last fully caught-up timestamp.
+Secret values are copied through native clipboard operations and are never
+returned by the bridge. Shared text is explicit, bounded to 8 KiB and encrypted.
+Android refuses private/unsupported input and marks delivered values sensitive
+so they do not re-enter shared capture.
+
+Passkey management exposes only public fingerprints and creation times.
+Removal requires a recent sign-in and consumes the server's atomic revocation
+receipt; revoking the current passkey session returns to sign-in. Creating or
+using a passkey opens the server's browser ceremony with comparison-code approval.
+
+`--vault` in identity acceptance also exercises shared text delivery/copy and,
+on Android, refusal to re-share a marked private clipboard value. Use an owned
+X11 session for Linux clipboard acceptance, for example
+`xvfb-run -a env -u WAYLAND_DISPLAY GDK_BACKEND=x11 python3 scripts/identity-acceptance.py --fixture /private/fixture.json --vault`.
+The test must observe the native operation completing before reading the OS
+clipboard. Production UI confirmation uses the same native completion receipt.

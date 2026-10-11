@@ -103,7 +103,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get privacy =>
-      'Секреты сессии остаются в защищённом хранилище ОС. Вход не восстанавливает ключи хранилища.';
+      'Данные сессии и ключи vault хранятся в защищённом хранилище ОС. Сервер передаёт ключ vault после подтверждённого входа и регистрации устройства.';
 
   @override
   String get endpointError =>
@@ -398,7 +398,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get localDiagnosticsOnly =>
-      'Локальная диагностика включена; внешняя доставка не настроена.';
+      'Локальная диагностика готова. Состояние отправки на сервер показано в разделе «Буфер и оповещения».';
 
   @override
   String diagnosticsDegraded(
@@ -425,7 +425,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get devicesHelp =>
-      'Зарегистрируйте эту установку с её собственным нативным ключом подписи. Регистрация устройства не открывает vault.';
+      'У каждой установки свой ключ подписи в хранилище ОС. Активные зарегистрированные устройства получают доступ к vault.';
 
   @override
   String get devicesUnverified =>
@@ -476,7 +476,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vaultLocked =>
-      'Ключ vault недоступен. Подключитесь через доверенное устройство.';
+      'Доступ к vault недоступен. Проверьте сессию, устройство и соединение с сервером.';
 
   @override
   String get vaultUnlocked => 'Нативный ключ vault доступен.';
@@ -499,7 +499,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vaultSecret => 'Секретное значение';
 
   @override
-  String get vaultSave => 'Зашифровать и синхронизировать';
+  String get vaultSave => 'Зашифровать и отправить на синхронизацию';
 
   @override
   String vaultRevision(String revision) {
@@ -568,4 +568,221 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get passkeyHelp =>
       'Сравните код в браузере, затем подтвердите ключ доступа. Для создания ключа нужен недавний вход.';
+
+  @override
+  String get utilitiesTitle => 'Буфер обмена и предупреждения';
+
+  @override
+  String get sharedClipboard => 'Общий буфер';
+
+  @override
+  String get alertsTitle => 'Предупреждения';
+
+  @override
+  String get clipboardHelp =>
+      'Текст шифруется и автоматически синхронизируется с сервером. Отправляйте только нужный текст; чувствительный буфер и URI исключены.';
+
+  @override
+  String get sharedText => 'Текст для передачи';
+
+  @override
+  String get shareText => 'Передать текст';
+
+  @override
+  String get shareNativeClipboard => 'Передать буфер устройства';
+
+  @override
+  String get clipboardArchive => 'Выбрать из истории буфера';
+
+  @override
+  String clipboardReady(int sequence, int bytes) {
+    return 'Серверная версия $sequence · $bytes байт';
+  }
+
+  @override
+  String get clipboardEmpty => 'Подтверждённого общего текста пока нет';
+
+  @override
+  String get copySharedClipboard => 'Скопировать общий текст';
+
+  @override
+  String utilityError(String code) {
+    return 'Операция недоступна: $code';
+  }
+
+  @override
+  String telemetryDelivery(
+    int pending,
+    int delivered,
+    int dropped,
+    int failures,
+  ) {
+    return 'В очереди $pending · Принято $delivered · Потеряно $dropped · Неудачных попыток $failures';
+  }
+
+  @override
+  String get telemetryInitialized =>
+      'Доставка клиента активна. Счётчик подтверждает приём сервером.';
+
+  @override
+  String get telemetryUnavailable =>
+      'Доставка клиента недоступна; локальная диагностика работает.';
+
+  @override
+  String get noIncidents => 'Инцидентов нет';
+
+  @override
+  String incidentState(String kind, String state, int occurrences) {
+    return '$kind · $state · случаев: $occurrences';
+  }
+
+  @override
+  String get acknowledgeIncident => 'Подтвердить';
+
+  @override
+  String get silenceIncident => 'Приглушить на час';
+
+  @override
+  String get moreIncidents => 'Следующие инциденты';
+
+  @override
+  String syncLastSeen(String time) {
+    return 'Последняя полная синхронизация: $time';
+  }
+
+  @override
+  String get vaultDelete => 'Удалить запись';
+
+  @override
+  String vaultDeleteHelp(String title) {
+    return 'Удалить «$title» на всех синхронизированных устройствах?';
+  }
+
+  @override
+  String get vaultResolve => 'Разрешить конфликт';
+
+  @override
+  String vaultResolveHelp(String choice) {
+    return 'Применить «$choice»? Другие устройства получат это решение после синхронизации.';
+  }
+
+  @override
+  String get operationBusy =>
+      'Выполняется другая операция или данные изменились. Обновите их и повторите попытку.';
+
+  @override
+  String vaultEditing(String title) {
+    return 'Редактирование: $title. Для сохранения введите секрет.';
+  }
+
+  @override
+  String get vaultDeleted => 'Удалённая запись';
+
+  @override
+  String vaultConflictingTitle(String title) {
+    return 'Конфликтующая версия: $title';
+  }
+
+  @override
+  String get vaultConflictingDelete =>
+      'Конфликтующая версия удаляет эту запись.';
+
+  @override
+  String get vaultKeepServer => 'Оставить серверную версию';
+
+  @override
+  String get vaultUseConflict => 'Выбрать конфликтующую версию';
+
+  @override
+  String get vaultCopySecret => 'Скопировать секрет';
+
+  @override
+  String get vaultEdit => 'Редактировать';
+
+  @override
+  String get vaultNextPage => 'Следующие записи';
+
+  @override
+  String get vaultFirstPage => 'Первые записи';
+
+  @override
+  String get passkeysTitle => 'Ваши ключи доступа';
+
+  @override
+  String get passkeysHelp =>
+      'Удаление ключа завершает созданные с ним сессии. Для удаления нужно войти в систему в течение последних пяти минут.';
+
+  @override
+  String get passkeysEmpty => 'Ключи доступа не зарегистрированы.';
+
+  @override
+  String passkeyCreated(String time) {
+    return 'Создан: $time';
+  }
+
+  @override
+  String get passkeyRemove => 'Удалить ключ доступа';
+
+  @override
+  String passkeyRemoveHelp(String id) {
+    return 'Удалить ключ $id? Сессии, созданные этим ключом, будут отозваны, возможно включая текущую.';
+  }
+
+  @override
+  String get passkeyFreshLogin =>
+      'Войдите заново перед изменением ключей доступа.';
+
+  @override
+  String get keepPasskey => 'Оставить ключ';
+
+  @override
+  String get passkeyMethod => 'Ключ доступа';
+
+  @override
+  String get actionCancel => 'Отмена';
+
+  @override
+  String get exportUnknown =>
+      'Политика отправки на сервер ещё не подтверждена.';
+
+  @override
+  String get exportEnabled => 'Отправка на сервер разрешена.';
+
+  @override
+  String get exportDisabled => 'Оператор отключил отправку на сервер.';
+
+  @override
+  String get exportPaused =>
+      'Отправка приостановлена, пока приложение неактивно.';
+
+  @override
+  String get eventsLabel => 'События';
+
+  @override
+  String get spansLabel => 'Трассировки операций';
+
+  @override
+  String exportLastSeen(String time) {
+    return 'Последний приём сервером: $time';
+  }
+
+  @override
+  String incidentsObserved(String time) {
+    return 'Состояние оповещений проверено: $time';
+  }
+
+  @override
+  String get incidentsUnavailable =>
+      'Не удалось обновить оповещения. Показанные данные могут быть устаревшими.';
+
+  @override
+  String get clipboardUnavailable =>
+      'Не удалось обновить состояние общего буфера.';
+
+  @override
+  String get clipboardRejected =>
+      'Этот элемент буфера помечен как приватный, не поддерживается или слишком велик. Выберите обычный текст до 8 КиБ.';
+
+  @override
+  String get clipboardCopied => 'Скопировано в буфер устройства.';
 }

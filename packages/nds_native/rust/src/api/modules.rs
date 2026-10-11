@@ -69,7 +69,7 @@ impl LocalAgent {
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            let _ = (before);
+            let _ = before;
             Err(AgentError::UnsupportedPlatform)
         }
     }
@@ -156,7 +156,7 @@ impl LocalAgent {
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            let _ = (path);
+            let _ = path;
             Err(AgentError::UnsupportedPlatform)
         }
     }

@@ -30,7 +30,7 @@
   "changeServer": "Сменить сервер",
   "diagnostics": "Диагностические логи на пять минут",
   "diagnosticsOff": "Отключить диагностические логи",
-  "privacy": "Секреты сессии остаются в защищённом хранилище ОС. Вход не восстанавливает ключи хранилища.",
+  "privacy": "Данные сессии и ключи vault хранятся в защищённом хранилище ОС. Сервер передаёт ключ vault после подтверждённого входа и регистрации устройства.",
   "endpointError": "Укажите HTTPS-адрес сервера без пароля, пути, параметров и фрагмента.",
   "inputError": "Проверьте адрес почты и восьмизначный код.",
   "networkError": "Сервер недоступен. Актуальное состояние сессии не подтверждено.",
@@ -132,7 +132,7 @@
   "connected": "Подключено",
   "connecting": "Подключение",
   "diagnosticsUnavailable": "Локальная диагностика недоступна. Вход в NDS остаётся доступен.",
-  "localDiagnosticsOnly": "Локальная диагностика включена; внешняя доставка не настроена.",
+  "localDiagnosticsOnly": "Локальная диагностика готова. Состояние отправки на сервер показано в разделе «Буфер и оповещения».",
   "diagnosticsDegraded": "Диагностика: отклонено {rejected}, потеряно {dropped}, ошибок записи {failures}, в очереди {pending}.",
   "@diagnosticsDegraded": {
     "placeholders": {
@@ -154,7 +154,7 @@
   "diagnosticsHttp": "Диагностика сети",
   "diagnosticsIo": "Локальные операции",
   "devicesTitle": "Ваши устройства",
-  "devicesHelp": "Зарегистрируйте эту установку с её собственным нативным ключом подписи. Регистрация устройства не открывает vault.",
+  "devicesHelp": "У каждой установки свой ключ подписи в хранилище ОС. Активные зарегистрированные устройства получают доступ к vault.",
   "devicesUnverified": "Список устройств ещё не подтверждён свежей проверкой.",
   "deviceName": "Имя устройства",
   "enrollDevice": "Зарегистрировать устройство",
@@ -176,14 +176,14 @@
   },
   "vaultTitle": "Vault и синхронизация",
   "vaultHelp": "Vault открывается автоматически после входа. Изменения синхронизируются через сервер; значения секретов остаются в нативном хранилище и зашифрованных записях.",
-  "vaultLocked": "Ключ vault недоступен. Подключитесь через доверенное устройство.",
+  "vaultLocked": "Доступ к vault недоступен. Проверьте сессию, устройство и соединение с сервером.",
   "vaultUnlocked": "Нативный ключ vault доступен.",
   "vaultCounts": "В очереди: {pending} · Конфликты: {conflicts}",
   "vaultKeyIdentity": "Идентичность ключа",
   "vaultRecordTitle": "Название записи",
   "vaultUsername": "Имя пользователя или аккаунта",
   "vaultSecret": "Секретное значение",
-  "vaultSave": "Зашифровать и синхронизировать",
+  "vaultSave": "Зашифровать и отправить на синхронизацию",
   "vaultRevision": "Ревизия {revision}",
   "vaultConflict": "Конфликт не разрешён. Обе версии сохранены.",
   "vaultSync": "Синхронизировать сейчас",
@@ -220,5 +220,172 @@
   "passkey": "Войти с ключом доступа",
   "registerPasskey": "Создать ключ доступа",
   "openPasskey": "Открыть проверку ключа доступа",
-  "passkeyHelp": "Сравните код в браузере, затем подтвердите ключ доступа. Для создания ключа нужен недавний вход."
+  "passkeyHelp": "Сравните код в браузере, затем подтвердите ключ доступа. Для создания ключа нужен недавний вход.",
+  "utilitiesTitle": "Буфер обмена и предупреждения",
+  "sharedClipboard": "Общий буфер",
+  "alertsTitle": "Предупреждения",
+  "clipboardHelp": "Текст шифруется и автоматически синхронизируется с сервером. Отправляйте только нужный текст; чувствительный буфер и URI исключены.",
+  "sharedText": "Текст для передачи",
+  "shareText": "Передать текст",
+  "shareNativeClipboard": "Передать буфер устройства",
+  "clipboardArchive": "Выбрать из истории буфера",
+  "clipboardReady": "Серверная версия {sequence} · {bytes} байт",
+  "clipboardEmpty": "Подтверждённого общего текста пока нет",
+  "copySharedClipboard": "Скопировать общий текст",
+  "utilityError": "Операция недоступна: {code}",
+  "telemetryDelivery": "В очереди {pending} · Принято {delivered} · Потеряно {dropped} · Неудачных попыток {failures}",
+  "telemetryInitialized": "Доставка клиента активна. Счётчик подтверждает приём сервером.",
+  "telemetryUnavailable": "Доставка клиента недоступна; локальная диагностика работает.",
+  "noIncidents": "Инцидентов нет",
+  "incidentState": "{kind} · {state} · случаев: {occurrences}",
+  "acknowledgeIncident": "Подтвердить",
+  "silenceIncident": "Приглушить на час",
+  "moreIncidents": "Следующие инциденты",
+  "@clipboardReady": {
+    "placeholders": {
+      "sequence": {
+        "type": "int"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "@utilityError": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "@telemetryDelivery": {
+    "placeholders": {
+      "pending": {
+        "type": "int"
+      },
+      "delivered": {
+        "type": "int"
+      },
+      "dropped": {
+        "type": "int"
+      },
+      "failures": {
+        "type": "int"
+      }
+    }
+  },
+  "@incidentState": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      },
+      "occurrences": {
+        "type": "int"
+      }
+    }
+  },
+  "syncLastSeen": "Последняя полная синхронизация: {time}",
+  "@syncLastSeen": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultDelete": "Удалить запись",
+  "vaultDeleteHelp": "Удалить «{title}» на всех синхронизированных устройствах?",
+  "@vaultDeleteHelp": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultResolve": "Разрешить конфликт",
+  "vaultResolveHelp": "Применить «{choice}»? Другие устройства получат это решение после синхронизации.",
+  "@vaultResolveHelp": {
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
+  "operationBusy": "Выполняется другая операция или данные изменились. Обновите их и повторите попытку.",
+  "vaultEditing": "Редактирование: {title}. Для сохранения введите секрет.",
+  "@vaultEditing": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultDeleted": "Удалённая запись",
+  "vaultConflictingTitle": "Конфликтующая версия: {title}",
+  "@vaultConflictingTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultConflictingDelete": "Конфликтующая версия удаляет эту запись.",
+  "vaultKeepServer": "Оставить серверную версию",
+  "vaultUseConflict": "Выбрать конфликтующую версию",
+  "vaultCopySecret": "Скопировать секрет",
+  "vaultEdit": "Редактировать",
+  "vaultNextPage": "Следующие записи",
+  "vaultFirstPage": "Первые записи",
+  "passkeysTitle": "Ваши ключи доступа",
+  "passkeysHelp": "Удаление ключа завершает созданные с ним сессии. Для удаления нужно войти в систему в течение последних пяти минут.",
+  "passkeysEmpty": "Ключи доступа не зарегистрированы.",
+  "passkeyCreated": "Создан: {time}",
+  "@passkeyCreated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "passkeyRemove": "Удалить ключ доступа",
+  "passkeyRemoveHelp": "Удалить ключ {id}? Сессии, созданные этим ключом, будут отозваны, возможно включая текущую.",
+  "@passkeyRemoveHelp": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "passkeyFreshLogin": "Войдите заново перед изменением ключей доступа.",
+  "keepPasskey": "Оставить ключ",
+  "passkeyMethod": "Ключ доступа",
+  "actionCancel": "Отмена",
+  "exportUnknown": "Политика отправки на сервер ещё не подтверждена.",
+  "exportEnabled": "Отправка на сервер разрешена.",
+  "exportDisabled": "Оператор отключил отправку на сервер.",
+  "exportPaused": "Отправка приостановлена, пока приложение неактивно.",
+  "eventsLabel": "События",
+  "spansLabel": "Трассировки операций",
+  "exportLastSeen": "Последний приём сервером: {time}",
+  "@exportLastSeen": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "incidentsObserved": "Состояние оповещений проверено: {time}",
+  "@incidentsObserved": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "incidentsUnavailable": "Не удалось обновить оповещения. Показанные данные могут быть устаревшими.",
+  "clipboardUnavailable": "Не удалось обновить состояние общего буфера.",
+  "clipboardRejected": "Этот элемент буфера помечен как приватный, не поддерживается или слишком велик. Выберите обычный текст до 8 КиБ.",
+  "clipboardCopied": "Скопировано в буфер устройства."
 }

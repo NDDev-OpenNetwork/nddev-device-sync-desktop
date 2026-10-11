@@ -7,41 +7,155 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`
+
+/// Clipboard metadata only; plaintext is consumed by the native OS adapter.
+class ClipboardView {
+  final bool present;
+  final String id;
+  final String deviceId;
+  final BigInt serverSeq;
+  final int bytes;
+  final bool conflicted;
+
+  const ClipboardView({
+    required this.present,
+    required this.id,
+    required this.deviceId,
+    required this.serverSeq,
+    required this.bytes,
+    required this.conflicted,
+  });
+
+  static Future<ClipboardView> default_() =>
+      RustLib.instance.api.nddevDeviceSyncVaultViewClipboardViewDefault();
+
+  @override
+  int get hashCode =>
+      present.hashCode ^
+      id.hashCode ^
+      deviceId.hashCode ^
+      serverSeq.hashCode ^
+      bytes.hashCode ^
+      conflicted.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ClipboardView &&
+          runtimeType == other.runtimeType &&
+          present == other.present &&
+          id == other.id &&
+          deviceId == other.deviceId &&
+          serverSeq == other.serverSeq &&
+          bytes == other.bytes &&
+          conflicted == other.conflicted;
+}
+
+class ConflictView {
+  final String title;
+  final String username;
+  final String deviceId;
+  final bool deleted;
+
+  const ConflictView({
+    required this.title,
+    required this.username,
+    required this.deviceId,
+    required this.deleted,
+  });
+
+  @override
+  int get hashCode =>
+      title.hashCode ^ username.hashCode ^ deviceId.hashCode ^ deleted.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConflictView &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          username == other.username &&
+          deviceId == other.deviceId &&
+          deleted == other.deleted;
+}
+
+class RecordPage {
+  final BigInt observedSeq;
+  final List<RecordView> items;
+  final String nextAfter;
+  final bool hasMore;
+
+  const RecordPage({
+    required this.observedSeq,
+    required this.items,
+    required this.nextAfter,
+    required this.hasMore,
+  });
+
+  @override
+  int get hashCode =>
+      observedSeq.hashCode ^
+      items.hashCode ^
+      nextAfter.hashCode ^
+      hasMore.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RecordPage &&
+          runtimeType == other.runtimeType &&
+          observedSeq == other.observedSeq &&
+          items == other.items &&
+          nextAfter == other.nextAfter &&
+          hasMore == other.hasMore;
+}
 
 class RecordView {
+  final BigInt observedSeq;
+  final bool deleted;
   final String id;
   final String title;
   final String username;
   final BigInt revision;
   final bool conflicted;
+  final ConflictView? conflict;
 
   const RecordView({
+    required this.observedSeq,
+    required this.deleted,
     required this.id,
     required this.title,
     required this.username,
     required this.revision,
     required this.conflicted,
+    this.conflict,
   });
 
   @override
   int get hashCode =>
+      observedSeq.hashCode ^
+      deleted.hashCode ^
       id.hashCode ^
       title.hashCode ^
       username.hashCode ^
       revision.hashCode ^
-      conflicted.hashCode;
+      conflicted.hashCode ^
+      conflict.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is RecordView &&
           runtimeType == other.runtimeType &&
+          observedSeq == other.observedSeq &&
+          deleted == other.deleted &&
           id == other.id &&
           title == other.title &&
           username == other.username &&
           revision == other.revision &&
-          conflicted == other.conflicted;
+          conflicted == other.conflicted &&
+          conflict == other.conflict;
 }
 
 class StatePage {

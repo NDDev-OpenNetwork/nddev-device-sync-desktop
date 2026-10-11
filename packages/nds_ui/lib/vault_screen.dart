@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
 
@@ -17,12 +18,17 @@ class VaultScreen extends StatefulWidget {
 class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   native.VaultView? _view;
   List<native.RecordView> _records = [];
+  native.RecordView? _editing;
+  BigInt? _loadedCursor;
+  String _after = '', _nextAfter = '';
+  bool _hasMore = false;
+  String _draftId = native.newVaultRecordId();
   final _title = TextEditingController();
   final _username = TextEditingController();
   final _secret = TextEditingController();
+  final _scroll = ScrollController();
   String? _error;
-  bool _busy = false;
-  bool _paused = false;
+  bool _busy = false, _paused = false;
   Timer? _refresh;
 
   @override
@@ -30,12 +36,15 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refresh = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted && !_paused && !_busy) {
-        _run(() => widget.client.vaultSnapshot());
+      if (mounted &&
+          !_paused &&
+          !_busy &&
+          ModalRoute.of(context)?.isCurrent == true) {
+        unawaited(_run(() => widget.client.vaultSnapshot()));
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _run(() => widget.client.vaultSnapshot());
+      if (mounted) unawaited(_run(() => widget.client.vaultSnapshot()));
     });
   }
 
@@ -52,60 +61,156 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     for (final controller in [_title, _username, _secret]) {
       controller.dispose();
     }
+    _scroll.dispose();
     super.dispose();
   }
 
-  Future<void> _run(Future<native.VaultView> Function() action) async {
+  Future<void> _run(
+    Future<native.VaultView> Function() action, {
+    bool reload = false,
+    String? after,
+  }) async {
     if (_busy) return;
     setState(() {
       _busy = true;
-      _error = null;
+      if (reload) _error = null;
     });
     try {
       final view = await action();
-      final records = view.unlocked
-          ? await widget.client.vaultRecords()
-          : <native.RecordView>[];
-      if (mounted) {
+      if (!mounted) return;
+      setState(() {
+        _view = view;
+        if (view.syncError.isNotEmpty) _error = view.syncError;
+      });
+      if (!view.unlocked) {
         setState(() {
-          _view = view;
-          _records = records;
+          _records = [];
+          _loadedCursor = null;
+          _hasMore = false;
+          _resetEditor();
+        });
+        return;
+      }
+      if (reload || _loadedCursor != view.cursor) {
+        final cursor = after ?? _after;
+        final page = await widget.client.vaultRecords(after: cursor);
+        if (!mounted) return;
+        setState(() {
+          _records = page.items;
+          _loadedCursor = page.observedSeq;
+          _after = cursor;
+          _nextAfter = page.nextAfter;
+          _hasMore = page.hasMore;
           _error = view.syncError.isEmpty ? null : view.syncError;
         });
       }
     } catch (error) {
       var code = 'unexpected';
-      if (error is native.VaultError) {
-        code = await error.code();
+      if (error is native.VaultError) code = await error.code();
+      if (mounted) {
+        setState(() {
+          if (code != 'vault_busy' || reload) _error = code;
+          if (code == 'vault_locked') {
+            _records = [];
+            _loadedCursor = null;
+            _secret.clear();
+          }
+        });
       }
-      if (code != 'vault_busy' && mounted) setState(() => _error = code);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
-  Future<void> _save() => _run(() async {
-    try {
+  void _resetEditor() {
+    _secret.clear();
+    _title.clear();
+    _username.clear();
+    _editing = null;
+    _draftId = native.newVaultRecordId();
+  }
+
+  Future<void> _save() => _run(
+    () async {
       await widget.client.vaultSave(
+        id: _editing?.id ?? _draftId,
+        expectedRevision: _editing?.revision ?? BigInt.zero,
         title: _title.text.trim(),
         username: _username.text.trim(),
         secret: _secret.text,
       );
-      _secret.clear();
-      _title.clear();
-      _username.clear();
-      return await widget.client.vaultSync();
-    } finally {
-      _secret.clear();
+      if (mounted) _resetEditor();
+      return widget.client.vaultSnapshot();
+    },
+    reload: true,
+    after: '',
+  );
+
+  Future<bool> _confirm(String title, String body, String action) async {
+    final l = AppLocalizations.of(context)!;
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(body),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l.actionCancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(action),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Future<void> _delete(native.RecordView record) async {
+    final l = AppLocalizations.of(context)!;
+    if (!await _confirm(
+          l.vaultDelete,
+          l.vaultDeleteHelp(record.title),
+          l.vaultDelete,
+        ) ||
+        !mounted) {
+      return;
     }
-  });
+    await _run(() async {
+      await widget.client.vaultDelete(
+        id: record.id,
+        expectedRevision: record.revision,
+      );
+      return widget.client.vaultSnapshot();
+    }, reload: true);
+  }
+
+  Future<void> _resolve(native.RecordView record, bool conflict) async {
+    final l = AppLocalizations.of(context)!;
+    final choice = conflict ? l.vaultUseConflict : l.vaultKeepServer;
+    if (!await _confirm(l.vaultResolve, l.vaultResolveHelp(choice), choice) ||
+        !mounted) {
+      return;
+    }
+    await _run(() async {
+      await widget.client.vaultResolve(
+        id: record.id,
+        expectedRevision: record.revision,
+        expectedCursor: record.observedSeq,
+        useConflict: conflict,
+      );
+      return widget.client.vaultSnapshot();
+    }, reload: true);
+  }
 
   String _message(AppLocalizations l) => switch (_error) {
     'vault_locked' => l.vaultLocked,
     'vault_key_registration_required' => l.vaultRegistrationRequired,
     'vault_invalid_input' => l.vaultInputError,
     'vault_authentication_failed' => l.vaultProofError,
-    'vault_busy' => l.rateError,
+    'vault_busy' => l.operationBusy,
     'vault_dependency_unavailable' => l.networkError,
     _ => l.genericError,
   };
@@ -120,6 +225,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
         child: Align(
           alignment: Alignment.topCenter,
           child: SingleChildScrollView(
+            controller: _scroll,
             padding: const EdgeInsets.all(OpenNetworkSpacing.six),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
@@ -141,6 +247,18 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                           ? l.syncNotObserved
                           : l.syncCaughtUp,
                     ),
+                    if (view.lastSyncAt != BigInt.zero)
+                      Text(
+                        l.syncLastSeen(
+                          DateFormat.yMd(
+                            Localizations.localeOf(context).languageCode,
+                          ).add_Hms().format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                              view.lastSyncAt.toInt() * 1000,
+                            ),
+                          ),
+                        ),
+                      ),
                     if (view.keyId.isNotEmpty)
                       SelectableText('${l.vaultKeyIdentity}: ${view.keyId}'),
                     if (view.unlocked) ...[
@@ -157,6 +275,8 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                         child: Text(l.syncedState),
                       ),
                       const SizedBox(height: OpenNetworkSpacing.six),
+                      if (_editing != null)
+                        Text(l.vaultEditing(_editing!.title)),
                       TextField(
                         key: const Key('vault-title'),
                         controller: _title,
@@ -188,6 +308,13 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                         onPressed: _busy ? null : _save,
                         child: Text(l.vaultSave),
                       ),
+                      if (_editing != null)
+                        TextButton(
+                          onPressed: _busy
+                              ? null
+                              : () => setState(_resetEditor),
+                          child: Text(l.actionCancel),
+                        ),
                       const SizedBox(height: OpenNetworkSpacing.six),
                       for (final record in _records)
                         Card(
@@ -209,10 +336,101 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                                 Text(
                                   l.vaultRevision(record.revision.toString()),
                                 ),
-                                if (record.conflicted) Text(l.vaultConflict),
+                                if (record.deleted) Text(l.vaultDeleted),
+                                if (record.conflicted) ...[
+                                  Text(l.vaultConflict),
+                                  if (record.conflict != null)
+                                    Text(
+                                      l.vaultConflictingTitle(
+                                        record.conflict!.title,
+                                      ),
+                                    ),
+                                  if (record.conflict?.deleted == true)
+                                    Text(l.vaultConflictingDelete),
+                                  Wrap(
+                                    spacing: OpenNetworkSpacing.four,
+                                    children: [
+                                      TextButton(
+                                        onPressed: _busy
+                                            ? null
+                                            : () => _resolve(record, false),
+                                        child: Text(l.vaultKeepServer),
+                                      ),
+                                      TextButton(
+                                        onPressed: _busy
+                                            ? null
+                                            : () => _resolve(record, true),
+                                        child: Text(l.vaultUseConflict),
+                                      ),
+                                    ],
+                                  ),
+                                ] else if (!record.deleted)
+                                  Wrap(
+                                    spacing: OpenNetworkSpacing.four,
+                                    children: [
+                                      if (native.supportsNativeClipboard())
+                                        TextButton(
+                                          onPressed: _busy
+                                              ? null
+                                              : () => _run(() async {
+                                                  await widget.client
+                                                      .vaultCopySecret(
+                                                        id: record.id,
+                                                      );
+                                                  return widget.client
+                                                      .vaultSnapshot();
+                                                }),
+                                          child: Text(l.vaultCopySecret),
+                                        ),
+                                      TextButton(
+                                        onPressed: _busy
+                                            ? null
+                                            : () {
+                                                setState(() {
+                                                  _editing = record;
+                                                  _title.text = record.title;
+                                                  _username.text =
+                                                      record.username;
+                                                  _secret.clear();
+                                                });
+                                                _scroll.jumpTo(0);
+                                              },
+                                        child: Text(l.vaultEdit),
+                                      ),
+                                      TextButton(
+                                        onPressed: _busy
+                                            ? null
+                                            : () => _delete(record),
+                                        child: Text(l.vaultDelete),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
+                        ),
+                      if (_hasMore)
+                        TextButton(
+                          key: const Key('vault-next-page'),
+                          onPressed: _busy
+                              ? null
+                              : () => _run(
+                                  () => widget.client.vaultSnapshot(),
+                                  reload: true,
+                                  after: _nextAfter,
+                                ),
+                          child: Text(l.vaultNextPage),
+                        ),
+                      if (_after.isNotEmpty)
+                        TextButton(
+                          onPressed: _busy
+                              ? null
+                              : () => _run(
+                                  () => widget.client.vaultSnapshot(),
+                                  reload: true,
+                                  after: '',
+                                ),
+                          child: Text(l.vaultFirstPage),
                         ),
                     ],
                   ],
@@ -221,27 +439,27 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                     key: const Key('vault-sync'),
                     onPressed: _busy
                         ? null
-                        : () => _run(() => widget.client.vaultSync()),
+                        : () => _run(
+                            () => widget.client.vaultSync(),
+                            reload: true,
+                          ),
                     child: Text(l.vaultSync),
                   ),
                   TextButton(
                     key: const Key('vault-refresh'),
                     onPressed: _busy
                         ? null
-                        : () => _run(() => widget.client.vaultRefresh()),
+                        : () => _run(
+                            () => widget.client.vaultRefresh(),
+                            reload: true,
+                          ),
                     child: Text(l.moduleRefresh),
                   ),
                   if (_busy) const LinearProgressIndicator(),
                   if (_error != null)
                     Semantics(
                       liveRegion: true,
-                      child: Text(
-                        _message(l),
-                        key: const Key('vault-error'),
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
+                      child: Text(_message(l), key: const Key('vault-error')),
                     ),
                 ],
               ),

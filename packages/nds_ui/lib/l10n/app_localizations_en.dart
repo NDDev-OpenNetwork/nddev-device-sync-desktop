@@ -105,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy =>
-      'Session secrets stay in native secure storage. Sign-in does not recover vault keys.';
+      'Session credentials and vault keys stay in native secure storage. The server delivers your vault key after verified sign-in and device enrollment.';
 
   @override
   String get endpointError =>
@@ -396,7 +396,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get localDiagnosticsOnly =>
-      'Local diagnostics are initialized; external delivery is not configured.';
+      'Local diagnostics are initialized. Server delivery status is shown under Clipboard and alerts.';
 
   @override
   String diagnosticsDegraded(
@@ -423,7 +423,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get devicesHelp =>
-      'Register this installation with its own native signing key. Device enrollment does not unlock the vault.';
+      'Each installation has its own native signing key. Active enrolled devices receive access to the vault.';
 
   @override
   String get devicesUnverified =>
@@ -474,7 +474,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vaultLocked =>
-      'Vault key is unavailable. Pair with a trusted device.';
+      'Vault access is unavailable. Verify the session, device and server connection.';
 
   @override
   String get vaultUnlocked => 'Native vault key is available.';
@@ -497,7 +497,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vaultSecret => 'Secret value';
 
   @override
-  String get vaultSave => 'Encrypt and synchronize';
+  String get vaultSave => 'Encrypt and queue for sync';
 
   @override
   String vaultRevision(String revision) {
@@ -566,4 +566,218 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get passkeyHelp =>
       'Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in.';
+
+  @override
+  String get utilitiesTitle => 'Clipboard and alerts';
+
+  @override
+  String get sharedClipboard => 'Shared clipboard';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get clipboardHelp =>
+      'Text is encrypted and synchronizes automatically with the server. Share only the text you intend to send; sensitive clipboard items and URI data are excluded.';
+
+  @override
+  String get sharedText => 'Text to share';
+
+  @override
+  String get shareText => 'Share text';
+
+  @override
+  String get shareNativeClipboard => 'Share device clipboard';
+
+  @override
+  String get clipboardArchive => 'Choose from clipboard archive';
+
+  @override
+  String clipboardReady(int sequence, int bytes) {
+    return 'Server revision $sequence · $bytes bytes';
+  }
+
+  @override
+  String get clipboardEmpty => 'No committed shared text yet';
+
+  @override
+  String get copySharedClipboard => 'Copy shared text';
+
+  @override
+  String utilityError(String code) {
+    return 'Operation unavailable: $code';
+  }
+
+  @override
+  String telemetryDelivery(
+    int pending,
+    int delivered,
+    int dropped,
+    int failures,
+  ) {
+    return 'Queued $pending · Received $delivered · Lost $dropped · Attempts failed $failures';
+  }
+
+  @override
+  String get telemetryInitialized =>
+      'Client delivery is active. Received counts confirm server acceptance.';
+
+  @override
+  String get telemetryUnavailable =>
+      'Client delivery is unavailable; local diagnostics remain active.';
+
+  @override
+  String get noIncidents => 'No incidents';
+
+  @override
+  String incidentState(String kind, String state, int occurrences) {
+    return '$kind · $state · $occurrences occurrences';
+  }
+
+  @override
+  String get acknowledgeIncident => 'Acknowledge';
+
+  @override
+  String get silenceIncident => 'Silence for one hour';
+
+  @override
+  String get moreIncidents => 'Next incidents';
+
+  @override
+  String syncLastSeen(String time) {
+    return 'Last complete sync: $time';
+  }
+
+  @override
+  String get vaultDelete => 'Delete record';
+
+  @override
+  String vaultDeleteHelp(String title) {
+    return 'Delete “$title” on all synchronized devices?';
+  }
+
+  @override
+  String get vaultResolve => 'Resolve conflict';
+
+  @override
+  String vaultResolveHelp(String choice) {
+    return 'Apply “$choice”? Other devices will receive this decision after synchronization.';
+  }
+
+  @override
+  String get operationBusy =>
+      'Another operation is in progress or this view changed. Refresh and try again.';
+
+  @override
+  String vaultEditing(String title) {
+    return 'Editing: $title. Enter the secret value to save.';
+  }
+
+  @override
+  String get vaultDeleted => 'Deleted record';
+
+  @override
+  String vaultConflictingTitle(String title) {
+    return 'Competing version: $title';
+  }
+
+  @override
+  String get vaultConflictingDelete =>
+      'The competing version deletes this record.';
+
+  @override
+  String get vaultKeepServer => 'Keep server version';
+
+  @override
+  String get vaultUseConflict => 'Use competing version';
+
+  @override
+  String get vaultCopySecret => 'Copy secret';
+
+  @override
+  String get vaultEdit => 'Edit';
+
+  @override
+  String get vaultNextPage => 'Next records';
+
+  @override
+  String get vaultFirstPage => 'First records';
+
+  @override
+  String get passkeysTitle => 'Your passkeys';
+
+  @override
+  String get passkeysHelp =>
+      'Removing a passkey ends sessions created with it. Removal requires signing in within the last five minutes.';
+
+  @override
+  String get passkeysEmpty => 'No passkeys registered.';
+
+  @override
+  String passkeyCreated(String time) {
+    return 'Created: $time';
+  }
+
+  @override
+  String get passkeyRemove => 'Remove passkey';
+
+  @override
+  String passkeyRemoveHelp(String id) {
+    return 'Remove passkey $id? Sessions created with this key will be revoked, possibly including this session.';
+  }
+
+  @override
+  String get passkeyFreshLogin => 'Sign in again before changing passkeys.';
+
+  @override
+  String get keepPasskey => 'Keep passkey';
+
+  @override
+  String get passkeyMethod => 'Passkey';
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get exportUnknown => 'Server export policy has not been confirmed.';
+
+  @override
+  String get exportEnabled => 'Server export is enabled.';
+
+  @override
+  String get exportDisabled => 'The operator disabled server export.';
+
+  @override
+  String get exportPaused => 'Delivery is paused while the app is inactive.';
+
+  @override
+  String get eventsLabel => 'Events';
+
+  @override
+  String get spansLabel => 'Operation traces';
+
+  @override
+  String exportLastSeen(String time) {
+    return 'Last server acceptance: $time';
+  }
+
+  @override
+  String incidentsObserved(String time) {
+    return 'Alert state observed: $time';
+  }
+
+  @override
+  String get incidentsUnavailable =>
+      'Alert state could not be refreshed. Displayed entries may be outdated.';
+
+  @override
+  String get clipboardUnavailable =>
+      'Shared clipboard state could not be refreshed.';
+
+  @override
+  String get clipboardRejected =>
+      'This clipboard item is private, unsupported or too large to share. Choose plain text up to 8 KiB.';
+
+  @override
+  String get clipboardCopied => 'Copied to device clipboard.';
 }
