@@ -10,6 +10,8 @@ import 'l10n/app_localizations.dart';
 import 'modules_screen.dart';
 import 'diagnostics.dart';
 import 'vault_screen.dart';
+import 'utilities_screen.dart';
+import 'passkeys_screen.dart';
 
 Future<void> runNdsApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -191,7 +193,10 @@ class _IdentityScreenState extends State<_IdentityScreen>
 
   String get _locale => Localizations.localeOf(context).languageCode;
 
-  Future<void> _run(Future<native.View> Function() action) async {
+  Future<void> _run(
+    Future<native.View> Function() action, {
+    bool prepare = false,
+  }) async {
     if (_busy) return;
     final epoch = _actionEpoch;
     setState(() {
@@ -200,7 +205,10 @@ class _IdentityScreenState extends State<_IdentityScreen>
     });
     try {
       var view = await action();
-      if (view.authenticated && view.sessionVerified) {
+      if (view.authenticated &&
+          view.sessionVerified &&
+          (prepare || view.currentDeviceId.isEmpty) &&
+          view.flow != 'passkey_registration') {
         view = await _client!.prepareDevice(
           name: const String.fromEnvironment('NDS_DEVICE_NAME'),
         );
@@ -441,7 +449,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       key: const Key('refresh'),
                       onPressed: _busy
                           ? null
-                          : () => _run(() => _client!.refresh()),
+                          : () => _run(() => _client!.refresh(), prepare: true),
                       child: Text(l.refresh),
                     ),
                   ] else if (v.authenticated &&
@@ -451,7 +459,11 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       const SizedBox(height: OpenNetworkSpacing.four),
                     ],
                     SelectableText(
-                      '${l.instance}: ${_endpoint.text}\n${l.user}: ${v.userId}\n${l.method}: ${v.authMethod == 'email_otp' ? l.emailMethod : l.github}\n${l.expires}: ${_date(v.expiresAt)}',
+                      '${l.instance}: ${_endpoint.text}\n${l.user}: ${v.userId}\n${l.method}: ${switch (v.authMethod) {
+                        'email_otp' => l.emailMethod,
+                        'passkey' => l.passkeyMethod,
+                        _ => l.github,
+                      }}\n${l.expires}: ${_date(v.expiresAt)}',
                     ),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     Text(
@@ -567,6 +579,30 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       ),
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(
+                      key: const Key('open-utilities'),
+                      onPressed: _busy || !v.sessionVerified
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    UtilitiesScreen(client: _client!),
+                              ),
+                            ),
+                      child: Text(l.utilitiesTitle),
+                    ),
+                    OutlinedButton(
+                      key: const Key('manage-passkeys'),
+                      onPressed: _busy || !v.sessionVerified
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    PasskeysScreen(client: _client!),
+                              ),
+                            ),
+                      child: Text(l.passkeysTitle),
+                    ),
+                    OutlinedButton(
                       key: const Key('register-passkey'),
                       onPressed: _busy || !v.sessionVerified
                           ? null
@@ -577,7 +613,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       key: const Key('refresh'),
                       onPressed: _busy
                           ? null
-                          : () => _run(() => _client!.refresh()),
+                          : () => _run(() => _client!.refresh(), prepare: true),
                       child: Text(l.refresh),
                     ),
                     FilledButton(

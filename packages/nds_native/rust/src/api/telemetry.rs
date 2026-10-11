@@ -2,6 +2,7 @@
 use flutter_rust_bridge::frb;
 use nddev_device_sync_telemetry::{
     Config, DebugWindow, Logger,
+    client_traces::ClientTraces,
     view::{ClientLifecycle, DebugScope, DiagnosticsError, FailureKind, LocalDiagnostics},
 };
 use std::{
@@ -9,8 +10,12 @@ use std::{
     time::Duration,
 };
 
-static LOGGER: OnceLock<Option<Mutex<Logger>>> = OnceLock::new();
-fn logger() -> Option<MutexGuard<'static, Logger>> {
+struct ProcessTelemetry {
+    logger: Logger,
+    traces: ClientTraces,
+}
+static LOGGER: OnceLock<Option<Mutex<ProcessTelemetry>>> = OnceLock::new();
+fn logger() -> Option<MutexGuard<'static, ProcessTelemetry>> {
     LOGGER
         .get()?
         .as_ref()
@@ -20,7 +25,7 @@ fn logger() -> Option<MutexGuard<'static, Logger>> {
 #[frb(init)]
 pub fn init_app() -> Result<(), DiagnosticsError> {
     LOGGER.get_or_init(|| {
-        nddev_device_sync_telemetry::install(Config {
+        let config = Config {
             service: "nddev-device-sync-client".into(),
             version: env!("CARGO_PKG_VERSION").into(),
             repository: "NDDev-OpenNetwork/nddev-device-sync-desktop".into(),
@@ -49,9 +54,11 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
             ],
             default_module: "process".into(),
             debug: None,
-        })
-        .ok()
-        .map(Mutex::new)
+        };
+        let traces = ClientTraces::new(&config).ok()?;
+        let logger =
+            nddev_device_sync_telemetry::install_with_tracer(config, traces.tracer()).ok()?;
+        Some(Mutex::new(ProcessTelemetry { logger, traces }))
     });
     // An unavailable OS sink is explicitly degraded; identity may still work.
     Ok(())
@@ -60,7 +67,7 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
 #[frb(sync)]
 pub fn client_diagnostics() -> LocalDiagnostics {
     logger().map_or_else(LocalDiagnostics::unavailable, |logger| {
-        logger.control.diagnostics()
+        logger.logger.control.diagnostics()
     })
 }
 
@@ -71,6 +78,7 @@ pub fn configure_debug(scope: DebugScope, seconds: u16) -> Result<(), Diagnostic
     }
     let logger = logger().ok_or(DiagnosticsError::Unavailable)?;
     logger
+        .logger
         .control
         .set_debug((seconds > 0).then(|| DebugWindow {
             scope: scope.as_str().into(),
@@ -86,10 +94,10 @@ pub fn record_client_failure(kind: FailureKind) -> bool {
     let Some(logger) = logger() else {
         return false;
     };
-    if logger.control.output_health().terminating {
+    if logger.logger.control.output_health().terminating {
         return false;
     }
-    logger.control.report_failure(kind);
+    logger.logger.control.report_failure(kind);
     true
 }
 
@@ -98,18 +106,19 @@ pub fn record_client_lifecycle(state: ClientLifecycle) -> bool {
     let Some(logger) = logger() else {
         return false;
     };
-    if logger.control.output_health().terminating {
+    if logger.logger.control.output_health().terminating {
         return false;
     }
-    logger.control.report_client_lifecycle(state);
+    logger.logger.control.report_client_lifecycle(state);
     true
 }
 
 /// Runs on the bridge worker, never synchronously on Flutter's frame thread.
 pub fn shutdown_telemetry() -> LocalDiagnostics {
     logger().map_or_else(LocalDiagnostics::unavailable, |mut logger| {
-        logger.shutdown();
-        logger.control.diagnostics()
+        logger.traces.shutdown();
+        logger.logger.shutdown();
+        logger.logger.control.diagnostics()
     })
 }
 
@@ -145,4 +154,20 @@ mod tests {
             "isolated missing-console startup failed"
         );
     }
+}
+
+pub(crate) use nddev_device_sync_accounts::telemetry::Delivery;
+pub use nddev_device_sync_accounts::view::DeliveryView;
+
+pub(crate) fn start_delivery(
+    identity: std::sync::Arc<nddev_device_sync_accounts::IdentityClient>,
+    foreground: bool,
+) -> Option<Delivery> {
+    let process = logger()?;
+    Some(Delivery::start(
+        identity,
+        process.logger.control.subscribe().ok()?,
+        process.traces.subscribe().ok()?,
+        foreground,
+    ))
 }

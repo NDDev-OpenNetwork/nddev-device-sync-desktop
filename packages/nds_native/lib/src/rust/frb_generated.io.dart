@@ -141,6 +141,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
+  ConflictView dco_decode_box_autoadd_conflict_view(dynamic raw);
+
+  @protected
   DebugScope dco_decode_box_autoadd_debug_scope(dynamic raw);
 
   @protected
@@ -177,10 +180,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ClientLifecycle dco_decode_client_lifecycle(dynamic raw);
 
   @protected
+  ClipboardView dco_decode_clipboard_view(dynamic raw);
+
+  @protected
+  ConflictView dco_decode_conflict_view(dynamic raw);
+
+  @protected
   Cpu dco_decode_cpu(dynamic raw);
 
   @protected
   DebugScope dco_decode_debug_scope(dynamic raw);
+
+  @protected
+  DeliveryView dco_decode_delivery_view(dynamic raw);
 
   @protected
   DeviceView dco_decode_device_view(dynamic raw);
@@ -196,6 +208,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Entry dco_decode_entry(dynamic raw);
+
+  @protected
+  ExportPolicy dco_decode_export_policy(dynamic raw);
 
   @protected
   double dco_decode_f_64(dynamic raw);
@@ -217,6 +232,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64 dco_decode_i_64(dynamic raw);
+
+  @protected
+  IncidentPage dco_decode_incident_page(dynamic raw);
+
+  @protected
+  IncidentView dco_decode_incident_view(dynamic raw);
 
   @protected
   List<Action>
@@ -243,7 +264,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<Finding> dco_decode_list_finding(dynamic raw);
 
   @protected
+  List<IncidentView> dco_decode_list_incident_view(dynamic raw);
+
+  @protected
   List<ModuleState> dco_decode_list_module_state(dynamic raw);
+
+  @protected
+  List<PasskeyView> dco_decode_list_passkey_view(dynamic raw);
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
@@ -279,6 +306,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
 
   @protected
+  ConflictView? dco_decode_opt_box_autoadd_conflict_view(dynamic raw);
+
+  @protected
   DebugScope? dco_decode_opt_box_autoadd_debug_scope(dynamic raw);
 
   @protected
@@ -300,10 +330,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Page dco_decode_page(dynamic raw);
 
   @protected
+  PasskeyView dco_decode_passkey_view(dynamic raw);
+
+  @protected
   Plan dco_decode_plan(dynamic raw);
 
   @protected
   Reachability dco_decode_reachability(dynamic raw);
+
+  @protected
+  RecordPage dco_decode_record_page(dynamic raw);
 
   @protected
   RecordView dco_decode_record_view(dynamic raw);
@@ -450,6 +486,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  ConflictView sse_decode_box_autoadd_conflict_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   DebugScope sse_decode_box_autoadd_debug_scope(SseDeserializer deserializer);
 
   @protected
@@ -488,10 +529,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ClientLifecycle sse_decode_client_lifecycle(SseDeserializer deserializer);
 
   @protected
+  ClipboardView sse_decode_clipboard_view(SseDeserializer deserializer);
+
+  @protected
+  ConflictView sse_decode_conflict_view(SseDeserializer deserializer);
+
+  @protected
   Cpu sse_decode_cpu(SseDeserializer deserializer);
 
   @protected
   DebugScope sse_decode_debug_scope(SseDeserializer deserializer);
+
+  @protected
+  DeliveryView sse_decode_delivery_view(SseDeserializer deserializer);
 
   @protected
   DeviceView sse_decode_device_view(SseDeserializer deserializer);
@@ -507,6 +557,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Entry sse_decode_entry(SseDeserializer deserializer);
+
+  @protected
+  ExportPolicy sse_decode_export_policy(SseDeserializer deserializer);
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
@@ -528,6 +581,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
+  IncidentPage sse_decode_incident_page(SseDeserializer deserializer);
+
+  @protected
+  IncidentView sse_decode_incident_view(SseDeserializer deserializer);
 
   @protected
   List<Action>
@@ -556,7 +615,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<Finding> sse_decode_list_finding(SseDeserializer deserializer);
 
   @protected
+  List<IncidentView> sse_decode_list_incident_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<ModuleState> sse_decode_list_module_state(SseDeserializer deserializer);
+
+  @protected
+  List<PasskeyView> sse_decode_list_passkey_view(SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
@@ -596,6 +663,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  ConflictView? sse_decode_opt_box_autoadd_conflict_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   DebugScope? sse_decode_opt_box_autoadd_debug_scope(
     SseDeserializer deserializer,
   );
@@ -621,10 +693,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Page sse_decode_page(SseDeserializer deserializer);
 
   @protected
+  PasskeyView sse_decode_passkey_view(SseDeserializer deserializer);
+
+  @protected
   Plan sse_decode_plan(SseDeserializer deserializer);
 
   @protected
   Reachability sse_decode_reachability(SseDeserializer deserializer);
+
+  @protected
+  RecordPage sse_decode_record_page(SseDeserializer deserializer);
 
   @protected
   RecordView sse_decode_record_view(SseDeserializer deserializer);
@@ -786,6 +864,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_conflict_view(
+    ConflictView self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_debug_scope(
     DebugScope self,
     SseSerializer serializer,
@@ -834,10 +918,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_clipboard_view(ClipboardView self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_conflict_view(ConflictView self, SseSerializer serializer);
+
+  @protected
   void sse_encode_cpu(Cpu self, SseSerializer serializer);
 
   @protected
   void sse_encode_debug_scope(DebugScope self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_delivery_view(DeliveryView self, SseSerializer serializer);
 
   @protected
   void sse_encode_device_view(DeviceView self, SseSerializer serializer);
@@ -856,6 +949,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_entry(Entry self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_export_policy(ExportPolicy self, SseSerializer serializer);
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
@@ -877,6 +973,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_incident_page(IncidentPage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_incident_view(IncidentView self, SseSerializer serializer);
 
   @protected
   void
@@ -910,8 +1012,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_finding(List<Finding> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_incident_view(
+    List<IncidentView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_module_state(
     List<ModuleState> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_passkey_view(
+    List<PasskeyView> self,
     SseSerializer serializer,
   );
 
@@ -967,6 +1081,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_conflict_view(
+    ConflictView? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_debug_scope(
     DebugScope? self,
     SseSerializer serializer,
@@ -994,10 +1114,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_page(Page self, SseSerializer serializer);
 
   @protected
+  void sse_encode_passkey_view(PasskeyView self, SseSerializer serializer);
+
+  @protected
   void sse_encode_plan(Plan self, SseSerializer serializer);
 
   @protected
   void sse_encode_reachability(Reachability self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_page(RecordPage self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_view(RecordView self, SseSerializer serializer);

@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 890096134;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -27123474;
 
 // Section: executor
 
@@ -856,6 +856,485 @@ fn wire__crate__api__identity__NdsClient_cancel_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_clipboard_copy_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_clipboard_copy",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok =
+                            crate::api::identity::NdsClient::clipboard_copy(&*api_that_guard)
+                                .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_clipboard_publish_archive_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_clipboard_publish_archive",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_agent = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LocalAgent>,
+            >>::sse_decode(&mut deserializer);
+            let api_entry = <u64>::sse_decode(&mut deserializer);
+            let api_mime = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let mut api_agent_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![
+                                    flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                        &api_that, 0, false,
+                                    ),
+                                    flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                        &api_agent, 1, false,
+                                    ),
+                                ],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                1 => {
+                                    api_agent_guard =
+                                        Some(api_agent.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let api_agent_guard = api_agent_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::clipboard_publish_archive(
+                            &*api_that_guard,
+                            &*api_agent_guard,
+                            api_entry,
+                            api_mime,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_clipboard_publish_native_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_clipboard_publish_native",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::clipboard_publish_native(
+                            &*api_that_guard,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_clipboard_publish_text_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_clipboard_publish_text",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_text = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::clipboard_publish_text(
+                            &*api_that_guard,
+                            api_text,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_clipboard_snapshot_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_clipboard_snapshot",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok =
+                            crate::api::identity::NdsClient::clipboard_snapshot(&*api_that_guard)
+                                .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_delivery_snapshot_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_delivery_snapshot",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok = Ok::<_, ()>(crate::api::identity::NdsClient::delivery_snapshot(
+                    &*api_that_guard,
+                ))?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_incident_action_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_incident_action",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_id = <String>::sse_decode(&mut deserializer);
+            let api_revision = <u64>::sse_decode(&mut deserializer);
+            let api_silence_seconds = <u32>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::incident_action(
+                            &*api_that_guard,
+                            api_id,
+                            api_revision,
+                            api_silence_seconds,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_incidents_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_incidents",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_after = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok =
+                            crate::api::identity::NdsClient::incidents(&*api_that_guard, api_after)
+                                .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_logout_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -941,6 +1420,62 @@ fn wire__crate__api__identity__NdsClient_new_impl(
                     let output_ok = crate::api::identity::NdsClient::new(api_endpoint)?;
                     std::result::Result::Ok(output_ok)
                 })())
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_passkeys_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_passkeys",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok =
+                            crate::api::identity::NdsClient::passkeys(&*api_that_guard).await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
             }
         },
     )
@@ -1482,6 +2017,66 @@ fn wire__crate__api__identity__NdsClient_revoke_device_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_revoke_passkey_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_revoke_passkey",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::revoke_passkey(
+                            &*api_that_guard,
+                            api_id,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_set_foreground_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -1760,6 +2355,128 @@ fn wire__crate__api__identity__NdsClient_sync_states_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_vault_copy_secret",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::vault_copy_secret(
+                            &*api_that_guard,
+                            api_id,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_vault_delete_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_vault_delete",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_id = <String>::sse_decode(&mut deserializer);
+            let api_expected_revision = <u64>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::vault_delete(
+                            &*api_that_guard,
+                            api_id,
+                            api_expected_revision,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_vault_records_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1785,6 +2502,7 @@ fn wire__crate__api__identity__NdsClient_vault_records_impl(
             let api_that = <RustOpaqueMoi<
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
             >>::sse_decode(&mut deserializer);
+            let api_after = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
@@ -1806,9 +2524,11 @@ fn wire__crate__api__identity__NdsClient_vault_records_impl(
                             }
                         }
                         let api_that_guard = api_that_guard.unwrap();
-                        let output_ok =
-                            crate::api::identity::NdsClient::vault_records(&*api_that_guard)
-                                .await?;
+                        let output_ok = crate::api::identity::NdsClient::vault_records(
+                            &*api_that_guard,
+                            api_after,
+                        )
+                        .await?;
                         std::result::Result::Ok(output_ok)
                     })()
                     .await,
@@ -1874,6 +2594,72 @@ fn wire__crate__api__identity__NdsClient_vault_refresh_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_vault_resolve_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_vault_resolve",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_id = <String>::sse_decode(&mut deserializer);
+            let api_expected_revision = <u64>::sse_decode(&mut deserializer);
+            let api_expected_cursor = <u64>::sse_decode(&mut deserializer);
+            let api_use_conflict = <bool>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, nddev_device_sync_vault::view::VaultError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::vault_resolve(
+                            &*api_that_guard,
+                            api_id,
+                            api_expected_revision,
+                            api_expected_cursor,
+                            api_use_conflict,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_vault_save_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1900,6 +2686,7 @@ fn wire__crate__api__identity__NdsClient_vault_save_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
             >>::sse_decode(&mut deserializer);
             let api_id = <Option<String>>::sse_decode(&mut deserializer);
+            let api_expected_revision = <u64>::sse_decode(&mut deserializer);
             let api_title = <String>::sse_decode(&mut deserializer);
             let api_username = <String>::sse_decode(&mut deserializer);
             let api_secret = <String>::sse_decode(&mut deserializer);
@@ -1927,6 +2714,7 @@ fn wire__crate__api__identity__NdsClient_vault_save_impl(
                         let output_ok = crate::api::identity::NdsClient::vault_save(
                             &*api_that_guard,
                             api_id,
+                            api_expected_revision,
                             api_title,
                             api_username,
                             api_secret,
@@ -2142,6 +2930,39 @@ fn wire__crate__api__telemetry__client_diagnostics_impl(
         },
     )
 }
+fn wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "clipboard_view_default",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok =
+                        Ok::<_, ()>(nddev_device_sync_vault::view::ClipboardView::default())?;
+                    std::result::Result::Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__crate__api__telemetry__configure_debug_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -2176,6 +2997,72 @@ fn wire__crate__api__telemetry__configure_debug_impl(
         },
     )
 }
+fn wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "delivery_view_default",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok =
+                        Ok::<_, ()>(nddev_device_sync_accounts::view::DeliveryView::default())?;
+                    std::result::Result::Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "export_policy_default",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok =
+                        Ok::<_, ()>(nddev_device_sync_accounts::view::ExportPolicy::default())?;
+                    std::result::Result::Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__crate__api__telemetry__init_app_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -2207,6 +3094,35 @@ fn wire__crate__api__telemetry__init_app_impl(
                     })(),
                 )
             }
+        },
+    )
+}
+fn wire__crate__api__identity__new_vault_record_id_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "new_vault_record_id",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Ok::<_, ()>(crate::api::identity::new_vault_record_id())?;
+                std::result::Result::Ok(output_ok)
+            })())
         },
     )
 }
@@ -2330,6 +3246,35 @@ fn wire__crate__api__modules__supports_local_agent_impl(
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
                 let output_ok = Ok::<_, ()>(crate::api::modules::supports_local_agent())?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__identity__supports_native_clipboard_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "supports_native_clipboard",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Ok::<_, ()>(crate::api::identity::supports_native_clipboard())?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -2587,9 +3532,40 @@ const _: fn() = || {
         let _: usize = CleanerRunSummary.failed;
     }
     {
+        let ClipboardView = None::<nddev_device_sync_vault::view::ClipboardView>.unwrap();
+        let _: bool = ClipboardView.present;
+        let _: String = ClipboardView.id;
+        let _: String = ClipboardView.device_id;
+        let _: u64 = ClipboardView.server_seq;
+        let _: u32 = ClipboardView.bytes;
+        let _: bool = ClipboardView.conflicted;
+    }
+    {
+        let ConflictView = None::<nddev_device_sync_vault::view::ConflictView>.unwrap();
+        let _: String = ConflictView.title;
+        let _: String = ConflictView.username;
+        let _: String = ConflictView.device_id;
+        let _: bool = ConflictView.deleted;
+    }
+    {
         let Cpu = None::<nddev_device_sync_sysinfo::view::Cpu>.unwrap();
         let _: Option<f64> = Cpu.usage;
         let _: Option<f64> = Cpu.temp;
+    }
+    {
+        let DeliveryView = None::<nddev_device_sync_accounts::view::DeliveryView>.unwrap();
+        let _: bool = DeliveryView.initialized;
+        let _: nddev_device_sync_accounts::view::ExportPolicy = DeliveryView.policy;
+        let _: bool = DeliveryView.paused;
+        let _: u32 = DeliveryView.pending;
+        let _: u64 = DeliveryView.delivered;
+        let _: u64 = DeliveryView.dropped;
+        let _: u64 = DeliveryView.failures;
+        let _: u32 = DeliveryView.spans_pending;
+        let _: u64 = DeliveryView.spans_delivered;
+        let _: u64 = DeliveryView.spans_dropped;
+        let _: u64 = DeliveryView.spans_failures;
+        let _: u64 = DeliveryView.last_success_at;
     }
     {
         let DeviceView = None::<nddev_device_sync_accounts::view::DeviceView>.unwrap();
@@ -2685,18 +3661,33 @@ const _: fn() = || {
         let _: bool = Page.more;
     }
     {
+        let PasskeyView = None::<nddev_device_sync_accounts::view::PasskeyView>.unwrap();
+        let _: String = PasskeyView.id;
+        let _: String = PasskeyView.created_at;
+    }
+    {
         let Plan = None::<nddev_device_sync_updater::view::Plan>.unwrap();
         let _: u8 = Plan.schema;
         let _: String = Plan.channel;
         let _: Vec<Action> = Plan.actions;
     }
     {
+        let RecordPage = None::<nddev_device_sync_vault::view::RecordPage>.unwrap();
+        let _: u64 = RecordPage.observed_seq;
+        let _: Vec<nddev_device_sync_vault::view::RecordView> = RecordPage.items;
+        let _: String = RecordPage.next_after;
+        let _: bool = RecordPage.has_more;
+    }
+    {
         let RecordView = None::<nddev_device_sync_vault::view::RecordView>.unwrap();
+        let _: u64 = RecordView.observed_seq;
+        let _: bool = RecordView.deleted;
         let _: String = RecordView.id;
         let _: String = RecordView.title;
         let _: String = RecordView.username;
         let _: u64 = RecordView.revision;
         let _: bool = RecordView.conflicted;
+        let _: Option<nddev_device_sync_vault::view::ConflictView> = RecordView.conflict;
     }
     {
         let RemoteSession = None::<nddev_device_sync_rds::view::RemoteSession>.unwrap();
@@ -3061,6 +4052,42 @@ impl SseDecode for nddev_device_sync_telemetry::view::ClientLifecycle {
     }
 }
 
+impl SseDecode for nddev_device_sync_vault::view::ClipboardView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_present = <bool>::sse_decode(deserializer);
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_deviceId = <String>::sse_decode(deserializer);
+        let mut var_serverSeq = <u64>::sse_decode(deserializer);
+        let mut var_bytes = <u32>::sse_decode(deserializer);
+        let mut var_conflicted = <bool>::sse_decode(deserializer);
+        return nddev_device_sync_vault::view::ClipboardView {
+            present: var_present,
+            id: var_id,
+            device_id: var_deviceId,
+            server_seq: var_serverSeq,
+            bytes: var_bytes,
+            conflicted: var_conflicted,
+        };
+    }
+}
+
+impl SseDecode for nddev_device_sync_vault::view::ConflictView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_title = <String>::sse_decode(deserializer);
+        let mut var_username = <String>::sse_decode(deserializer);
+        let mut var_deviceId = <String>::sse_decode(deserializer);
+        let mut var_deleted = <bool>::sse_decode(deserializer);
+        return nddev_device_sync_vault::view::ConflictView {
+            title: var_title,
+            username: var_username,
+            device_id: var_deviceId,
+            deleted: var_deleted,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_sysinfo::view::Cpu {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3084,6 +4111,39 @@ impl SseDecode for nddev_device_sync_telemetry::view::DebugScope {
             3 => nddev_device_sync_telemetry::view::DebugScope::Io,
             4 => nddev_device_sync_telemetry::view::DebugScope::Process,
             _ => unreachable!("Invalid variant for DebugScope: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for nddev_device_sync_accounts::view::DeliveryView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_initialized = <bool>::sse_decode(deserializer);
+        let mut var_policy =
+            <nddev_device_sync_accounts::view::ExportPolicy>::sse_decode(deserializer);
+        let mut var_paused = <bool>::sse_decode(deserializer);
+        let mut var_pending = <u32>::sse_decode(deserializer);
+        let mut var_delivered = <u64>::sse_decode(deserializer);
+        let mut var_dropped = <u64>::sse_decode(deserializer);
+        let mut var_failures = <u64>::sse_decode(deserializer);
+        let mut var_spansPending = <u32>::sse_decode(deserializer);
+        let mut var_spansDelivered = <u64>::sse_decode(deserializer);
+        let mut var_spansDropped = <u64>::sse_decode(deserializer);
+        let mut var_spansFailures = <u64>::sse_decode(deserializer);
+        let mut var_lastSuccessAt = <u64>::sse_decode(deserializer);
+        return nddev_device_sync_accounts::view::DeliveryView {
+            initialized: var_initialized,
+            policy: var_policy,
+            paused: var_paused,
+            pending: var_pending,
+            delivered: var_delivered,
+            dropped: var_dropped,
+            failures: var_failures,
+            spans_pending: var_spansPending,
+            spans_delivered: var_spansDelivered,
+            spans_dropped: var_spansDropped,
+            spans_failures: var_spansFailures,
+            last_success_at: var_lastSuccessAt,
         };
     }
 }
@@ -3185,6 +4245,19 @@ impl SseDecode for nddev_device_sync_clipboard::view::Entry {
     }
 }
 
+impl SseDecode for nddev_device_sync_accounts::view::ExportPolicy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => nddev_device_sync_accounts::view::ExportPolicy::Unknown,
+            1 => nddev_device_sync_accounts::view::ExportPolicy::Enabled,
+            2 => nddev_device_sync_accounts::view::ExportPolicy::Disabled,
+            _ => unreachable!("Invalid variant for ExportPolicy: {}", inner),
+        };
+    }
+}
+
 impl SseDecode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3260,6 +4333,48 @@ impl SseDecode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_i64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::identity::IncidentPage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_incidents = <Vec<crate::api::identity::IncidentView>>::sse_decode(deserializer);
+        let mut var_nextCursor = <String>::sse_decode(deserializer);
+        let mut var_generatedAt = <String>::sse_decode(deserializer);
+        return crate::api::identity::IncidentPage {
+            incidents: var_incidents,
+            next_cursor: var_nextCursor,
+            generated_at: var_generatedAt,
+        };
+    }
+}
+
+impl SseDecode for crate::api::identity::IncidentView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_service = <String>::sse_decode(deserializer);
+        let mut var_kind = <String>::sse_decode(deserializer);
+        let mut var_severity = <String>::sse_decode(deserializer);
+        let mut var_state = <String>::sse_decode(deserializer);
+        let mut var_revision = <u64>::sse_decode(deserializer);
+        let mut var_occurrences = <u64>::sse_decode(deserializer);
+        let mut var_firstSeen = <String>::sse_decode(deserializer);
+        let mut var_lastSeen = <String>::sse_decode(deserializer);
+        let mut var_silencedUntil = <String>::sse_decode(deserializer);
+        return crate::api::identity::IncidentView {
+            id: var_id,
+            service: var_service,
+            kind: var_kind,
+            severity: var_severity,
+            state: var_state,
+            revision: var_revision,
+            occurrences: var_occurrences,
+            first_seen: var_firstSeen,
+            last_seen: var_lastSeen,
+            silenced_until: var_silencedUntil,
+        };
     }
 }
 
@@ -3357,6 +4472,20 @@ impl SseDecode for Vec<nddev_device_sync_gds::view::Finding> {
     }
 }
 
+impl SseDecode for Vec<crate::api::identity::IncidentView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::identity::IncidentView>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<nddev_device_sync_agent::view::ModuleState> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3364,6 +4493,20 @@ impl SseDecode for Vec<nddev_device_sync_agent::view::ModuleState> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<nddev_device_sync_agent::view::ModuleState>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<nddev_device_sync_accounts::view::PasskeyView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<nddev_device_sync_accounts::view::PasskeyView>::sse_decode(
                 deserializer,
             ));
         }
@@ -3533,6 +4676,19 @@ impl SseDecode for Option<bool> {
     }
 }
 
+impl SseDecode for Option<nddev_device_sync_vault::view::ConflictView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<nddev_device_sync_vault::view::ConflictView>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<nddev_device_sync_telemetry::view::DebugScope> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3616,6 +4772,18 @@ impl SseDecode for nddev_device_sync_clipboard::view::Page {
     }
 }
 
+impl SseDecode for nddev_device_sync_accounts::view::PasskeyView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_createdAt = <String>::sse_decode(deserializer);
+        return nddev_device_sync_accounts::view::PasskeyView {
+            id: var_id,
+            created_at: var_createdAt,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_updater::view::Plan {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3644,20 +4812,44 @@ impl SseDecode for nddev_device_sync_agent::view::Reachability {
     }
 }
 
+impl SseDecode for nddev_device_sync_vault::view::RecordPage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_observedSeq = <u64>::sse_decode(deserializer);
+        let mut var_items =
+            <Vec<nddev_device_sync_vault::view::RecordView>>::sse_decode(deserializer);
+        let mut var_nextAfter = <String>::sse_decode(deserializer);
+        let mut var_hasMore = <bool>::sse_decode(deserializer);
+        return nddev_device_sync_vault::view::RecordPage {
+            observed_seq: var_observedSeq,
+            items: var_items,
+            next_after: var_nextAfter,
+            has_more: var_hasMore,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_vault::view::RecordView {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_observedSeq = <u64>::sse_decode(deserializer);
+        let mut var_deleted = <bool>::sse_decode(deserializer);
         let mut var_id = <String>::sse_decode(deserializer);
         let mut var_title = <String>::sse_decode(deserializer);
         let mut var_username = <String>::sse_decode(deserializer);
         let mut var_revision = <u64>::sse_decode(deserializer);
         let mut var_conflicted = <bool>::sse_decode(deserializer);
+        let mut var_conflict =
+            <Option<nddev_device_sync_vault::view::ConflictView>>::sse_decode(deserializer);
         return nddev_device_sync_vault::view::RecordView {
+            observed_seq: var_observedSeq,
+            deleted: var_deleted,
             id: var_id,
             title: var_title,
             username: var_username,
             revision: var_revision,
             conflicted: var_conflicted,
+            conflict: var_conflict,
         };
     }
 }
@@ -4026,122 +5218,206 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__identity__NdsClient_new_impl(port, ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__identity__NdsClient_poll_github_impl(
+        16 => wire__crate__api__identity__NdsClient_clipboard_copy_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__api__identity__NdsClient_poll_passkey_impl(
+        17 => wire__crate__api__identity__NdsClient_clipboard_publish_archive_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__api__identity__NdsClient_prepare_device_impl(
+        18 => wire__crate__api__identity__NdsClient_clipboard_publish_native_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__api__identity__NdsClient_publish_device_state_impl(
+        19 => wire__crate__api__identity__NdsClient_clipboard_publish_text_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__api__identity__NdsClient_publish_local_state_impl(
+        20 => wire__crate__api__identity__NdsClient_clipboard_snapshot_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__identity__NdsClient_refresh_devices_impl(
+        22 => wire__crate__api__identity__NdsClient_incident_action_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__api__identity__NdsClient_request_email_impl(
+        23 => {
+            wire__crate__api__identity__NdsClient_incidents_impl(port, ptr, rust_vec_len, data_len)
+        }
+        24 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__identity__NdsClient_new_impl(port, ptr, rust_vec_len, data_len),
+        26 => {
+            wire__crate__api__identity__NdsClient_passkeys_impl(port, ptr, rust_vec_len, data_len)
+        }
+        27 => wire__crate__api__identity__NdsClient_poll_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__api__identity__NdsClient_revoke_device_impl(
+        28 => wire__crate__api__identity__NdsClient_poll_passkey_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__identity__NdsClient_start_github_impl(
+        29 => wire__crate__api__identity__NdsClient_prepare_device_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__api__identity__NdsClient_start_passkey_impl(
+        30 => wire__crate__api__identity__NdsClient_publish_device_state_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__api__identity__NdsClient_sync_states_impl(
+        31 => wire__crate__api__identity__NdsClient_publish_local_state_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => wire__crate__api__identity__NdsClient_vault_records_impl(
+        32 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
+        33 => wire__crate__api__identity__NdsClient_refresh_devices_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        33 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+        34 => wire__crate__api__identity__NdsClient_request_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        34 => {
+        35 => wire__crate__api__identity__NdsClient_revoke_device_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        36 => wire__crate__api__identity__NdsClient_revoke_passkey_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        39 => wire__crate__api__identity__NdsClient_start_github_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        40 => wire__crate__api__identity__NdsClient_start_passkey_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        41 => wire__crate__api__identity__NdsClient_sync_states_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        42 => wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        43 => wire__crate__api__identity__NdsClient_vault_delete_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        44 => wire__crate__api__identity__NdsClient_vault_records_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        45 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        46 => wire__crate__api__identity__NdsClient_vault_resolve_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        47 => {
             wire__crate__api__identity__NdsClient_vault_save_impl(port, ptr, rust_vec_len, data_len)
         }
-        35 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
+        48 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        36 => {
+        49 => {
             wire__crate__api__identity__NdsClient_vault_sync_impl(port, ptr, rust_vec_len, data_len)
         }
-        37 => wire__crate__api__identity__NdsClient_verify_email_impl(
+        50 => wire__crate__api__identity__NdsClient_verify_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        40 => wire__crate__api__telemetry__init_app_impl(port, ptr, rust_vec_len, data_len),
-        43 => {
+        52 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        54 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        55 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        56 => wire__crate__api__telemetry__init_app_impl(port, ptr, rust_vec_len, data_len),
+        60 => {
             wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
         }
-        47 => wire__nddev_device_sync_vault__view__vault_error_code_impl(
+        65 => wire__nddev_device_sync_vault__view__vault_error_code_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        66 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        49 => wire__nddev_device_sync_accounts__view__view_default_impl(
+        67 => wire__nddev_device_sync_accounts__view__view_default_impl(
             port,
             ptr,
             rust_vec_len,
@@ -4162,19 +5438,28 @@ fn pde_ffi_dispatcher_sync_impl(
         7 => wire__crate__api__modules__LocalAgent_close_impl(ptr, rust_vec_len, data_len),
         9 => wire__crate__api__modules__LocalAgent_modules_impl(ptr, rust_vec_len, data_len),
         15 => wire__crate__api__identity__NdsClient_cancel_impl(ptr, rust_vec_len, data_len),
-        27 => {
+        21 => wire__crate__api__identity__NdsClient_delivery_snapshot_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        37 => {
             wire__crate__api__identity__NdsClient_set_foreground_impl(ptr, rust_vec_len, data_len)
         }
-        28 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
-        38 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        39 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
-        41 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
-        42 => {
+        38 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
+        51 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
+        53 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        57 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
+        58 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        59 => {
             wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
         }
-        44 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        45 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        46 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        61 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        62 => {
+            wire__crate__api__identity__supports_native_clipboard_impl(ptr, rust_vec_len, data_len)
+        }
+        63 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        64 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4453,6 +5738,54 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::ClipboardView> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.present.into_into_dart().into_dart(),
+            self.0.id.into_into_dart().into_dart(),
+            self.0.device_id.into_into_dart().into_dart(),
+            self.0.server_seq.into_into_dart().into_dart(),
+            self.0.bytes.into_into_dart().into_dart(),
+            self.0.conflicted.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_vault::view::ClipboardView>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_vault::view::ClipboardView>>
+    for nddev_device_sync_vault::view::ClipboardView
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_vault::view::ClipboardView> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::ConflictView> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.title.into_into_dart().into_dart(),
+            self.0.username.into_into_dart().into_dart(),
+            self.0.device_id.into_into_dart().into_dart(),
+            self.0.deleted.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_vault::view::ConflictView>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_vault::view::ConflictView>>
+    for nddev_device_sync_vault::view::ConflictView
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_vault::view::ConflictView> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_sysinfo::view::Cpu> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4494,6 +5827,37 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_telemetry::v
     for nddev_device_sync_telemetry::view::DebugScope
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_telemetry::view::DebugScope> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_accounts::view::DeliveryView> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.initialized.into_into_dart().into_dart(),
+            self.0.policy.into_into_dart().into_dart(),
+            self.0.paused.into_into_dart().into_dart(),
+            self.0.pending.into_into_dart().into_dart(),
+            self.0.delivered.into_into_dart().into_dart(),
+            self.0.dropped.into_into_dart().into_dart(),
+            self.0.failures.into_into_dart().into_dart(),
+            self.0.spans_pending.into_into_dart().into_dart(),
+            self.0.spans_delivered.into_into_dart().into_dart(),
+            self.0.spans_dropped.into_into_dart().into_dart(),
+            self.0.spans_failures.into_into_dart().into_dart(),
+            self.0.last_success_at.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_accounts::view::DeliveryView>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_accounts::view::DeliveryView>>
+    for nddev_device_sync_accounts::view::DeliveryView
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_accounts::view::DeliveryView> {
         self.into()
     }
 }
@@ -4625,6 +5989,28 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_clipboard::v
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_accounts::view::ExportPolicy> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            nddev_device_sync_accounts::view::ExportPolicy::Unknown => 0.into_dart(),
+            nddev_device_sync_accounts::view::ExportPolicy::Enabled => 1.into_dart(),
+            nddev_device_sync_accounts::view::ExportPolicy::Disabled => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_accounts::view::ExportPolicy>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_accounts::view::ExportPolicy>>
+    for nddev_device_sync_accounts::view::ExportPolicy
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_accounts::view::ExportPolicy> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_telemetry::view::FailureKind> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self.0 {
@@ -4711,6 +6097,57 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_sysinfo::vie
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_sysinfo::view::Gpu> {
         self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::identity::IncidentPage {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.incidents.into_into_dart().into_dart(),
+            self.next_cursor.into_into_dart().into_dart(),
+            self.generated_at.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::identity::IncidentPage
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::identity::IncidentPage>
+    for crate::api::identity::IncidentPage
+{
+    fn into_into_dart(self) -> crate::api::identity::IncidentPage {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::identity::IncidentView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.service.into_into_dart().into_dart(),
+            self.kind.into_into_dart().into_dart(),
+            self.severity.into_into_dart().into_dart(),
+            self.state.into_into_dart().into_dart(),
+            self.revision.into_into_dart().into_dart(),
+            self.occurrences.into_into_dart().into_dart(),
+            self.first_seen.into_into_dart().into_dart(),
+            self.last_seen.into_into_dart().into_dart(),
+            self.silenced_until.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::identity::IncidentView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::identity::IncidentView>
+    for crate::api::identity::IncidentView
+{
+    fn into_into_dart(self) -> crate::api::identity::IncidentView {
+        self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -4837,6 +6274,27 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_clipboard::v
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_accounts::view::PasskeyView> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.id.into_into_dart().into_dart(),
+            self.0.created_at.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_accounts::view::PasskeyView>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_accounts::view::PasskeyView>>
+    for nddev_device_sync_accounts::view::PasskeyView
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_accounts::view::PasskeyView> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_updater::view::Plan> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4882,14 +6340,40 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_agent::view:
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::RecordPage> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.observed_seq.into_into_dart().into_dart(),
+            self.0.items.into_into_dart().into_dart(),
+            self.0.next_after.into_into_dart().into_dart(),
+            self.0.has_more.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<nddev_device_sync_vault::view::RecordPage>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_vault::view::RecordPage>>
+    for nddev_device_sync_vault::view::RecordPage
+{
+    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_vault::view::RecordPage> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::RecordView> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.0.observed_seq.into_into_dart().into_dart(),
+            self.0.deleted.into_into_dart().into_dart(),
             self.0.id.into_into_dart().into_dart(),
             self.0.title.into_into_dart().into_dart(),
             self.0.username.into_into_dart().into_dart(),
             self.0.revision.into_into_dart().into_dart(),
             self.0.conflicted.into_into_dart().into_dart(),
+            self.0.conflict.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -5407,6 +6891,28 @@ impl SseEncode for nddev_device_sync_telemetry::view::ClientLifecycle {
     }
 }
 
+impl SseEncode for nddev_device_sync_vault::view::ClipboardView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.present, serializer);
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.device_id, serializer);
+        <u64>::sse_encode(self.server_seq, serializer);
+        <u32>::sse_encode(self.bytes, serializer);
+        <bool>::sse_encode(self.conflicted, serializer);
+    }
+}
+
+impl SseEncode for nddev_device_sync_vault::view::ConflictView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.title, serializer);
+        <String>::sse_encode(self.username, serializer);
+        <String>::sse_encode(self.device_id, serializer);
+        <bool>::sse_encode(self.deleted, serializer);
+    }
+}
+
 impl SseEncode for nddev_device_sync_sysinfo::view::Cpu {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5431,6 +6937,24 @@ impl SseEncode for nddev_device_sync_telemetry::view::DebugScope {
             },
             serializer,
         );
+    }
+}
+
+impl SseEncode for nddev_device_sync_accounts::view::DeliveryView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.initialized, serializer);
+        <nddev_device_sync_accounts::view::ExportPolicy>::sse_encode(self.policy, serializer);
+        <bool>::sse_encode(self.paused, serializer);
+        <u32>::sse_encode(self.pending, serializer);
+        <u64>::sse_encode(self.delivered, serializer);
+        <u64>::sse_encode(self.dropped, serializer);
+        <u64>::sse_encode(self.failures, serializer);
+        <u32>::sse_encode(self.spans_pending, serializer);
+        <u64>::sse_encode(self.spans_delivered, serializer);
+        <u64>::sse_encode(self.spans_dropped, serializer);
+        <u64>::sse_encode(self.spans_failures, serializer);
+        <u64>::sse_encode(self.last_success_at, serializer);
     }
 }
 
@@ -5500,6 +7024,23 @@ impl SseEncode for nddev_device_sync_clipboard::view::Entry {
     }
 }
 
+impl SseEncode for nddev_device_sync_accounts::view::ExportPolicy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                nddev_device_sync_accounts::view::ExportPolicy::Unknown => 0,
+                nddev_device_sync_accounts::view::ExportPolicy::Enabled => 1,
+                nddev_device_sync_accounts::view::ExportPolicy::Disabled => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5563,6 +7104,31 @@ impl SseEncode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_i64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::identity::IncidentPage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::identity::IncidentView>>::sse_encode(self.incidents, serializer);
+        <String>::sse_encode(self.next_cursor, serializer);
+        <String>::sse_encode(self.generated_at, serializer);
+    }
+}
+
+impl SseEncode for crate::api::identity::IncidentView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.service, serializer);
+        <String>::sse_encode(self.kind, serializer);
+        <String>::sse_encode(self.severity, serializer);
+        <String>::sse_encode(self.state, serializer);
+        <u64>::sse_encode(self.revision, serializer);
+        <u64>::sse_encode(self.occurrences, serializer);
+        <String>::sse_encode(self.first_seen, serializer);
+        <String>::sse_encode(self.last_seen, serializer);
+        <String>::sse_encode(self.silenced_until, serializer);
     }
 }
 
@@ -5636,12 +7202,32 @@ impl SseEncode for Vec<nddev_device_sync_gds::view::Finding> {
     }
 }
 
+impl SseEncode for Vec<crate::api::identity::IncidentView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::identity::IncidentView>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<nddev_device_sync_agent::view::ModuleState> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <nddev_device_sync_agent::view::ModuleState>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<nddev_device_sync_accounts::view::PasskeyView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <nddev_device_sync_accounts::view::PasskeyView>::sse_encode(item, serializer);
         }
     }
 }
@@ -5762,6 +7348,16 @@ impl SseEncode for Option<bool> {
     }
 }
 
+impl SseEncode for Option<nddev_device_sync_vault::view::ConflictView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <nddev_device_sync_vault::view::ConflictView>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<nddev_device_sync_telemetry::view::DebugScope> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5830,6 +7426,14 @@ impl SseEncode for nddev_device_sync_clipboard::view::Page {
     }
 }
 
+impl SseEncode for nddev_device_sync_accounts::view::PasskeyView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.created_at, serializer);
+    }
+}
+
 impl SseEncode for nddev_device_sync_updater::view::Plan {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5857,14 +7461,30 @@ impl SseEncode for nddev_device_sync_agent::view::Reachability {
     }
 }
 
+impl SseEncode for nddev_device_sync_vault::view::RecordPage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u64>::sse_encode(self.observed_seq, serializer);
+        <Vec<nddev_device_sync_vault::view::RecordView>>::sse_encode(self.items, serializer);
+        <String>::sse_encode(self.next_after, serializer);
+        <bool>::sse_encode(self.has_more, serializer);
+    }
+}
+
 impl SseEncode for nddev_device_sync_vault::view::RecordView {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u64>::sse_encode(self.observed_seq, serializer);
+        <bool>::sse_encode(self.deleted, serializer);
         <String>::sse_encode(self.id, serializer);
         <String>::sse_encode(self.title, serializer);
         <String>::sse_encode(self.username, serializer);
         <u64>::sse_encode(self.revision, serializer);
         <bool>::sse_encode(self.conflicted, serializer);
+        <Option<nddev_device_sync_vault::view::ConflictView>>::sse_encode(
+            self.conflict,
+            serializer,
+        );
     }
 }
 
