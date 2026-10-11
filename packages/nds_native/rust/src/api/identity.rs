@@ -57,6 +57,16 @@ impl NdsClient {
     pub async fn start_github(&self, locale: String) -> Result<View, ClientError> {
         self.inner.start_github(&locale).await
     }
+    pub async fn start_passkey(
+        &self,
+        registration: bool,
+        locale: String,
+    ) -> Result<View, ClientError> {
+        self.inner.start_passkey(registration, &locale).await
+    }
+    pub async fn poll_passkey(&self) -> Result<View, ClientError> {
+        self.inner.poll_passkey().await
+    }
     pub async fn poll_github(&self) -> Result<View, ClientError> {
         self.inner.poll_github().await
     }

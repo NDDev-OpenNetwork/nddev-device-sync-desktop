@@ -555,4 +555,17 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get syncCaughtUp =>
       'Изменения получены при последней успешной проверке.';
+
+  @override
+  String get passkey => 'Войти с ключом доступа';
+
+  @override
+  String get registerPasskey => 'Создать ключ доступа';
+
+  @override
+  String get openPasskey => 'Открыть проверку ключа доступа';
+
+  @override
+  String get passkeyHelp =>
+      'Сравните код в браузере, затем подтвердите ключ доступа. Для создания ключа нужен недавний вход.';
 }
