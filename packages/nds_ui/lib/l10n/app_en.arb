@@ -30,7 +30,7 @@
   "changeServer": "Change server",
   "diagnostics": "Diagnostic logs for five minutes",
   "diagnosticsOff": "Stop diagnostic logs",
-  "privacy": "Session secrets stay in native secure storage. Sign-in does not recover vault keys.",
+  "privacy": "Session credentials and vault keys stay in native secure storage. The server delivers your vault key after verified sign-in and device enrollment.",
   "endpointError": "Use an HTTPS server origin without credentials, path, query or fragment.",
   "inputError": "Check the email address and the eight-digit code.",
   "networkError": "The server could not be reached. No fresh session state is confirmed.",
@@ -132,7 +132,7 @@
   "connected": "Connected",
   "connecting": "Connecting",
   "diagnosticsUnavailable": "Local diagnostics are unavailable. Sign-in can continue.",
-  "localDiagnosticsOnly": "Local diagnostics are initialized; external delivery is not configured.",
+  "localDiagnosticsOnly": "Local diagnostics are initialized. Server delivery status is shown under Clipboard and alerts.",
   "diagnosticsDegraded": "Diagnostics: rejected {rejected}, dropped {dropped}, write failures {failures}, pending {pending}.",
   "@diagnosticsDegraded": {
     "placeholders": {
@@ -154,7 +154,7 @@
   "diagnosticsHttp": "Network diagnostics",
   "diagnosticsIo": "Local operations",
   "devicesTitle": "Your devices",
-  "devicesHelp": "Register this installation with its own native signing key. Device enrollment does not unlock the vault.",
+  "devicesHelp": "Each installation has its own native signing key. Active enrolled devices receive access to the vault.",
   "devicesUnverified": "Device inventory has not been freshly verified.",
   "deviceName": "Device name",
   "enrollDevice": "Register this device",
@@ -176,14 +176,14 @@
   },
   "vaultTitle": "Vault and sync",
   "vaultHelp": "Your vault opens automatically after sign-in. Changes synchronize through the server; secret values stay in native storage and encrypted records.",
-  "vaultLocked": "Vault key is unavailable. Pair with a trusted device.",
+  "vaultLocked": "Vault access is unavailable. Verify the session, device and server connection.",
   "vaultUnlocked": "Native vault key is available.",
   "vaultCounts": "Pending: {pending} · Conflicts: {conflicts}",
   "vaultKeyIdentity": "Key identity",
   "vaultRecordTitle": "Record title",
   "vaultUsername": "Username or account label",
   "vaultSecret": "Secret value",
-  "vaultSave": "Encrypt and synchronize",
+  "vaultSave": "Encrypt and queue for sync",
   "vaultRevision": "Revision {revision}",
   "vaultConflict": "Unresolved conflict. Both versions are retained.",
   "vaultSync": "Synchronize now",
@@ -216,5 +216,176 @@
   "vaultRegistrationRequired": "An existing vault key must first be registered by an updated installation that already has it.",
   "syncCatchingUp": "Catching up with the server…",
   "syncNotObserved": "Synchronization has not been observed yet.",
-  "syncCaughtUp": "Caught up at the last successful check."
+  "syncCaughtUp": "Caught up at the last successful check.",
+  "passkey": "Sign in with passkey",
+  "registerPasskey": "Create passkey",
+  "openPasskey": "Open passkey verification",
+  "passkeyHelp": "Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in.",
+  "utilitiesTitle": "Clipboard and alerts",
+  "sharedClipboard": "Shared clipboard",
+  "alertsTitle": "Alerts",
+  "clipboardHelp": "Text is encrypted and synchronizes automatically with the server. Share only the text you intend to send; sensitive clipboard items and URI data are excluded.",
+  "sharedText": "Text to share",
+  "shareText": "Share text",
+  "shareNativeClipboard": "Share device clipboard",
+  "clipboardArchive": "Choose from clipboard archive",
+  "clipboardReady": "Server revision {sequence} · {bytes} bytes",
+  "clipboardEmpty": "No committed shared text yet",
+  "copySharedClipboard": "Copy shared text",
+  "utilityError": "Operation unavailable: {code}",
+  "telemetryDelivery": "Queued {pending} · Received {delivered} · Lost {dropped} · Attempts failed {failures}",
+  "telemetryInitialized": "Client delivery is active. Received counts confirm server acceptance.",
+  "telemetryUnavailable": "Client delivery is unavailable; local diagnostics remain active.",
+  "noIncidents": "No incidents",
+  "incidentState": "{kind} · {state} · {occurrences} occurrences",
+  "acknowledgeIncident": "Acknowledge",
+  "silenceIncident": "Silence for one hour",
+  "moreIncidents": "Next incidents",
+  "@clipboardReady": {
+    "placeholders": {
+      "sequence": {
+        "type": "int"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "@utilityError": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "@telemetryDelivery": {
+    "placeholders": {
+      "pending": {
+        "type": "int"
+      },
+      "delivered": {
+        "type": "int"
+      },
+      "dropped": {
+        "type": "int"
+      },
+      "failures": {
+        "type": "int"
+      }
+    }
+  },
+  "@incidentState": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      },
+      "occurrences": {
+        "type": "int"
+      }
+    }
+  },
+  "syncLastSeen": "Last complete sync: {time}",
+  "@syncLastSeen": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultDelete": "Delete record",
+  "vaultDeleteHelp": "Delete “{title}” on all synchronized devices?",
+  "@vaultDeleteHelp": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultResolve": "Resolve conflict",
+  "vaultResolveHelp": "Apply “{choice}”? Other devices will receive this decision after synchronization.",
+  "@vaultResolveHelp": {
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
+  "operationBusy": "Another operation is in progress or this view changed. Refresh and try again.",
+  "vaultEditing": "Editing: {title}. Enter the secret value to save.",
+  "@vaultEditing": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultDeleted": "Deleted record",
+  "vaultConflictingTitle": "Competing version: {title}",
+  "@vaultConflictingTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "vaultConflictingDelete": "The competing version deletes this record.",
+  "vaultKeepServer": "Keep server version",
+  "vaultUseConflict": "Use competing version",
+  "vaultCopySecret": "Copy secret",
+  "vaultEdit": "Edit",
+  "vaultNextPage": "Next records",
+  "vaultFirstPage": "First records",
+  "passkeysTitle": "Your passkeys",
+  "passkeysHelp": "Removing a passkey ends sessions created with it. Removal requires signing in within the last five minutes.",
+  "passkeysEmpty": "No passkeys registered.",
+  "passkeyCreated": "Created: {time}",
+  "@passkeyCreated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "passkeyRemove": "Remove passkey",
+  "passkeyRemoveHelp": "Remove passkey {id}? Sessions created with this key will be revoked, possibly including this session.",
+  "@passkeyRemoveHelp": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "passkeyFreshLogin": "Sign in again before changing passkeys.",
+  "keepPasskey": "Keep passkey",
+  "passkeyMethod": "Passkey",
+  "actionCancel": "Cancel",
+  "exportUnknown": "Server export policy has not been confirmed.",
+  "exportEnabled": "Server export is enabled.",
+  "exportDisabled": "The operator disabled server export.",
+  "exportPaused": "Delivery is paused while the app is inactive.",
+  "eventsLabel": "Events",
+  "spansLabel": "Operation traces",
+  "exportLastSeen": "Last server acceptance: {time}",
+  "@exportLastSeen": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "incidentsObserved": "Alert state observed: {time}",
+  "@incidentsObserved": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "incidentsUnavailable": "Alert state could not be refreshed. Displayed entries may be outdated.",
+  "clipboardUnavailable": "Shared clipboard state could not be refreshed.",
+  "clipboardRejected": "This clipboard item is private, unsupported or too large to share. Choose plain text up to 8 KiB.",
+  "clipboardCopied": "Copied to device clipboard."
 }

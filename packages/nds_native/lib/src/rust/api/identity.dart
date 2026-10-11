@@ -10,13 +10,43 @@ import 'modules.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `data_directory`, `device_observations`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`
+// These functions are ignored because they are not marked as `pub`: `data_directory`, `device_observations`, `incident_view`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`, `wake_replica`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Replica`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `drop`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`
+
+bool supportsNativeClipboard() =>
+    RustLib.instance.api.crateApiIdentitySupportsNativeClipboard();
+
+String newVaultRecordId() =>
+    RustLib.instance.api.crateApiIdentityNewVaultRecordId();
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>>
 abstract class NdsClient implements RustOpaqueInterface {
   void cancel();
+
+  Future<void> clipboardCopy();
+
+  Future<String> clipboardPublishArchive({
+    required LocalAgent agent,
+    required BigInt entry,
+    required String mime,
+  });
+
+  Future<String> clipboardPublishNative();
+
+  Future<String> clipboardPublishText({required String text});
+
+  Future<ClipboardView> clipboardSnapshot();
+
+  DeliveryView deliverySnapshot();
+
+  Future<IncidentView> incidentAction({
+    required String id,
+    required BigInt revision,
+    required int silenceSeconds,
+  });
+
+  Future<IncidentPage> incidents({required String after});
 
   Future<View> logout();
 
@@ -24,7 +54,11 @@ abstract class NdsClient implements RustOpaqueInterface {
   static Future<NdsClient> newInstance({required String endpoint}) =>
       RustLib.instance.api.crateApiIdentityNdsClientNew(endpoint: endpoint);
 
+  Future<List<PasskeyView>> passkeys();
+
   Future<View> pollGithub();
+
+  Future<View> pollPasskey();
 
   Future<View> prepareDevice({required String name});
 
@@ -40,20 +74,42 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> revokeDevice({required String id});
 
+  Future<View> revokePasskey({required String id});
+
   void setForeground({required bool active});
 
   View snapshot();
 
   Future<View> startGithub({required String locale});
 
+  Future<View> startPasskey({
+    required bool registration,
+    required String locale,
+  });
+
   Future<StatePage> syncStates({required String after});
 
-  Future<List<RecordView>> vaultRecords();
+  Future<void> vaultCopySecret({required String id});
+
+  Future<String> vaultDelete({
+    required String id,
+    required BigInt expectedRevision,
+  });
+
+  Future<RecordPage> vaultRecords({required String after});
 
   Future<VaultView> vaultRefresh();
 
+  Future<String> vaultResolve({
+    required String id,
+    required BigInt expectedRevision,
+    required BigInt expectedCursor,
+    required bool useConflict,
+  });
+
   Future<String> vaultSave({
     String? id,
+    required BigInt expectedRevision,
     required String title,
     required String username,
     required String secret,
@@ -64,4 +120,84 @@ abstract class NdsClient implements RustOpaqueInterface {
   Future<VaultView> vaultSync();
 
   Future<View> verifyEmail({required String code});
+}
+
+class IncidentPage {
+  final List<IncidentView> incidents;
+  final String nextCursor;
+  final String generatedAt;
+
+  const IncidentPage({
+    required this.incidents,
+    required this.nextCursor,
+    required this.generatedAt,
+  });
+
+  @override
+  int get hashCode =>
+      incidents.hashCode ^ nextCursor.hashCode ^ generatedAt.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IncidentPage &&
+          runtimeType == other.runtimeType &&
+          incidents == other.incidents &&
+          nextCursor == other.nextCursor &&
+          generatedAt == other.generatedAt;
+}
+
+class IncidentView {
+  final String id;
+  final String service;
+  final String kind;
+  final String severity;
+  final String state;
+  final BigInt revision;
+  final BigInt occurrences;
+  final String firstSeen;
+  final String lastSeen;
+  final String silencedUntil;
+
+  const IncidentView({
+    required this.id,
+    required this.service,
+    required this.kind,
+    required this.severity,
+    required this.state,
+    required this.revision,
+    required this.occurrences,
+    required this.firstSeen,
+    required this.lastSeen,
+    required this.silencedUntil,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      service.hashCode ^
+      kind.hashCode ^
+      severity.hashCode ^
+      state.hashCode ^
+      revision.hashCode ^
+      occurrences.hashCode ^
+      firstSeen.hashCode ^
+      lastSeen.hashCode ^
+      silencedUntil.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IncidentView &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          service == other.service &&
+          kind == other.kind &&
+          severity == other.severity &&
+          state == other.state &&
+          revision == other.revision &&
+          occurrences == other.occurrences &&
+          firstSeen == other.firstSeen &&
+          lastSeen == other.lastSeen &&
+          silencedUntil == other.silencedUntil;
 }

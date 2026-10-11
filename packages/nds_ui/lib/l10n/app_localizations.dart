@@ -281,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacy.
   ///
   /// In en, this message translates to:
-  /// **'Session secrets stay in native secure storage. Sign-in does not recover vault keys.'**
+  /// **'Session credentials and vault keys stay in native secure storage. The server delivers your vault key after verified sign-in and device enrollment.'**
   String get privacy;
 
   /// No description provided for @endpointError.
@@ -809,7 +809,7 @@ abstract class AppLocalizations {
   /// No description provided for @localDiagnosticsOnly.
   ///
   /// In en, this message translates to:
-  /// **'Local diagnostics are initialized; external delivery is not configured.'**
+  /// **'Local diagnostics are initialized. Server delivery status is shown under Clipboard and alerts.'**
   String get localDiagnosticsOnly;
 
   /// No description provided for @diagnosticsDegraded.
@@ -850,7 +850,7 @@ abstract class AppLocalizations {
   /// No description provided for @devicesHelp.
   ///
   /// In en, this message translates to:
-  /// **'Register this installation with its own native signing key. Device enrollment does not unlock the vault.'**
+  /// **'Each installation has its own native signing key. Active enrolled devices receive access to the vault.'**
   String get devicesHelp;
 
   /// No description provided for @devicesUnverified.
@@ -940,7 +940,7 @@ abstract class AppLocalizations {
   /// No description provided for @vaultLocked.
   ///
   /// In en, this message translates to:
-  /// **'Vault key is unavailable. Pair with a trusted device.'**
+  /// **'Vault access is unavailable. Verify the session, device and server connection.'**
   String get vaultLocked;
 
   /// No description provided for @vaultUnlocked.
@@ -982,7 +982,7 @@ abstract class AppLocalizations {
   /// No description provided for @vaultSave.
   ///
   /// In en, this message translates to:
-  /// **'Encrypt and synchronize'**
+  /// **'Encrypt and queue for sync'**
   String get vaultSave;
 
   /// No description provided for @vaultRevision.
@@ -1080,6 +1080,383 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Caught up at the last successful check.'**
   String get syncCaughtUp;
+
+  /// No description provided for @passkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with passkey'**
+  String get passkey;
+
+  /// No description provided for @registerPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Create passkey'**
+  String get registerPasskey;
+
+  /// No description provided for @openPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Open passkey verification'**
+  String get openPasskey;
+
+  /// No description provided for @passkeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare this code in the browser, then verify your passkey. Creating a passkey requires a recent sign-in.'**
+  String get passkeyHelp;
+
+  /// No description provided for @utilitiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clipboard and alerts'**
+  String get utilitiesTitle;
+
+  /// No description provided for @sharedClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared clipboard'**
+  String get sharedClipboard;
+
+  /// No description provided for @alertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsTitle;
+
+  /// No description provided for @clipboardHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Text is encrypted and synchronizes automatically with the server. Share only the text you intend to send; sensitive clipboard items and URI data are excluded.'**
+  String get clipboardHelp;
+
+  /// No description provided for @sharedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Text to share'**
+  String get sharedText;
+
+  /// No description provided for @shareText.
+  ///
+  /// In en, this message translates to:
+  /// **'Share text'**
+  String get shareText;
+
+  /// No description provided for @shareNativeClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Share device clipboard'**
+  String get shareNativeClipboard;
+
+  /// No description provided for @clipboardArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from clipboard archive'**
+  String get clipboardArchive;
+
+  /// No description provided for @clipboardReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Server revision {sequence} · {bytes} bytes'**
+  String clipboardReady(int sequence, int bytes);
+
+  /// No description provided for @clipboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No committed shared text yet'**
+  String get clipboardEmpty;
+
+  /// No description provided for @copySharedClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy shared text'**
+  String get copySharedClipboard;
+
+  /// No description provided for @utilityError.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation unavailable: {code}'**
+  String utilityError(String code);
+
+  /// No description provided for @telemetryDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued {pending} · Received {delivered} · Lost {dropped} · Attempts failed {failures}'**
+  String telemetryDelivery(
+    int pending,
+    int delivered,
+    int dropped,
+    int failures,
+  );
+
+  /// No description provided for @telemetryInitialized.
+  ///
+  /// In en, this message translates to:
+  /// **'Client delivery is active. Received counts confirm server acceptance.'**
+  String get telemetryInitialized;
+
+  /// No description provided for @telemetryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Client delivery is unavailable; local diagnostics remain active.'**
+  String get telemetryUnavailable;
+
+  /// No description provided for @noIncidents.
+  ///
+  /// In en, this message translates to:
+  /// **'No incidents'**
+  String get noIncidents;
+
+  /// No description provided for @incidentState.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} · {state} · {occurrences} occurrences'**
+  String incidentState(String kind, String state, int occurrences);
+
+  /// No description provided for @acknowledgeIncident.
+  ///
+  /// In en, this message translates to:
+  /// **'Acknowledge'**
+  String get acknowledgeIncident;
+
+  /// No description provided for @silenceIncident.
+  ///
+  /// In en, this message translates to:
+  /// **'Silence for one hour'**
+  String get silenceIncident;
+
+  /// No description provided for @moreIncidents.
+  ///
+  /// In en, this message translates to:
+  /// **'Next incidents'**
+  String get moreIncidents;
+
+  /// No description provided for @syncLastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last complete sync: {time}'**
+  String syncLastSeen(String time);
+
+  /// No description provided for @vaultDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete record'**
+  String get vaultDelete;
+
+  /// No description provided for @vaultDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{title}” on all synchronized devices?'**
+  String vaultDeleteHelp(String title);
+
+  /// No description provided for @vaultResolve.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve conflict'**
+  String get vaultResolve;
+
+  /// No description provided for @vaultResolveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply “{choice}”? Other devices will receive this decision after synchronization.'**
+  String vaultResolveHelp(String choice);
+
+  /// No description provided for @operationBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Another operation is in progress or this view changed. Refresh and try again.'**
+  String get operationBusy;
+
+  /// No description provided for @vaultEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing: {title}. Enter the secret value to save.'**
+  String vaultEditing(String title);
+
+  /// No description provided for @vaultDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted record'**
+  String get vaultDeleted;
+
+  /// No description provided for @vaultConflictingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Competing version: {title}'**
+  String vaultConflictingTitle(String title);
+
+  /// No description provided for @vaultConflictingDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'The competing version deletes this record.'**
+  String get vaultConflictingDelete;
+
+  /// No description provided for @vaultKeepServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep server version'**
+  String get vaultKeepServer;
+
+  /// No description provided for @vaultUseConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Use competing version'**
+  String get vaultUseConflict;
+
+  /// No description provided for @vaultCopySecret.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy secret'**
+  String get vaultCopySecret;
+
+  /// No description provided for @vaultEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get vaultEdit;
+
+  /// No description provided for @vaultNextPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Next records'**
+  String get vaultNextPage;
+
+  /// No description provided for @vaultFirstPage.
+  ///
+  /// In en, this message translates to:
+  /// **'First records'**
+  String get vaultFirstPage;
+
+  /// No description provided for @passkeysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your passkeys'**
+  String get passkeysTitle;
+
+  /// No description provided for @passkeysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Removing a passkey ends sessions created with it. Removal requires signing in within the last five minutes.'**
+  String get passkeysHelp;
+
+  /// No description provided for @passkeysEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No passkeys registered.'**
+  String get passkeysEmpty;
+
+  /// No description provided for @passkeyCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {time}'**
+  String passkeyCreated(String time);
+
+  /// No description provided for @passkeyRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove passkey'**
+  String get passkeyRemove;
+
+  /// No description provided for @passkeyRemoveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove passkey {id}? Sessions created with this key will be revoked, possibly including this session.'**
+  String passkeyRemoveHelp(String id);
+
+  /// No description provided for @passkeyFreshLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again before changing passkeys.'**
+  String get passkeyFreshLogin;
+
+  /// No description provided for @keepPasskey.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep passkey'**
+  String get keepPasskey;
+
+  /// No description provided for @passkeyMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Passkey'**
+  String get passkeyMethod;
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// No description provided for @exportUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Server export policy has not been confirmed.'**
+  String get exportUnknown;
+
+  /// No description provided for @exportEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Server export is enabled.'**
+  String get exportEnabled;
+
+  /// No description provided for @exportDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'The operator disabled server export.'**
+  String get exportDisabled;
+
+  /// No description provided for @exportPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery is paused while the app is inactive.'**
+  String get exportPaused;
+
+  /// No description provided for @eventsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get eventsLabel;
+
+  /// No description provided for @spansLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation traces'**
+  String get spansLabel;
+
+  /// No description provided for @exportLastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last server acceptance: {time}'**
+  String exportLastSeen(String time);
+
+  /// No description provided for @incidentsObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert state observed: {time}'**
+  String incidentsObserved(String time);
+
+  /// No description provided for @incidentsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert state could not be refreshed. Displayed entries may be outdated.'**
+  String get incidentsUnavailable;
+
+  /// No description provided for @clipboardUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared clipboard state could not be refreshed.'**
+  String get clipboardUnavailable;
+
+  /// No description provided for @clipboardRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'This clipboard item is private, unsupported or too large to share. Choose plain text up to 8 KiB.'**
+  String get clipboardRejected;
+
+  /// No description provided for @clipboardCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to device clipboard.'**
+  String get clipboardCopied;
 }
 
 class _AppLocalizationsDelegate

@@ -7,12 +7,78 @@ import '../../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `fmt`, `fmt`, `fmt`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientError>>
 abstract class ClientError implements RustOpaqueInterface {
   /// An allowlisted code for localization; never an underlying I/O message.
   Future<String> code();
+}
+
+class DeliveryView {
+  final bool initialized;
+  final ExportPolicy policy;
+  final bool paused;
+  final int pending;
+  final BigInt delivered;
+  final BigInt dropped;
+  final BigInt failures;
+  final int spansPending;
+  final BigInt spansDelivered;
+  final BigInt spansDropped;
+  final BigInt spansFailures;
+  final BigInt lastSuccessAt;
+
+  const DeliveryView({
+    required this.initialized,
+    required this.policy,
+    required this.paused,
+    required this.pending,
+    required this.delivered,
+    required this.dropped,
+    required this.failures,
+    required this.spansPending,
+    required this.spansDelivered,
+    required this.spansDropped,
+    required this.spansFailures,
+    required this.lastSuccessAt,
+  });
+
+  static Future<DeliveryView> default_() =>
+      RustLib.instance.api.nddevDeviceSyncAccountsViewDeliveryViewDefault();
+
+  @override
+  int get hashCode =>
+      initialized.hashCode ^
+      policy.hashCode ^
+      paused.hashCode ^
+      pending.hashCode ^
+      delivered.hashCode ^
+      dropped.hashCode ^
+      failures.hashCode ^
+      spansPending.hashCode ^
+      spansDelivered.hashCode ^
+      spansDropped.hashCode ^
+      spansFailures.hashCode ^
+      lastSuccessAt.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DeliveryView &&
+          runtimeType == other.runtimeType &&
+          initialized == other.initialized &&
+          policy == other.policy &&
+          paused == other.paused &&
+          pending == other.pending &&
+          delivered == other.delivered &&
+          dropped == other.dropped &&
+          failures == other.failures &&
+          spansPending == other.spansPending &&
+          spansDelivered == other.spansDelivered &&
+          spansDropped == other.spansDropped &&
+          spansFailures == other.spansFailures &&
+          lastSuccessAt == other.lastSuccessAt;
 }
 
 /// Public metadata only; signing keys never cross the presentation boundary.
@@ -55,6 +121,34 @@ class DeviceView {
           createdAt == other.createdAt;
 }
 
+enum ExportPolicy {
+  unknown,
+  enabled,
+  disabled;
+
+  static Future<ExportPolicy> default_() =>
+      RustLib.instance.api.nddevDeviceSyncAccountsViewExportPolicyDefault();
+}
+
+/// Bounded public credential metadata; no verifier/public-key bodies or secrets.
+class PasskeyView {
+  final String id;
+  final String createdAt;
+
+  const PasskeyView({required this.id, required this.createdAt});
+
+  @override
+  int get hashCode => id.hashCode ^ createdAt.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PasskeyView &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          createdAt == other.createdAt;
+}
+
 /// Presentation state, never a bearer credential or a wire request.
 class View {
   final List<DeviceView> devices;
@@ -62,6 +156,7 @@ class View {
   final PlatformInt64 devicesCheckedAt;
   final bool emailAvailable;
   final bool githubAvailable;
+  final bool passkeyAvailable;
   final bool credentialStoreReady;
   final String serverVersion;
   final bool authenticated;
@@ -84,6 +179,7 @@ class View {
     required this.devicesCheckedAt,
     required this.emailAvailable,
     required this.githubAvailable,
+    required this.passkeyAvailable,
     required this.credentialStoreReady,
     required this.serverVersion,
     required this.authenticated,
@@ -111,6 +207,7 @@ class View {
       devicesCheckedAt.hashCode ^
       emailAvailable.hashCode ^
       githubAvailable.hashCode ^
+      passkeyAvailable.hashCode ^
       credentialStoreReady.hashCode ^
       serverVersion.hashCode ^
       authenticated.hashCode ^
@@ -137,6 +234,7 @@ class View {
           devicesCheckedAt == other.devicesCheckedAt &&
           emailAvailable == other.emailAvailable &&
           githubAvailable == other.githubAvailable &&
+          passkeyAvailable == other.passkeyAvailable &&
           credentialStoreReady == other.credentialStoreReady &&
           serverVersion == other.serverVersion &&
           authenticated == other.authenticated &&

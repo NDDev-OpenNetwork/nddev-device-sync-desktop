@@ -1,6 +1,6 @@
 name: nds_ui
 description: Shared NDDev OpenNetwork identity presentation for native clients.
-version: 0.0.1-alpha.15
+version: 0.0.1-alpha.17
 publish_to: none
 environment:
   sdk: ">=3.13.0 <4.0.0"

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:nds_ui/nds_ui.dart';
@@ -58,6 +59,13 @@ void main() {
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox.shrink());
         return;
+      }
+      // A failed acceptance may leave this owned loopback fixture signed in.
+      // Revoke only its own session before repeating the full interaction.
+      await tester.pumpAndSettle();
+      if (find.byKey(const Key('logout')).evaluate().isNotEmpty) {
+        await tester.ensureVisible(find.byKey(const Key('logout')));
+        await tester.tap(find.byKey(const Key('logout')));
       }
       await waitFor(tester, find.byKey(const Key('email')));
       await tester.enterText(find.byKey(const Key('email')), owner);
@@ -150,6 +158,67 @@ void main() {
           await tester.pumpAndSettle();
         }
       }
+      if (vault) {
+        await tester.ensureVisible(find.byKey(const Key('open-utilities')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('open-utilities')));
+        await waitFor(tester, find.byKey(const Key('shared-text')));
+        await tester.enterText(
+          find.byKey(const Key('shared-text')),
+          'Owned shared clipboard acceptance',
+        );
+        FocusManager.instance.primaryFocus?.unfocus();
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.byKey(const Key('share-text')));
+        await tester.tap(find.byKey(const Key('share-text')));
+        await waitFor(tester, find.textContaining('Server revision'));
+        if (!Platform.isIOS) {
+          await tester.ensureVisible(
+            find.byKey(const Key('copy-shared-clipboard')),
+          );
+          await tester.pumpAndSettle();
+          await waitFor(
+            tester,
+            find.byWidgetPredicate(
+              (widget) =>
+                  widget is FilledButton &&
+                  widget.key == const Key('copy-shared-clipboard') &&
+                  widget.onPressed != null,
+            ),
+          );
+          await tester.tap(find.byKey(const Key('copy-shared-clipboard')));
+          await waitFor(tester, find.text('Copied to device clipboard.'));
+          await tester.pumpAndSettle();
+          final deadline = DateTime.now().add(const Duration(seconds: 10));
+          while (true) {
+            final copied = await Clipboard.getData(Clipboard.kTextPlain);
+            if (copied?.text == 'Owned shared clipboard acceptance') break;
+            if (DateTime.now().isAfter(deadline)) {
+              final error = find.byKey(const Key('utility-error'));
+              throw StateError(
+                error.evaluate().isEmpty
+                    ? 'Native clipboard value not observed'
+                    : tester.widget<Text>(error).data!,
+              );
+            }
+            await tester.pump(const Duration(milliseconds: 100));
+            await Future<void>.delayed(const Duration(milliseconds: 100));
+          }
+          if (Platform.isAndroid) {
+            await tester.ensureVisible(
+              find.byKey(const Key('share-native-clipboard')),
+            );
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('share-native-clipboard')));
+            await waitFor(
+              tester,
+              find.textContaining('This clipboard item is private'),
+            );
+          }
+        }
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+      }
       if (phase == 'persist') {
         await tester.pumpWidget(const SizedBox.shrink());
         return;
@@ -202,7 +271,15 @@ Future<void> waitFor(WidgetTester tester, Finder finder) async {
   final deadline = DateTime.now().add(const Duration(seconds: 25));
   while (finder.evaluate().isEmpty) {
     if (DateTime.now().isAfter(deadline)) {
-      final error = find.byKey(const Key('auth-error'));
+      final error = find.byWidgetPredicate(
+        (widget) =>
+            widget is Text &&
+            {
+              const Key('auth-error'),
+              const Key('vault-error'),
+              const Key('state-error'),
+            }.contains(widget.key),
+      );
       final message = error.evaluate().isEmpty
           ? 'no displayed error'
           : tester.widget<Text>(error).data;

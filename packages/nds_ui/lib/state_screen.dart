@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
@@ -12,19 +14,48 @@ class StateScreen extends StatefulWidget {
   State<StateScreen> createState() => _StateScreenState();
 }
 
-class _StateScreenState extends State<StateScreen> {
+class _StateScreenState extends State<StateScreen> with WidgetsBindingObserver {
   native.StatePage? _page;
   bool _busy = false;
   String? _error;
+  Timer? _clock;
+  bool _paused = false;
+  String _after = '';
+  BigInt? _cursor;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _clock = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted &&
+          !_busy &&
+          !_paused &&
+          ModalRoute.of(context)?.isCurrent == true) {
+        unawaited(_read(after: _after, polling: true));
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _read();
     });
   }
 
-  Future<void> _read({String after = '', bool publish = false}) async {
+  @override
+  void dispose() {
+    _clock?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _paused = state != AppLifecycleState.resumed;
+  }
+
+  Future<void> _read({
+    String after = '',
+    bool publish = false,
+    bool polling = false,
+  }) async {
     if (_busy) return;
     setState(() {
       _busy = true;
@@ -33,16 +64,34 @@ class _StateScreenState extends State<StateScreen> {
     try {
       if (publish) {
         await widget.client.publishDeviceState();
-      } else {
-        await widget.client.vaultSync();
       }
+      final view = await widget.client.vaultSnapshot();
+      if (!view.unlocked) {
+        if (mounted) {
+          setState(() {
+            _page = null;
+            _cursor = null;
+            _error = 'vault_locked';
+          });
+        }
+        return;
+      }
+      if (polling && _cursor == view.cursor) return;
       final page = await widget.client.syncStates(after: after);
-      if (mounted) setState(() => _page = page);
+      if (mounted) {
+        setState(() {
+          _page = page;
+          _cursor = view.cursor;
+          _after = after;
+        });
+      }
     } catch (error) {
       final code = error is native.VaultError
           ? await error.code()
           : 'unexpected';
-      if (mounted) setState(() => _error = code);
+      if (mounted && (!polling || code != 'vault_busy')) {
+        setState(() => _error = code);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -97,6 +146,9 @@ class _StateScreenState extends State<StateScreen> {
                                 : item.kind == 'account_state' &&
                                       item.label == 'github'
                                 ? 'GitHub'
+                                : item.kind == 'account_state' &&
+                                      item.label == 'passkey'
+                                ? l.passkeyMethod
                                 : item.label,
                           ),
                           if (item.platform.isNotEmpty) Text(item.platform),
@@ -137,6 +189,8 @@ class _StateScreenState extends State<StateScreen> {
                 Text(
                   _error == 'vault_locked'
                       ? l.vaultLocked
+                      : _error == 'vault_busy'
+                      ? l.operationBusy
                       : l.statePublishError,
                   key: const Key('state-error'),
                 ),
