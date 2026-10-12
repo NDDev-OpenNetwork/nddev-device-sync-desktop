@@ -83,9 +83,7 @@ impl NdsClient {
         if view.authenticated && !view.current_device_id.is_empty() && !revoked {
             match self.inner.authorize_local().await {
                 Ok(()) => {
-                    self.start_replica()
-                        .await
-                        .map_err(|_| ClientError::Transport)?;
+                    self.start_replica().await.map_err(replica_start_error)?;
                     self.ensure_delivery();
                     return Ok(self.inner.view());
                 }
@@ -170,9 +168,7 @@ impl NdsClient {
         } else {
             self.inner.prepare_device(name).await?
         };
-        self.start_replica()
-            .await
-            .map_err(|_| ClientError::Transport)?;
+        self.start_replica().await.map_err(replica_start_error)?;
         self.ensure_delivery();
         Ok(view)
     }
@@ -704,6 +700,16 @@ impl NdsClient {
             .unwrap_or_else(|e| e.into_inner())
             .take();
         self.inner.cancel_sign_in();
+    }
+}
+
+fn replica_start_error(error: VaultError) -> ClientError {
+    match error {
+        VaultError::Busy => ClientError::Busy,
+        VaultError::Locked => ClientError::RevalidationRequired,
+        // Constructing a local replica performs no server request.
+        VaultError::Unavailable => ClientError::Server("vault_storage_unavailable".into()),
+        other => ClientError::Server(other.code()),
     }
 }
 

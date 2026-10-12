@@ -398,5 +398,7 @@
   "browserStorageEvictable": "The browser may remove site data under storage pressure. Unsynchronized changes would be lost.",
   "vaultRecordPending": "Local change awaiting synchronization",
   "telemetryPersistenceReady": "Browser log storage has confirmed writes.",
-  "telemetryPersistenceUnavailable": "Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes."
+  "telemetryPersistenceUnavailable": "Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.",
+  "vaultStorageUnavailable": "Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.",
+  "vaultDependencyUnavailable": "The vault could not access required local storage or server services."
 }

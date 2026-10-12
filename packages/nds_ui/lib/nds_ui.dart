@@ -380,6 +380,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
     'recent_authentication_required' => l.recentAuthenticationRequired,
     'invalid_input' => l.inputError,
     'credential_store_unavailable' => l.storeError,
+    'vault_storage_unavailable' => l.vaultStorageUnavailable,
+    'vault_storage_full' => l.storageFull,
     'credential_revalidation_required' => l.revalidationRequired,
     'transport_unavailable' ||
     'request_timeout' ||

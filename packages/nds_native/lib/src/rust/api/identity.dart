@@ -10,7 +10,7 @@ import 'modules.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
+// These functions are ignored because they are not marked as `pub`: `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe`, `publish_state_inner`, `replica_start_error`, `start_replica`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClipboardReservation`, `Replica`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`, `drop`
 

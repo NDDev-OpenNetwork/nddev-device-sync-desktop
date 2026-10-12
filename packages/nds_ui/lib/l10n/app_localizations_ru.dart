@@ -828,4 +828,12 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get telemetryPersistenceUnavailable =>
       'Успешная запись журналов в постоянное хранилище браузера не подтверждена. Несохранённые события могут потеряться при закрытии страницы.';
+
+  @override
+  String get vaultStorageUnavailable =>
+      'Локальное зашифрованное хранилище недоступно. Проверьте поддержку хранилища и разрешения браузера или устройства.';
+
+  @override
+  String get vaultDependencyUnavailable =>
+      'Vault не смог получить доступ к необходимому локальному хранилищу или серверным сервисам.';
 }

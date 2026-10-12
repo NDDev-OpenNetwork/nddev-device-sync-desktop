@@ -1523,6 +1523,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.'**
   String get telemetryPersistenceUnavailable;
+
+  /// No description provided for @vaultStorageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.'**
+  String get vaultStorageUnavailable;
+
+  /// No description provided for @vaultDependencyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The vault could not access required local storage or server services.'**
+  String get vaultDependencyUnavailable;
 }
 
 class _AppLocalizationsDelegate

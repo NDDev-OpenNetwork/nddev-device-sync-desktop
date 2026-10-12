@@ -268,7 +268,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     'vault_authentication_failed' => l.vaultProofError,
     'vault_busy' => l.operationBusy,
     'vault_storage_full' => l.storageFull,
-    'vault_dependency_unavailable' => l.networkError,
+    'vault_dependency_unavailable' => l.vaultDependencyUnavailable,
     _ => l.genericError,
   };
 

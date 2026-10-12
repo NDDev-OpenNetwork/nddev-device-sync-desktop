@@ -822,4 +822,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get telemetryPersistenceUnavailable =>
       'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.';
+
+  @override
+  String get vaultStorageUnavailable =>
+      'Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.';
+
+  @override
+  String get vaultDependencyUnavailable =>
+      'The vault could not access required local storage or server services.';
 }
