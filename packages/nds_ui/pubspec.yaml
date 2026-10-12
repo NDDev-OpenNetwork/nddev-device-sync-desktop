@@ -1,6 +1,6 @@
 name: nds_ui
-description: Shared NDDev OpenNetwork identity presentation for native clients.
-version: 0.0.1-alpha.18
+description: Shared NDDev OpenNetwork presentation for desktop, mobile and web clients.
+version: 0.0.1-alpha.19
 publish_to: none
 environment:
   sdk: ">=3.13.0 <4.0.0"
@@ -11,6 +11,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.3
+  cupertino_icons: 2.0.0
   nds_native:
     path: ../nds_native
   nddev_opennetwork_design_system:

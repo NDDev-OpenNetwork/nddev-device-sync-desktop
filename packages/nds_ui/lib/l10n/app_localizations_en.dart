@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storeError =>
-      'The native credential store is unavailable. No plaintext fallback is used.';
+      'Protected credential storage is unavailable. No plaintext fallback is used.';
 
   @override
   String get authError =>
@@ -423,7 +423,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get devicesHelp =>
-      'Each installation has its own native signing key. Active enrolled devices receive access to the vault.';
+      'Each installation has its own signing key. Active enrolled devices receive access to the vault.';
 
   @override
   String get devicesUnverified =>
@@ -477,7 +477,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Vault access is unavailable. Verify the session, device and server connection.';
 
   @override
-  String get vaultUnlocked => 'Native vault key is available.';
+  String get vaultUnlocked => 'Protected vault key is available.';
 
   @override
   String vaultCounts(int pending, int conflicts) {
@@ -780,4 +780,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clipboardCopied => 'Copied to device clipboard.';
+
+  @override
+  String get offlineAuthorized =>
+      'Offline access uses the last verified session and device. Changes remain on this device until synchronization.';
+
+  @override
+  String get storageFull => 'Local storage is full. The change was not saved.';
+
+  @override
+  String get logoutPending =>
+      'Signed out locally. Server sign-out will complete after reconnecting.';
+
+  @override
+  String get recentAuthenticationRequired =>
+      'Sign in again to manage passkeys. Your current session remains valid.';
+
+  @override
+  String get browserPrivacy =>
+      'The session stays in a protected browser cookie. Vault keys are encrypted in this browser profile; the server delivers them after verified sign-in and device enrollment.';
+
+  @override
+  String get browserVaultHelp =>
+      'Your vault opens automatically after sign-in. Changes are stored encrypted in this browser and synchronize through the server. Keep this browser’s site data until all changes are synchronized.';
+
+  @override
+  String get browserStoragePersistent =>
+      'The browser granted persistent storage. Clearing site data still removes local changes.';
+
+  @override
+  String get browserStorageEvictable =>
+      'The browser may remove site data under storage pressure. Unsynchronized changes would be lost.';
+
+  @override
+  String get vaultRecordPending => 'Local change awaiting synchronization';
+
+  @override
+  String get telemetryPersistenceReady =>
+      'Browser log storage has confirmed writes.';
+
+  @override
+  String get telemetryPersistenceUnavailable =>
+      'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.';
+
+  @override
+  String get vaultStorageUnavailable =>
+      'Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.';
+
+  @override
+  String get vaultDependencyUnavailable =>
+      'The vault could not access required local storage or server services.';
 }

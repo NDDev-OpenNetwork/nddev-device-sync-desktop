@@ -6,3 +6,4 @@ export 'src/rust/api/telemetry.dart';
 export 'src/rust/third_party/nddev_device_sync_telemetry/view.dart';
 export 'src/rust/third_party/nddev_device_sync_agent/view.dart';
 export 'src/rust/third_party/nddev_device_sync_vault/view.dart';
+export 'src/initialize.dart';

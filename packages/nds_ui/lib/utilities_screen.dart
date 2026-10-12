@@ -26,6 +26,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
   String? _error;
   bool _copied = false;
   bool _busy = false, _paused = false, _polling = false;
+  Completer<void>? _pollCompletion;
   bool _clipboardUnavailable = false, _incidentsUnavailable = false;
   @override
   void initState() {
@@ -66,14 +67,18 @@ class _UtilitiesState extends State<UtilitiesScreen>
       _error = null;
     });
     try {
+      // A user action owns the next local read/use. Finish the current bounded
+      // background read instead of racing the same vault admission gate.
+      await _pollCompletion?.future;
+      if (!mounted) return;
       await work();
     } catch (error) {
       var code = 'unexpected';
       if (error is native.ClientError) {
-        code = await error.code();
+        code = error.code();
         error.dispose();
       } else if (error is native.VaultError) {
-        code = await error.code();
+        code = error.code();
       } else if (error is native.AgentError) {
         code = error.name;
       }
@@ -86,6 +91,8 @@ class _UtilitiesState extends State<UtilitiesScreen>
   Future<void> _poll() async {
     if (_polling) return;
     _polling = true;
+    final completion = Completer<void>();
+    _pollCompletion = completion;
     try {
       final value = await widget.client.clipboardSnapshot();
       if (mounted) {
@@ -108,6 +115,8 @@ class _UtilitiesState extends State<UtilitiesScreen>
       }
     } finally {
       _polling = false;
+      _pollCompletion = null;
+      completion.complete();
     }
   }
 
@@ -221,8 +230,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
                         }),
                   child: Text(l.shareText),
                 ),
-                if (native.supportsNativeClipboard() &&
-                    !native.supportsLocalAgent())
+                if (native.supportsNativeClipboardRead())
                   OutlinedButton(
                     key: const Key('share-native-clipboard'),
                     onPressed: _busy
@@ -287,10 +295,21 @@ class _UtilitiesState extends State<UtilitiesScreen>
                           !native.supportsNativeClipboard() ||
                           _clipboard?.present != true
                       ? null
-                      : () => _action(() async {
-                          await widget.client.clipboardCopy();
-                          if (mounted) setState(() => _copied = true);
-                        }),
+                      : () {
+                          String? ticket;
+                          try {
+                            ticket = widget.client.reserveClipboardCopy();
+                          } catch (_) {
+                            setState(
+                              () => _error = 'vault_dependency_unavailable',
+                            );
+                            return;
+                          }
+                          _action(() async {
+                            await widget.client.clipboardCopy(ticket: ticket);
+                            if (mounted) setState(() => _copied = true);
+                          });
+                        },
                   child: Text(l.copySharedClipboard),
                 ),
                 if (_busy) const LinearProgressIndicator(),
@@ -301,6 +320,12 @@ class _UtilitiesState extends State<UtilitiesScreen>
             ListView(
               padding: const EdgeInsets.all(OpenNetworkSpacing.four),
               children: [
+                if (delivery.localPersistenceReady != null)
+                  Text(
+                    delivery.localPersistenceReady!
+                        ? l.telemetryPersistenceReady
+                        : l.telemetryPersistenceUnavailable,
+                  ),
                 Text(l.eventsLabel),
                 Text(
                   l.telemetryDelivery(

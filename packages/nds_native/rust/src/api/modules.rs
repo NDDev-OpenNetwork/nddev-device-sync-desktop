@@ -19,11 +19,13 @@ pub fn supports_local_agent() -> bool {
 }
 
 impl LocalAgent {
-    pub fn discover() -> Result<Self, AgentError> {
+    pub async fn discover() -> Result<Self, AgentError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             Ok(Self {
-                inner: NativeAgent::discover()?,
+                inner: tokio::task::spawn_blocking(NativeAgent::discover)
+                    .await
+                    .map_err(|_| AgentError::Unavailable)??,
             })
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]

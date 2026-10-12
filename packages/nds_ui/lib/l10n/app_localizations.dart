@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @storeError.
   ///
   /// In en, this message translates to:
-  /// **'The native credential store is unavailable. No plaintext fallback is used.'**
+  /// **'Protected credential storage is unavailable. No plaintext fallback is used.'**
   String get storeError;
 
   /// No description provided for @authError.
@@ -850,7 +850,7 @@ abstract class AppLocalizations {
   /// No description provided for @devicesHelp.
   ///
   /// In en, this message translates to:
-  /// **'Each installation has its own native signing key. Active enrolled devices receive access to the vault.'**
+  /// **'Each installation has its own signing key. Active enrolled devices receive access to the vault.'**
   String get devicesHelp;
 
   /// No description provided for @devicesUnverified.
@@ -946,7 +946,7 @@ abstract class AppLocalizations {
   /// No description provided for @vaultUnlocked.
   ///
   /// In en, this message translates to:
-  /// **'Native vault key is available.'**
+  /// **'Protected vault key is available.'**
   String get vaultUnlocked;
 
   /// No description provided for @vaultCounts.
@@ -1457,6 +1457,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied to device clipboard.'**
   String get clipboardCopied;
+
+  /// No description provided for @offlineAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline access uses the last verified session and device. Changes remain on this device until synchronization.'**
+  String get offlineAuthorized;
+
+  /// No description provided for @storageFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Local storage is full. The change was not saved.'**
+  String get storageFull;
+
+  /// No description provided for @logoutPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out locally. Server sign-out will complete after reconnecting.'**
+  String get logoutPending;
+
+  /// No description provided for @recentAuthenticationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again to manage passkeys. Your current session remains valid.'**
+  String get recentAuthenticationRequired;
+
+  /// No description provided for @browserPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'The session stays in a protected browser cookie. Vault keys are encrypted in this browser profile; the server delivers them after verified sign-in and device enrollment.'**
+  String get browserPrivacy;
+
+  /// No description provided for @browserVaultHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your vault opens automatically after sign-in. Changes are stored encrypted in this browser and synchronize through the server. Keep this browser’s site data until all changes are synchronized.'**
+  String get browserVaultHelp;
+
+  /// No description provided for @browserStoragePersistent.
+  ///
+  /// In en, this message translates to:
+  /// **'The browser granted persistent storage. Clearing site data still removes local changes.'**
+  String get browserStoragePersistent;
+
+  /// No description provided for @browserStorageEvictable.
+  ///
+  /// In en, this message translates to:
+  /// **'The browser may remove site data under storage pressure. Unsynchronized changes would be lost.'**
+  String get browserStorageEvictable;
+
+  /// No description provided for @vaultRecordPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Local change awaiting synchronization'**
+  String get vaultRecordPending;
+
+  /// No description provided for @telemetryPersistenceReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Browser log storage has confirmed writes.'**
+  String get telemetryPersistenceReady;
+
+  /// No description provided for @telemetryPersistenceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.'**
+  String get telemetryPersistenceUnavailable;
+
+  /// No description provided for @vaultStorageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.'**
+  String get vaultStorageUnavailable;
+
+  /// No description provided for @vaultDependencyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The vault could not access required local storage or server services.'**
+  String get vaultDependencyUnavailable;
 }
 
 class _AppLocalizationsDelegate
