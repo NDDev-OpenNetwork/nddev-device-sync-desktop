@@ -672,6 +672,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     const SizedBox(height: OpenNetworkSpacing.four),
                     SelectableText(
                       v.verificationCode,
+                      semanticsLabel: v.verificationCode,
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     Text(l.validFor(v.expiresInSeconds)),
