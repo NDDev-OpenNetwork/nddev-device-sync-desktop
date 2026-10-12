@@ -26,6 +26,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
   String? _error;
   bool _copied = false;
   bool _busy = false, _paused = false, _polling = false;
+  Completer<void>? _pollCompletion;
   bool _clipboardUnavailable = false, _incidentsUnavailable = false;
   @override
   void initState() {
@@ -66,6 +67,10 @@ class _UtilitiesState extends State<UtilitiesScreen>
       _error = null;
     });
     try {
+      // A user action owns the next local read/use. Finish the current bounded
+      // background read instead of racing the same vault admission gate.
+      await _pollCompletion?.future;
+      if (!mounted) return;
       await work();
     } catch (error) {
       var code = 'unexpected';
@@ -86,6 +91,8 @@ class _UtilitiesState extends State<UtilitiesScreen>
   Future<void> _poll() async {
     if (_polling) return;
     _polling = true;
+    final completion = Completer<void>();
+    _pollCompletion = completion;
     try {
       final value = await widget.client.clipboardSnapshot();
       if (mounted) {
@@ -108,6 +115,8 @@ class _UtilitiesState extends State<UtilitiesScreen>
       }
     } finally {
       _polling = false;
+      _pollCompletion = null;
+      completion.complete();
     }
   }
 

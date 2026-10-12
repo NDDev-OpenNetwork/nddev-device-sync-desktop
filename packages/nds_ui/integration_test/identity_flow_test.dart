@@ -160,7 +160,15 @@ void main() {
         await tester.pumpAndSettle();
         if (nativeDesktop()) {
           await tester.tap(find.text('Local modules'));
-          await waitFor(tester, find.byKey(const Key('publish-local-state')));
+          await waitFor(
+            tester,
+            find.byWidgetPredicate(
+              (widget) =>
+                  widget is OutlinedButton &&
+                  widget.key == const Key('publish-local-state') &&
+                  widget.onPressed != null,
+            ),
+          );
           await tester.tap(find.byKey(const Key('publish-local-state')));
           await waitFor(tester, find.text('Pending: 0 · Conflicts: 0'));
           await tester.tap(find.text('NDS session'));
@@ -302,6 +310,8 @@ Future<void> waitFor(WidgetTester tester, Finder finder) async {
               const Key('auth-error'),
               const Key('vault-error'),
               const Key('state-error'),
+              const Key('utility-error'),
+              const Key('module-error'),
             }.contains(widget.key),
       );
       final message = error.evaluate().isEmpty

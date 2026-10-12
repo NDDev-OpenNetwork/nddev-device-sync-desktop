@@ -76,7 +76,11 @@ impl NdsClient {
         if view.logout_pending {
             return self.inner.refresh().await;
         }
-        if view.authenticated && !view.current_device_id.is_empty() {
+        let revoked = view
+            .devices
+            .iter()
+            .any(|device| device.is_current && device.revoked);
+        if view.authenticated && !view.current_device_id.is_empty() && !revoked {
             match self.inner.authorize_local().await {
                 Ok(()) => {
                     self.start_replica()
@@ -97,7 +101,9 @@ impl NdsClient {
                 }
             }
         }
-        if !view.authenticated {
+        // A known device revocation closes device capabilities while the NDS
+        // session remains valid for inventory and explicit sign-out.
+        if !view.authenticated || revoked {
             self.stop_replica().await;
             self.delivery
                 .lock()
