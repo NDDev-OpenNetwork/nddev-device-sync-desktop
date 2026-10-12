@@ -30,7 +30,7 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
         let config = Config {
             service: "nddev-device-sync-client".into(),
             version: env!("CARGO_PKG_VERSION").into(),
-            repository: "NDDev-OpenNetwork/nddev-device-sync-desktop".into(),
+            repository: "NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-desktop".into(),
             commit: crate::provenance::source_commit().into(),
             channel: "alpha".into(),
             standards: "unreleased".into(),
