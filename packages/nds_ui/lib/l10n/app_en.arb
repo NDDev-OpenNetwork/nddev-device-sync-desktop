@@ -396,5 +396,7 @@
   "browserVaultHelp": "Your vault opens automatically after sign-in. Changes are stored encrypted in this browser and synchronize through the server. Keep this browser’s site data until all changes are synchronized.",
   "browserStoragePersistent": "The browser granted persistent storage. Clearing site data still removes local changes.",
   "browserStorageEvictable": "The browser may remove site data under storage pressure. Unsynchronized changes would be lost.",
-  "vaultRecordPending": "Local change awaiting synchronization"
+  "vaultRecordPending": "Local change awaiting synchronization",
+  "telemetryPersistenceReady": "Browser log storage has confirmed writes.",
+  "telemetryPersistenceUnavailable": "Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes."
 }

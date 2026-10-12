@@ -24,6 +24,9 @@ accounts sender for signed event and OTLP span delivery; the server applies its
 operator policy and binds tenant/user/device identity. Clipboard and alerts
 shows per-signal acknowledgements, losses, policy and last successful receipt.
 Pause/resume, bounded retention and cancellation belong to the shared sender.
+Browser batches persist through page restart in the SDK spool; the UI reports
+actual payload-write readiness separately from policy and remote acknowledgements.
+Startup capture belongs only to the first verified client subscription.
 
 Use Flutter 3.47.7/Dart 3.13.5, Rust 1.99.0 and flutter_rust_bridge_codegen 2.13.0.
 Install the Rust target matching the platform being built. `flutter pub get

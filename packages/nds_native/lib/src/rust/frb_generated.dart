@@ -3074,21 +3074,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   DeliveryView dco_decode_delivery_view(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 12)
-      throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
+    if (arr.length != 13)
+      throw Exception('unexpected arr length: expect 13 but see ${arr.length}');
     return DeliveryView(
       initialized: dco_decode_bool(arr[0]),
-      policy: dco_decode_export_policy(arr[1]),
-      paused: dco_decode_bool(arr[2]),
-      pending: dco_decode_u_32(arr[3]),
-      delivered: dco_decode_u_64(arr[4]),
-      dropped: dco_decode_u_64(arr[5]),
-      failures: dco_decode_u_64(arr[6]),
-      spansPending: dco_decode_u_32(arr[7]),
-      spansDelivered: dco_decode_u_64(arr[8]),
-      spansDropped: dco_decode_u_64(arr[9]),
-      spansFailures: dco_decode_u_64(arr[10]),
-      lastSuccessAt: dco_decode_u_64(arr[11]),
+      localPersistenceReady: dco_decode_opt_box_autoadd_bool(arr[1]),
+      policy: dco_decode_export_policy(arr[2]),
+      paused: dco_decode_bool(arr[3]),
+      pending: dco_decode_u_32(arr[4]),
+      delivered: dco_decode_u_64(arr[5]),
+      dropped: dco_decode_u_64(arr[6]),
+      failures: dco_decode_u_64(arr[7]),
+      spansPending: dco_decode_u_32(arr[8]),
+      spansDelivered: dco_decode_u_64(arr[9]),
+      spansDropped: dco_decode_u_64(arr[10]),
+      spansFailures: dco_decode_u_64(arr[11]),
+      lastSuccessAt: dco_decode_u_64(arr[12]),
     );
   }
 
@@ -4155,6 +4156,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   DeliveryView sse_decode_delivery_view(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_initialized = sse_decode_bool(deserializer);
+    var var_localPersistenceReady = sse_decode_opt_box_autoadd_bool(
+      deserializer,
+    );
     var var_policy = sse_decode_export_policy(deserializer);
     var var_paused = sse_decode_bool(deserializer);
     var var_pending = sse_decode_u_32(deserializer);
@@ -4168,6 +4172,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_lastSuccessAt = sse_decode_u_64(deserializer);
     return DeliveryView(
       initialized: var_initialized,
+      localPersistenceReady: var_localPersistenceReady,
       policy: var_policy,
       paused: var_paused,
       pending: var_pending,
@@ -5419,6 +5424,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_delivery_view(DeliveryView self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_bool(self.initialized, serializer);
+    sse_encode_opt_box_autoadd_bool(self.localPersistenceReady, serializer);
     sse_encode_export_policy(self.policy, serializer);
     sse_encode_bool(self.paused, serializer);
     sse_encode_u_32(self.pending, serializer);

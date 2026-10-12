@@ -820,4 +820,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vaultRecordPending => 'Локальное изменение ожидает синхронизации';
+
+  @override
+  String get telemetryPersistenceReady =>
+      'Запись журналов в хранилище браузера подтверждена.';
+
+  @override
+  String get telemetryPersistenceUnavailable =>
+      'Успешная запись журналов в постоянное хранилище браузера не подтверждена. Несохранённые события могут потеряться при закрытии страницы.';
 }

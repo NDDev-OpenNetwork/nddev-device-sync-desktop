@@ -312,6 +312,12 @@ class _UtilitiesState extends State<UtilitiesScreen>
             ListView(
               padding: const EdgeInsets.all(OpenNetworkSpacing.four),
               children: [
+                if (delivery.localPersistenceReady != null)
+                  Text(
+                    delivery.localPersistenceReady!
+                        ? l.telemetryPersistenceReady
+                        : l.telemetryPersistenceUnavailable,
+                  ),
                 Text(l.eventsLabel),
                 Text(
                   l.telemetryDelivery(

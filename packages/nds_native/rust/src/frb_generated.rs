@@ -3647,6 +3647,7 @@ const _: fn() = || {
     {
         let DeliveryView = None::<nddev_device_sync_accounts::view::DeliveryView>.unwrap();
         let _: bool = DeliveryView.initialized;
+        let _: Option<bool> = DeliveryView.local_persistence_ready;
         let _: nddev_device_sync_accounts::view::ExportPolicy = DeliveryView.policy;
         let _: bool = DeliveryView.paused;
         let _: u32 = DeliveryView.pending;
@@ -4218,6 +4219,7 @@ impl SseDecode for nddev_device_sync_accounts::view::DeliveryView {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_initialized = <bool>::sse_decode(deserializer);
+        let mut var_localPersistenceReady = <Option<bool>>::sse_decode(deserializer);
         let mut var_policy =
             <nddev_device_sync_accounts::view::ExportPolicy>::sse_decode(deserializer);
         let mut var_paused = <bool>::sse_decode(deserializer);
@@ -4232,6 +4234,7 @@ impl SseDecode for nddev_device_sync_accounts::view::DeliveryView {
         let mut var_lastSuccessAt = <u64>::sse_decode(deserializer);
         return nddev_device_sync_accounts::view::DeliveryView {
             initialized: var_initialized,
+            local_persistence_ready: var_localPersistenceReady,
             policy: var_policy,
             paused: var_paused,
             pending: var_pending,
@@ -5946,6 +5949,7 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_accounts::vi
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.0.initialized.into_into_dart().into_dart(),
+            self.0.local_persistence_ready.into_into_dart().into_dart(),
             self.0.policy.into_into_dart().into_dart(),
             self.0.paused.into_into_dart().into_dart(),
             self.0.pending.into_into_dart().into_dart(),
@@ -7063,6 +7067,7 @@ impl SseEncode for nddev_device_sync_accounts::view::DeliveryView {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.initialized, serializer);
+        <Option<bool>>::sse_encode(self.local_persistence_ready, serializer);
         <nddev_device_sync_accounts::view::ExportPolicy>::sse_encode(self.policy, serializer);
         <bool>::sse_encode(self.paused, serializer);
         <u32>::sse_encode(self.pending, serializer);

@@ -59,8 +59,12 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
             debug: None,
         };
         let traces = ClientTraces::new(&config).ok()?;
-        let logger =
-            nddev_device_sync_telemetry::install_with_tracer(config, traces.tracer()).ok()?;
+        let logger = nddev_device_sync_telemetry::install_client_with_tracer_to(
+            config,
+            traces.tracer(),
+            nddev_device_sync_telemetry::LocalOutput::Stdout,
+        )
+        .ok()?;
         Some(Mutex::new(ProcessTelemetry { logger, traces }))
     });
     // An unavailable OS sink is explicitly degraded; identity may still work.

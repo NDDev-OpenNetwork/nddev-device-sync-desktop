@@ -17,6 +17,9 @@ abstract class ClientError implements RustOpaqueInterface {
 
 class DeliveryView {
   final bool initialized;
+
+  /// Browser durable-spool availability; native transport does not use it.
+  final bool? localPersistenceReady;
   final ExportPolicy policy;
   final bool paused;
   final int pending;
@@ -31,6 +34,7 @@ class DeliveryView {
 
   const DeliveryView({
     required this.initialized,
+    this.localPersistenceReady,
     required this.policy,
     required this.paused,
     required this.pending,
@@ -50,6 +54,7 @@ class DeliveryView {
   @override
   int get hashCode =>
       initialized.hashCode ^
+      localPersistenceReady.hashCode ^
       policy.hashCode ^
       paused.hashCode ^
       pending.hashCode ^
@@ -68,6 +73,7 @@ class DeliveryView {
       other is DeliveryView &&
           runtimeType == other.runtimeType &&
           initialized == other.initialized &&
+          localPersistenceReady == other.localPersistenceReady &&
           policy == other.policy &&
           paused == other.paused &&
           pending == other.pending &&

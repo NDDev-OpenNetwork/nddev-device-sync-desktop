@@ -1511,6 +1511,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Local change awaiting synchronization'**
   String get vaultRecordPending;
+
+  /// No description provided for @telemetryPersistenceReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Browser log storage has confirmed writes.'**
+  String get telemetryPersistenceReady;
+
+  /// No description provided for @telemetryPersistenceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.'**
+  String get telemetryPersistenceUnavailable;
 }
 
 class _AppLocalizationsDelegate

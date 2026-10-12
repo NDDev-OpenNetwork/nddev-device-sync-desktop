@@ -814,4 +814,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vaultRecordPending => 'Local change awaiting synchronization';
+
+  @override
+  String get telemetryPersistenceReady =>
+      'Browser log storage has confirmed writes.';
+
+  @override
+  String get telemetryPersistenceUnavailable =>
+      'Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.';
 }
