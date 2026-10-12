@@ -14,6 +14,11 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClipboardReservation`, `Replica`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`, `drop`
 
+/// Native read preserves Android's sensitivity/URI refusal contract. Browser
+/// copy support does not imply a native clipboard read adapter exists.
+bool supportsNativeClipboardRead() =>
+    RustLib.instance.api.crateApiIdentitySupportsNativeClipboardRead();
+
 bool supportsNativeClipboard() =>
     RustLib.instance.api.crateApiIdentitySupportsNativeClipboard();
 

@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 12828810;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 776290764;
 
 // Section: executor
 
@@ -3382,6 +3382,36 @@ fn wire__crate__api__identity__supports_native_clipboard_impl(
         },
     )
 }
+fn wire__crate__api__identity__supports_native_clipboard_read_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "supports_native_clipboard_read",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Ok::<_, ()>(crate::api::identity::supports_native_clipboard_read())?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__modules__update_action_kind_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -5561,17 +5591,22 @@ fn pde_ffi_dispatcher_sync_impl(
         64 => {
             wire__crate__api__identity__supports_native_clipboard_impl(ptr, rust_vec_len, data_len)
         }
-        65 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        66 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
-        67 => {
-            wire__nddev_device_sync_vault__view__vault_error_code_impl(ptr, rust_vec_len, data_len)
-        }
-        68 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        65 => wire__crate__api__identity__supports_native_clipboard_read_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        69 => {
+        66 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        67 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        68 => {
+            wire__nddev_device_sync_vault__view__vault_error_code_impl(ptr, rust_vec_len, data_len)
+        }
+        69 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        70 => {
             wire__nddev_device_sync_accounts__view__view_default_impl(ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),

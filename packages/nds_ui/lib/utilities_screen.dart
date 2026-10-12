@@ -221,8 +221,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
                         }),
                   child: Text(l.shareText),
                 ),
-                if (native.supportsNativeClipboard() &&
-                    !native.supportsLocalAgent())
+                if (native.supportsNativeClipboardRead())
                   OutlinedButton(
                     key: const Key('share-native-clipboard'),
                     onPressed: _busy

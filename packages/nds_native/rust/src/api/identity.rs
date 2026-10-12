@@ -822,6 +822,13 @@ fn incident_view(
     })
 }
 
+/// Native read preserves Android's sensitivity/URI refusal contract. Browser
+/// copy support does not imply a native clipboard read adapter exists.
+#[frb(sync)]
+pub fn supports_native_clipboard_read() -> bool {
+    cfg!(target_os = "android")
+}
+
 #[frb(sync)]
 pub fn supports_native_clipboard() -> bool {
     #[cfg(target_arch = "wasm32")]
