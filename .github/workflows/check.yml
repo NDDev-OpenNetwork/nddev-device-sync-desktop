@@ -51,7 +51,7 @@ jobs:
           PY
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
-          repository: NDDev-OpenNetwork/nddev-opennetwork-design-system
+          repository: NDDev-Technocracy-OpenNetwork-NDS/nddev-opennetwork-design-system
           ref: ${{ steps.design.outputs.sha }}
           path: vendor/design-system
           persist-credentials: false
@@ -117,7 +117,7 @@ jobs:
           PY
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
-          repository: NDDev-OpenNetwork/nddev-opennetwork-design-system
+          repository: NDDev-Technocracy-OpenNetwork-NDS/nddev-opennetwork-design-system
           ref: ${{ steps.design.outputs.sha }}
           path: vendor/design-system
           persist-credentials: false
