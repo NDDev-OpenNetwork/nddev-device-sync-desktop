@@ -36,7 +36,7 @@ class _PasskeysState extends State<PasskeysScreen> {
     } catch (error) {
       var code = 'unexpected';
       if (error is native.ClientError) {
-        code = await error.code();
+        code = error.code();
         error.dispose();
       }
       if (mounted) setState(() => _error = code);

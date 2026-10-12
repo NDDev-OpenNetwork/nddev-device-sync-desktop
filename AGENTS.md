@@ -1,8 +1,8 @@
 # NDS desktop working contract
 
 Flutter owns presentation only. Shared nds_ui and the thin generated Rust bridge
-live in the desktop repository; mobile consumes the same implementation.
-Native NDS credentials stay in the Rust accounts module. Never export tokens,
+live in the desktop repository; mobile and web consume the same implementation.
+NDS credentials stay in the Rust accounts module and its platform adapters. Never export tokens,
 exchange tokens or private keys through FFI or log bodies. Protocol owns wire
 schemas; generate mechanical projections and keep core independent of Flutter.
 

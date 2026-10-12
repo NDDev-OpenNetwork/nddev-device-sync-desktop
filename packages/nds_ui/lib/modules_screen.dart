@@ -417,7 +417,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                       true) ...[
                     OutlinedButton(
                       key: const Key('publish-local-state'),
-                      onPressed: _busy ? null : _publish,
+                      onPressed: _busy || _agent == null ? null : _publish,
                       child: Text(l.publishModuleState),
                     ),
                     if (_published != null) Text(_published!),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
@@ -18,7 +19,7 @@ Future<void> runNdsApp() async {
   final diagnostics = ApplicationDiagnostics();
   var nativeReady = false;
   try {
-    await native.RustLib.init();
+    await native.initializeNdsBridge();
     diagnostics.nativeInitialized();
     nativeReady = true;
   } catch (_) {
@@ -137,7 +138,9 @@ class _IdentityScreen extends StatefulWidget {
 class _IdentityScreenState extends State<_IdentityScreen>
     with WidgetsBindingObserver {
   final _endpoint = TextEditingController(
-    text: const String.fromEnvironment('NDS_SERVER_URL'),
+    text: kIsWeb
+        ? Uri.base.origin
+        : const String.fromEnvironment('NDS_SERVER_URL'),
   );
   final _email = TextEditingController();
   final _code = TextEditingController();
@@ -150,6 +153,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
   String? _error;
   Timer? _poll;
   Timer? _clock;
+  int _reconcileTick = 0;
+  Future<void>? _reconciliation;
   native.DebugScope _debugScope = native.DebugScope.http;
 
   @override
@@ -162,6 +167,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     _clock = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && !_paused) {
         setState(() => _view = _client?.snapshot());
+        if (++_reconcileTick % 5 == 0) _reconcile();
       }
     });
   }
@@ -173,7 +179,31 @@ class _IdentityScreenState extends State<_IdentityScreen>
     if (_paused) {
       _poll?.cancel();
     } else {
+      _reconcile();
       _schedulePoll();
+    }
+  }
+
+  void _reconcile() {
+    if (_paused || _busy || _reconciliation != null || _client == null) return;
+    _reconciliation = _reconcileInner(_client!).whenComplete(() {
+      _reconciliation = null;
+    });
+  }
+
+  Future<void> _reconcileInner(native.NdsClient client) async {
+    try {
+      await client.reconcile();
+    } catch (error) {
+      if (error is native.ClientError) {
+        error.dispose();
+      } else {
+        widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
+      }
+    } finally {
+      if (mounted && identical(client, _client)) {
+        setState(() => _view = client.snapshot());
+      }
     }
   }
 
@@ -204,9 +234,10 @@ class _IdentityScreenState extends State<_IdentityScreen>
       _error = null;
     });
     try {
+      await _reconciliation;
       var view = await action();
       if (view.authenticated &&
-          view.sessionVerified &&
+          (view.sessionVerified || view.offlineAuthorized) &&
           (prepare || view.currentDeviceId.isEmpty) &&
           view.flow != 'passkey_registration') {
         view = await _client!.prepareDevice(
@@ -220,7 +251,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     } catch (error) {
       var code = 'unexpected';
       if (error is native.ClientError) {
-        code = await error.code();
+        code = error.code();
         error.dispose();
       } else {
         widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
@@ -249,9 +280,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     _client = null;
     _view = null;
     final epoch = _actionEpoch;
-    final client = await native.NdsClient.newInstance(
-      endpoint: _endpoint.text.trim(),
-    );
+    final client = native.NdsClient(endpoint: _endpoint.text.trim());
     if (!mounted || epoch != _actionEpoch) {
       client.cancel();
       client.dispose();
@@ -260,7 +289,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
     client.setForeground(active: !_paused);
     _client = client;
     return client.refresh();
-  });
+  }, prepare: true);
 
   void _schedulePoll() {
     _poll?.cancel();
@@ -348,8 +377,11 @@ class _IdentityScreenState extends State<_IdentityScreen>
 
   String _message(AppLocalizations l, String code) => switch (code) {
     'invalid_endpoint' => l.endpointError,
+    'recent_authentication_required' => l.recentAuthenticationRequired,
     'invalid_input' => l.inputError,
     'credential_store_unavailable' => l.storeError,
+    'vault_storage_unavailable' => l.vaultStorageUnavailable,
+    'vault_storage_full' => l.storageFull,
     'credential_revalidation_required' => l.revalidationRequired,
     'transport_unavailable' ||
     'request_timeout' ||
@@ -414,6 +446,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: OpenNetworkSpacing.six),
+                  if (v?.logoutPending == true) Text(l.logoutPending),
                   if (_client == null || v?.serverVersion.isEmpty != false) ...[
                     Text(l.connectHelp),
                     const SizedBox(height: OpenNetworkSpacing.four),
@@ -421,6 +454,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                       key: const Key('server-address'),
                       controller: _endpoint,
                       enabled: !_busy,
+                      readOnly: kIsWeb,
                       keyboardType: TextInputType.url,
                       autocorrect: false,
                       decoration: InputDecoration(
@@ -455,7 +489,11 @@ class _IdentityScreenState extends State<_IdentityScreen>
                   ] else if (v.authenticated &&
                       v.flow != 'passkey_registration') ...[
                     if (!v.sessionVerified) ...[
-                      Text(l.unverified),
+                      Text(
+                        v.offlineAuthorized
+                            ? l.offlineAuthorized
+                            : l.unverified,
+                      ),
                       const SizedBox(height: OpenNetworkSpacing.four),
                     ],
                     SelectableText(
@@ -568,7 +606,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     ))
                       FilledButton(
                         key: const Key('open-vault'),
-                        onPressed: _busy || !v.sessionVerified
+                        onPressed:
+                            _busy || !(v.sessionVerified || v.offlineAuthorized)
                             ? null
                             : () => Navigator.of(context).push(
                                 MaterialPageRoute<void>(
@@ -580,7 +619,8 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(
                       key: const Key('open-utilities'),
-                      onPressed: _busy || !v.sessionVerified
+                      onPressed:
+                          _busy || !(v.sessionVerified || v.offlineAuthorized)
                           ? null
                           : () => Navigator.of(context).push(
                               MaterialPageRoute<void>(
@@ -632,6 +672,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     const SizedBox(height: OpenNetworkSpacing.four),
                     SelectableText(
                       v.verificationCode,
+                      semanticsLabel: v.verificationCode,
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     Text(l.validFor(v.expiresInSeconds)),
@@ -743,7 +784,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
                     ),
                   ],
                   const SizedBox(height: OpenNetworkSpacing.six),
-                  if (_client != null) ...[
+                  if (_client != null && !kIsWeb) ...[
                     TextButton(
                       onPressed: _busy
                           ? null
@@ -835,7 +876,10 @@ class _IdentityScreenState extends State<_IdentityScreen>
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                  Text(l.privacy, style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    kIsWeb ? l.browserPrivacy : l.privacy,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   const SizedBox(height: OpenNetworkSpacing.four),
                   TextButton(
                     onPressed: () => launchUrl(

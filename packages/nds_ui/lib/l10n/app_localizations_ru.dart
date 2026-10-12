@@ -118,7 +118,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get storeError =>
-      'Защищённое хранилище ОС недоступно. Незашифрованное хранение не используется.';
+      'Защищённое хранилище учётных данных недоступно. Сохранение открытым текстом не используется.';
 
   @override
   String get authError =>
@@ -425,7 +425,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get devicesHelp =>
-      'У каждой установки свой ключ подписи в хранилище ОС. Активные зарегистрированные устройства получают доступ к vault.';
+      'У каждой установки свой ключ подписи. Активные зарегистрированные устройства получают доступ к vault.';
 
   @override
   String get devicesUnverified =>
@@ -479,7 +479,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Доступ к vault недоступен. Проверьте сессию, устройство и соединение с сервером.';
 
   @override
-  String get vaultUnlocked => 'Нативный ключ vault доступен.';
+  String get vaultUnlocked => 'Защищённый ключ vault доступен.';
 
   @override
   String vaultCounts(int pending, int conflicts) {
@@ -785,4 +785,55 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get clipboardCopied => 'Скопировано в буфер устройства.';
+
+  @override
+  String get offlineAuthorized =>
+      'Офлайн-доступ использует последнюю проверку сессии и устройства. Изменения остаются на этом устройстве до синхронизации.';
+
+  @override
+  String get storageFull =>
+      'Локальное хранилище заполнено. Изменение не сохранено.';
+
+  @override
+  String get logoutPending =>
+      'Локальный выход выполнен. Выход на сервере завершится после подключения.';
+
+  @override
+  String get recentAuthenticationRequired =>
+      'Для управления ключами доступа войдите снова. Текущая сессия остаётся действующей.';
+
+  @override
+  String get browserPrivacy =>
+      'Сессия хранится в защищённой cookie. Ключи vault зашифрованы в профиле браузера; сервер передаёт их после подтверждённого входа и регистрации устройства.';
+
+  @override
+  String get browserVaultHelp =>
+      'Vault открывается автоматически после входа. Изменения хранятся в браузере в зашифрованном виде и синхронизируются через сервер. Сохраняйте данные сайта, пока все изменения не синхронизированы.';
+
+  @override
+  String get browserStoragePersistent =>
+      'Браузер разрешил постоянное хранение. Очистка данных сайта всё равно удалит локальные изменения.';
+
+  @override
+  String get browserStorageEvictable =>
+      'При нехватке места браузер может удалить данные сайта. Несинхронизированные изменения будут потеряны.';
+
+  @override
+  String get vaultRecordPending => 'Локальное изменение ожидает синхронизации';
+
+  @override
+  String get telemetryPersistenceReady =>
+      'Запись журналов в хранилище браузера подтверждена.';
+
+  @override
+  String get telemetryPersistenceUnavailable =>
+      'Успешная запись журналов в постоянное хранилище браузера не подтверждена. Несохранённые события могут потеряться при закрытии страницы.';
+
+  @override
+  String get vaultStorageUnavailable =>
+      'Локальное зашифрованное хранилище недоступно. Проверьте поддержку хранилища и разрешения браузера или устройства.';
+
+  @override
+  String get vaultDependencyUnavailable =>
+      'Vault не смог получить доступ к необходимому локальному хранилищу или серверным сервисам.';
 }

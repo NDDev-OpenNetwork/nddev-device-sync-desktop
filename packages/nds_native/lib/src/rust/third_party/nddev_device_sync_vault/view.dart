@@ -27,7 +27,7 @@ class ClipboardView {
     required this.conflicted,
   });
 
-  static Future<ClipboardView> default_() =>
+  static ClipboardView default_() =>
       RustLib.instance.api.nddevDeviceSyncVaultViewClipboardViewDefault();
 
   @override
@@ -82,12 +82,14 @@ class ConflictView {
 
 class RecordPage {
   final BigInt observedSeq;
+  final BigInt localRevision;
   final List<RecordView> items;
   final String nextAfter;
   final bool hasMore;
 
   const RecordPage({
     required this.observedSeq,
+    required this.localRevision,
     required this.items,
     required this.nextAfter,
     required this.hasMore,
@@ -96,6 +98,7 @@ class RecordPage {
   @override
   int get hashCode =>
       observedSeq.hashCode ^
+      localRevision.hashCode ^
       items.hashCode ^
       nextAfter.hashCode ^
       hasMore.hashCode;
@@ -106,6 +109,7 @@ class RecordPage {
       other is RecordPage &&
           runtimeType == other.runtimeType &&
           observedSeq == other.observedSeq &&
+          localRevision == other.localRevision &&
           items == other.items &&
           nextAfter == other.nextAfter &&
           hasMore == other.hasMore;
@@ -118,6 +122,9 @@ class RecordView {
   final String title;
   final String username;
   final BigInt revision;
+
+  /// Local operation identity for optimistic editing; not a server revision.
+  final String? pendingId;
   final bool conflicted;
   final ConflictView? conflict;
 
@@ -128,6 +135,7 @@ class RecordView {
     required this.title,
     required this.username,
     required this.revision,
+    this.pendingId,
     required this.conflicted,
     this.conflict,
   });
@@ -140,6 +148,7 @@ class RecordView {
       title.hashCode ^
       username.hashCode ^
       revision.hashCode ^
+      pendingId.hashCode ^
       conflicted.hashCode ^
       conflict.hashCode;
 
@@ -154,6 +163,7 @@ class RecordView {
           title == other.title &&
           username == other.username &&
           revision == other.revision &&
+          pendingId == other.pendingId &&
           conflicted == other.conflicted &&
           conflict == other.conflict;
 }
@@ -259,10 +269,11 @@ enum VaultError {
   authentication,
   unavailable,
   busy,
+  storageFull,
   registrationRequired;
 
   /// Stable presentation class; never an underlying driver/secret message.
-  Future<String> code() =>
+  String code() =>
       RustLib.instance.api.nddevDeviceSyncVaultViewVaultErrorCode(that: this);
 }
 
@@ -272,9 +283,16 @@ class VaultView {
   final int pending;
   final int conflicts;
   final BigInt cursor;
+
+  /// Local durable mutation counter, independent of the committed cursor.
+  final BigInt localRevision;
   final BigInt lastSyncAt;
   final bool catchingUp;
   final String syncError;
+
+  /// Browser retention preference observed at client startup; native is None.
+  /// Even persistent browser storage can be cleared explicitly by the user.
+  final bool? browserPersistent;
 
   const VaultView({
     required this.unlocked,
@@ -282,12 +300,14 @@ class VaultView {
     required this.pending,
     required this.conflicts,
     required this.cursor,
+    required this.localRevision,
     required this.lastSyncAt,
     required this.catchingUp,
     required this.syncError,
+    this.browserPersistent,
   });
 
-  static Future<VaultView> default_() =>
+  static VaultView default_() =>
       RustLib.instance.api.nddevDeviceSyncVaultViewVaultViewDefault();
 
   @override
@@ -297,9 +317,11 @@ class VaultView {
       pending.hashCode ^
       conflicts.hashCode ^
       cursor.hashCode ^
+      localRevision.hashCode ^
       lastSyncAt.hashCode ^
       catchingUp.hashCode ^
-      syncError.hashCode;
+      syncError.hashCode ^
+      browserPersistent.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -311,7 +333,9 @@ class VaultView {
           pending == other.pending &&
           conflicts == other.conflicts &&
           cursor == other.cursor &&
+          localRevision == other.localRevision &&
           lastSyncAt == other.lastSyncAt &&
           catchingUp == other.catchingUp &&
-          syncError == other.syncError;
+          syncError == other.syncError &&
+          browserPersistent == other.browserPersistent;
 }

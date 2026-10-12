@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
@@ -19,7 +20,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   native.VaultView? _view;
   List<native.RecordView> _records = [];
   native.RecordView? _editing;
-  BigInt? _loadedCursor;
+  BigInt? _loadedCursor, _loadedLocalRevision;
   String _after = '', _nextAfter = '';
   bool _hasMore = false;
   String _draftId = native.newVaultRecordId();
@@ -27,7 +28,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   final _username = TextEditingController();
   final _secret = TextEditingController();
   final _scroll = ScrollController();
-  String? _error;
+  String? _error, _readError;
   bool _busy = false, _paused = false;
   Timer? _refresh;
   Completer<void>? _backgroundRead;
@@ -81,7 +82,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     } else {
       setState(() {
         _busy = true;
-        if (reload) _error = null;
+        _error = null;
       });
     }
     try {
@@ -93,7 +94,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
       if (!mounted || epoch != _actionEpoch) return;
       setState(() {
         _view = view;
-        if (view.syncError.isNotEmpty) _error = view.syncError;
+        _readError = null;
       });
       if (!view.unlocked) {
         setState(() {
@@ -104,29 +105,51 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
         });
         return;
       }
-      if (reload || _loadedCursor != view.cursor) {
+      if (reload ||
+          _loadedCursor != view.cursor ||
+          _loadedLocalRevision != view.localRevision) {
         final cursor = after ?? _after;
-        final page = await widget.client.vaultRecords(after: cursor);
+        native.RecordPage page;
+        try {
+          page = await widget.client.vaultRecords(after: cursor);
+        } on native.VaultError catch (error) {
+          // The action already succeeded. A competing background read cannot
+          // turn its receipt into an apparent failed mutation; the next poll
+          // observes the durable local revision and reloads this page.
+          if (error.code() == 'vault_busy') return;
+          rethrow;
+        }
         if (!mounted || epoch != _actionEpoch) return;
         setState(() {
           _records = page.items;
           _loadedCursor = page.observedSeq;
+          _loadedLocalRevision = page.localRevision;
           _after = cursor;
           _nextAfter = page.nextAfter;
           _hasMore = page.hasMore;
-          _error = view.syncError.isEmpty ? null : view.syncError;
         });
       }
     } catch (error) {
       var code = 'unexpected';
-      if (error is native.VaultError) code = await error.code();
+      if (error is native.VaultError) {
+        code = error.code();
+      } else {
+        native.recordClientFailure(kind: native.FailureKind.nativeBridge);
+      }
       if (mounted && epoch == _actionEpoch) {
         setState(() {
-          if (code != 'vault_busy' || reload) _error = code;
+          if (background) {
+            if (code != 'vault_busy') _readError = code;
+          } else {
+            _error = code;
+          }
           if (code == 'vault_locked') {
+            _view = null;
             _records = [];
             _loadedCursor = null;
-            _secret.clear();
+            _loadedLocalRevision = null;
+            _hasMore = false;
+            _resetEditor();
           }
         });
       }
@@ -148,17 +171,32 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
     _draftId = native.newVaultRecordId();
   }
 
+  Future<void> _copy(native.RecordView record) async {
+    String? ticket;
+    try {
+      ticket = widget.client.reserveClipboardCopy();
+    } catch (_) {
+      setState(() => _error = 'vault_dependency_unavailable');
+      return;
+    }
+    await _run(() async {
+      await widget.client.vaultCopySecret(id: record.id, ticket: ticket);
+      return widget.client.vaultSnapshot();
+    });
+  }
+
   Future<void> _save() => _run(
     () async {
-      await widget.client.vaultSave(
+      final view = await widget.client.vaultSave(
         id: _editing?.id ?? _draftId,
         expectedRevision: _editing?.revision ?? BigInt.zero,
+        expectedPending: _editing?.pendingId,
         title: _title.text.trim(),
         username: _username.text.trim(),
         secret: _secret.text,
       );
       if (mounted) _resetEditor();
-      return widget.client.vaultSnapshot();
+      return view;
     },
     reload: true,
     after: '',
@@ -197,11 +235,11 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
       return;
     }
     await _run(() async {
-      await widget.client.vaultDelete(
+      return widget.client.vaultDelete(
         id: record.id,
         expectedRevision: record.revision,
+        expectedPending: record.pendingId,
       );
-      return widget.client.vaultSnapshot();
     }, reload: true);
   }
 
@@ -213,23 +251,24 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
       return;
     }
     await _run(() async {
-      await widget.client.vaultResolve(
+      return widget.client.vaultResolve(
         id: record.id,
         expectedRevision: record.revision,
+        expectedPending: record.pendingId,
         expectedCursor: record.observedSeq,
         useConflict: conflict,
       );
-      return widget.client.vaultSnapshot();
     }, reload: true);
   }
 
-  String _message(AppLocalizations l) => switch (_error) {
+  String _message(AppLocalizations l, String code) => switch (code) {
     'vault_locked' => l.vaultLocked,
     'vault_key_registration_required' => l.vaultRegistrationRequired,
     'vault_invalid_input' => l.vaultInputError,
     'vault_authentication_failed' => l.vaultProofError,
     'vault_busy' => l.operationBusy,
-    'vault_dependency_unavailable' => l.networkError,
+    'vault_storage_full' => l.storageFull,
+    'vault_dependency_unavailable' => l.vaultDependencyUnavailable,
     _ => l.genericError,
   };
 
@@ -237,6 +276,13 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final view = _view;
+    final syncError = view?.syncError;
+    final error =
+        _error ??
+        _readError ??
+        (syncError == null || syncError.isEmpty || syncError == 'vault_busy'
+            ? null
+            : syncError);
     return Scaffold(
       appBar: AppBar(title: Text(l.vaultTitle)),
       body: SafeArea(
@@ -250,13 +296,19 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(l.vaultHelp),
+                  Text(kIsWeb ? l.browserVaultHelp : l.vaultHelp),
                   const SizedBox(height: OpenNetworkSpacing.four),
                   if (view != null) ...[
                     Text(
                       view.unlocked ? l.vaultUnlocked : l.vaultLocked,
                       key: const Key('vault-state'),
                     ),
+                    if (view.browserPersistent != null)
+                      Text(
+                        view.browserPersistent!
+                            ? l.browserStoragePersistent
+                            : l.browserStorageEvictable,
+                      ),
                     Text(l.vaultCounts(view.pending, view.conflicts)),
                     Text(
                       view.catchingUp
@@ -355,6 +407,8 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                                   l.vaultRevision(record.revision.toString()),
                                 ),
                                 if (record.deleted) Text(l.vaultDeleted),
+                                if (record.pendingId != null)
+                                  Text(l.vaultRecordPending),
                                 if (record.conflicted) ...[
                                   Text(l.vaultConflict),
                                   if (record.conflict != null)
@@ -390,14 +444,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                                         TextButton(
                                           onPressed: _busy
                                               ? null
-                                              : () => _run(() async {
-                                                  await widget.client
-                                                      .vaultCopySecret(
-                                                        id: record.id,
-                                                      );
-                                                  return widget.client
-                                                      .vaultSnapshot();
-                                                }),
+                                              : () => _copy(record),
                                           child: Text(l.vaultCopySecret),
                                         ),
                                       TextButton(
@@ -474,10 +521,13 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
                     child: Text(l.moduleRefresh),
                   ),
                   if (_busy) const LinearProgressIndicator(),
-                  if (_error != null)
+                  if (error != null)
                     Semantics(
                       liveRegion: true,
-                      child: Text(_message(l), key: const Key('vault-error')),
+                      child: Text(
+                        _message(l, error),
+                        key: const Key('vault-error'),
+                      ),
                     ),
                 ],
               ),
