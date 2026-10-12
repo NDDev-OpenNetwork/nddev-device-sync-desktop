@@ -1,4 +1,5 @@
 use flutter_rust_bridge::frb;
+use nddev_device_sync_accounts::runtime::{self, Instant};
 use nddev_device_sync_accounts::{
     IdentityClient,
     view::{ClientError, PasskeyView, View},
@@ -12,7 +13,7 @@ use std::{
         Arc, Mutex,
         atomic::{AtomicBool, Ordering},
     },
-    time::{Duration, Instant},
+    time::Duration,
 };
 use tracing::Instrument;
 use zeroize::Zeroizing;
@@ -24,16 +25,28 @@ pub struct NdsClient {
     replica: Mutex<Option<Replica>>,
     foreground: AtomicBool,
     delivery: Mutex<Option<super::telemetry::Delivery>>,
+    #[cfg(not(target_arch = "wasm32"))]
     clipboard: nddev_device_sync_clipboard::os::TextClipboard,
 }
 
 struct Replica {
     active: tokio::sync::watch::Sender<bool>,
-    task: tokio::task::JoinHandle<()>,
+    task: Option<runtime::Task>,
+}
+struct ClipboardReservation(Option<String>);
+impl Drop for ClipboardReservation {
+    fn drop(&mut self) {
+        #[cfg(target_arch = "wasm32")]
+        if let Some(id) = &self.0 {
+            nddev_device_sync_clipboard::browser::cancel_write(id);
+        }
+    }
 }
 impl Drop for Replica {
     fn drop(&mut self) {
-        self.task.abort();
+        if let Some(task) = &self.task {
+            task.abort();
+        }
     }
 }
 
@@ -45,12 +58,54 @@ impl NdsClient {
             replica: Mutex::default(),
             foreground: AtomicBool::new(true),
             delivery: Mutex::default(),
+            #[cfg(not(target_arch = "wasm32"))]
             clipboard: Default::default(),
         })
     }
     pub async fn refresh(&self) -> Result<View, ClientError> {
         self.stop_replica().await;
         self.inner.refresh().await
+    }
+    /// Reconcile shared local authorization on foreground ticks/resume. Pending
+    /// logout retries through the identity owner; no presentation auth rules.
+    pub async fn reconcile(&self) -> Result<View, ClientError> {
+        let view = self.inner.view();
+        if !self.foreground.load(Ordering::Relaxed) || !view.flow.is_empty() {
+            return Ok(view);
+        }
+        if view.logout_pending {
+            return self.inner.refresh().await;
+        }
+        if view.authenticated && !view.current_device_id.is_empty() {
+            match self.inner.authorize_local().await {
+                Ok(()) => {
+                    self.start_replica()
+                        .await
+                        .map_err(|_| ClientError::Transport)?;
+                    self.ensure_delivery();
+                    return Ok(self.inner.view());
+                }
+                Err(ClientError::Busy) => return Ok(self.inner.view()),
+                Err(error) => {
+                    self.stop_replica().await;
+                    self.delivery
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .take();
+                    self.vault.lock().await.take();
+                    return Err(error);
+                }
+            }
+        }
+        if !view.authenticated {
+            self.stop_replica().await;
+            self.delivery
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take();
+            self.vault.lock().await.take();
+        }
+        Ok(self.inner.view())
     }
     pub async fn request_email(&self, email: String, locale: String) -> Result<View, ClientError> {
         self.inner.request_email(email, &locale).await
@@ -104,7 +159,18 @@ impl NdsClient {
     }
     pub async fn prepare_device(&self, name: String) -> Result<View, ClientError> {
         self.stop_replica().await;
-        let view = self.inner.prepare_device(name).await?;
+        let view = if self.inner.view().offline_authorized {
+            self.inner.view()
+        } else {
+            self.inner.prepare_device(name).await?
+        };
+        self.start_replica()
+            .await
+            .map_err(|_| ClientError::Transport)?;
+        self.ensure_delivery();
+        Ok(view)
+    }
+    fn ensure_delivery(&self) {
         {
             let mut delivery = self
                 .delivery
@@ -118,10 +184,6 @@ impl NdsClient {
                 );
             }
         }
-        self.start_replica()
-            .await
-            .map_err(|_| ClientError::Transport)?;
-        Ok(view)
     }
     pub async fn revoke_device(&self, id: String) -> Result<View, ClientError> {
         let view = self.inner.revoke_device(id).await?;
@@ -158,9 +220,11 @@ impl NdsClient {
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .take();
-        if let Some(mut replica) = replica {
-            replica.task.abort();
-            let _ = (&mut replica.task).await;
+        if let Some(mut replica) = replica
+            && let Some(task) = replica.task.take()
+        {
+            task.abort();
+            task.join().await;
         }
     }
     async fn start_replica(&self) -> Result<(), VaultError> {
@@ -170,10 +234,16 @@ impl NdsClient {
             tokio::sync::watch::channel(self.foreground.load(Ordering::Relaxed));
         let identity = self.inner.clone();
         let mut slot = self.replica.lock().unwrap_or_else(|e| e.into_inner());
-        if slot.is_some() {
+        if slot.as_ref().is_some_and(|replica| {
+            replica
+                .task
+                .as_ref()
+                .is_some_and(|task| !task.is_finished())
+        }) {
             return Ok(());
         }
-        let task = tokio::spawn(async move {
+        slot.take();
+        let task = runtime::spawn(async move {
             let mut delay = Duration::ZERO;
             let mut failures = 0u32;
             let mut published = false;
@@ -187,7 +257,7 @@ impl NdsClient {
                 }
                 tokio::select! {
                     changed = enabled.changed() => { if changed.is_err() { break; } delay = Duration::ZERO; continue; }
-                    _ = tokio::time::sleep(delay) => {}
+                    _ = runtime::sleep(delay) => {}
                 }
                 let Some(vault) = weak.upgrade() else {
                     break;
@@ -221,7 +291,10 @@ impl NdsClient {
                 };
             }
         });
-        *slot = Some(Replica { active, task });
+        *slot = Some(Replica {
+            active,
+            task: Some(task),
+        });
         Ok(())
     }
     async fn vault(&self) -> Result<Arc<VaultClient>, VaultError> {
@@ -240,7 +313,7 @@ impl NdsClient {
         .await
     }
     pub async fn vault_snapshot(&self) -> Result<VaultView, VaultError> {
-        Ok(self.vault().await?.snapshot())
+        self.vault().await?.refresh_local().await
     }
     pub async fn vault_sync(&self) -> Result<VaultView, VaultError> {
         observe("vault.sync", async {
@@ -258,21 +331,24 @@ impl NdsClient {
         &self,
         id: Option<String>,
         expected_revision: u64,
+        expected_pending: Option<String>,
         title: String,
         username: String,
         secret: String,
-    ) -> Result<String, VaultError> {
+    ) -> Result<VaultView, VaultError> {
         let result = observe("vault.record.save", async {
-            self.vault()
-                .await?
+            let vault = self.vault().await?;
+            vault
                 .save_record(
                     id,
                     expected_revision,
+                    expected_pending,
                     title,
                     username,
                     Zeroizing::new(secret),
                 )
-                .await
+                .await?;
+            Ok(vault.snapshot())
         })
         .await?;
         self.wake_replica();
@@ -282,12 +358,14 @@ impl NdsClient {
         &self,
         id: String,
         expected_revision: u64,
-    ) -> Result<String, VaultError> {
+        expected_pending: Option<String>,
+    ) -> Result<VaultView, VaultError> {
         let result = observe("vault.record.delete", async {
-            self.vault()
-                .await?
-                .delete_record(id, expected_revision)
-                .await
+            let vault = self.vault().await?;
+            vault
+                .delete_record(id, expected_revision, expected_pending)
+                .await?;
+            Ok(vault.snapshot())
         })
         .await?;
         self.wake_replica();
@@ -297,14 +375,22 @@ impl NdsClient {
         &self,
         id: String,
         expected_revision: u64,
+        expected_pending: Option<String>,
         expected_cursor: u64,
         use_conflict: bool,
-    ) -> Result<String, VaultError> {
+    ) -> Result<VaultView, VaultError> {
         let result = observe("vault.record.resolve", async {
-            self.vault()
-                .await?
-                .resolve_record(id, expected_revision, expected_cursor, use_conflict)
-                .await
+            let vault = self.vault().await?;
+            vault
+                .resolve_record(
+                    id,
+                    expected_revision,
+                    expected_cursor,
+                    expected_pending,
+                    use_conflict,
+                )
+                .await?;
+            Ok(vault.snapshot())
         })
         .await?;
         self.wake_replica();
@@ -399,7 +485,49 @@ impl NdsClient {
             Err(ClientError::Server("clipboard_unsupported".into()))
         }
     }
-    pub async fn clipboard_copy(&self) -> Result<(), VaultError> {
+    /// Called synchronously in the explicit user gesture, before async decryption.
+    #[frb(sync)]
+    pub fn reserve_clipboard_copy(&self) -> Result<Option<String>, VaultError> {
+        #[cfg(target_arch = "wasm32")]
+        {
+            nddev_device_sync_clipboard::browser::reserve_write()
+                .map(Some)
+                .map_err(clipboard_error)
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            Ok(None)
+        }
+    }
+    async fn write_clipboard(
+        &self,
+        text: Zeroizing<String>,
+        sensitive: bool,
+        reserved: &ClipboardReservation,
+    ) -> Result<(), VaultError> {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let _ = sensitive;
+            nddev_device_sync_clipboard::browser::write_reserved(
+                reserved.0.clone().ok_or(VaultError::Invalid)?,
+                text,
+            )
+            .await
+            .map_err(clipboard_error)
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            if reserved.0.is_some() {
+                return Err(VaultError::Invalid);
+            }
+            self.clipboard
+                .write(text, sensitive)
+                .await
+                .map_err(clipboard_error)
+        }
+    }
+    pub async fn clipboard_copy(&self, ticket: Option<String>) -> Result<(), VaultError> {
+        let reserved = ClipboardReservation(ticket);
         observe("clipboard.copy", async {
             let (_, text) = self
                 .vault()
@@ -407,20 +535,19 @@ impl NdsClient {
                 .clipboard()
                 .await?
                 .ok_or(VaultError::Invalid)?;
-            self.clipboard
-                .write(text, false)
-                .await
-                .map_err(|_| VaultError::Unavailable)
+            self.write_clipboard(text, false, &reserved).await
         })
         .await
     }
-    pub async fn vault_copy_secret(&self, id: String) -> Result<(), VaultError> {
+    pub async fn vault_copy_secret(
+        &self,
+        id: String,
+        ticket: Option<String>,
+    ) -> Result<(), VaultError> {
+        let reserved = ClipboardReservation(ticket);
         observe("vault.secret.copy", async {
             let text = self.vault().await?.native_secret(id).await?;
-            self.clipboard
-                .write(text, true)
-                .await
-                .map_err(|_| VaultError::Unavailable)
+            self.write_clipboard(text, true, &reserved).await
         })
         .await
     }
@@ -574,6 +701,11 @@ impl NdsClient {
     }
 }
 
+fn clipboard_error(error: nddev_device_sync_clipboard::os::Error) -> VaultError {
+    tracing::event!(target:"nds_native",tracing::Level::WARN,{event.name="clipboard.delivery.failed",module="clipboard",scope="io",error.type=%error,outcome="error"});
+    VaultError::Unavailable
+}
+
 fn device_observations(
     identity: &IdentityClient,
 ) -> Result<Vec<nddev_device_sync_domain::state::Snapshot>, VaultError> {
@@ -584,10 +716,7 @@ fn device_observations(
         .into_iter()
         .find(|value| value.is_current && !value.revoked)
         .ok_or(VaultError::Locked)?;
-    let observed_at_ms = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map_err(|_| VaultError::Unavailable)?
-        .as_millis()
+    let observed_at_ms = (time::OffsetDateTime::now_utc().unix_timestamp_nanos() / 1_000_000)
         .try_into()
         .map_err(|_| VaultError::Invalid)?;
     let capture = |data| Snapshot {
@@ -638,30 +767,13 @@ async fn observe<T>(
     }.instrument(span).await
 }
 fn data_directory() -> Result<std::path::PathBuf, VaultError> {
-    #[cfg(target_os = "android")]
+    #[cfg(not(target_arch = "wasm32"))]
     {
-        nddev_device_sync_accounts::android::private_data_directory()
-            .map_err(|_| VaultError::Unavailable)
+        nddev_device_sync_accounts::private_data_directory().map_err(|_| VaultError::Unavailable)
     }
-    #[cfg(not(target_os = "android"))]
+    #[cfg(target_arch = "wasm32")]
     {
-        #[cfg(target_os = "windows")]
-        let root = std::env::var_os("LOCALAPPDATA").map(std::path::PathBuf::from);
-        #[cfg(any(target_os = "ios", target_os = "macos"))]
-        let root = std::env::var_os("HOME")
-            .map(|home| std::path::PathBuf::from(home).join("Library/Application Support"));
-        #[cfg(target_os = "linux")]
-        let root = std::env::var_os("XDG_STATE_HOME")
-            .map(std::path::PathBuf::from)
-            .or_else(|| {
-                std::env::var_os("HOME")
-                    .map(|home| std::path::PathBuf::from(home).join(".local/state"))
-            });
-        let root = root.ok_or(VaultError::Unavailable)?;
-        if !root.is_absolute() {
-            return Err(VaultError::Invalid);
-        }
-        Ok(root.join("nddev-device-sync"))
+        Ok("/browser".into())
     }
 }
 
@@ -712,12 +824,19 @@ fn incident_view(
 
 #[frb(sync)]
 pub fn supports_native_clipboard() -> bool {
-    cfg!(any(
-        target_os = "linux",
-        target_os = "macos",
-        target_os = "windows",
-        target_os = "android"
-    ))
+    #[cfg(target_arch = "wasm32")]
+    {
+        nddev_device_sync_clipboard::browser::supported()
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        cfg!(any(
+            target_os = "linux",
+            target_os = "macos",
+            target_os = "windows",
+            target_os = "android"
+        ))
+    }
 }
 
 #[frb(sync)]

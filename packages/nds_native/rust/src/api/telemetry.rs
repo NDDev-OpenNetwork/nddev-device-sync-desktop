@@ -24,6 +24,8 @@ fn logger() -> Option<MutexGuard<'static, ProcessTelemetry>> {
 
 #[frb(init)]
 pub fn init_app() -> Result<(), DiagnosticsError> {
+    #[cfg(target_arch = "wasm32")]
+    crate::browser::configure().map_err(|_| DiagnosticsError::Unavailable)?;
     LOGGER.get_or_init(|| {
         let config = Config {
             service: "nddev-device-sync-client".into(),
@@ -43,6 +45,7 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
             target_prefixes: vec![
                 "nds_accounts".into(),
                 "nds_native".into(),
+                "nddev_device_sync_vault".into(),
                 "nddev_device_sync_agent".into(),
                 "nddev_device_sync_adapter_io".into(),
                 "nddev_device_sync_sysinfo".into(),
@@ -113,8 +116,21 @@ pub fn record_client_lifecycle(state: ClientLifecycle) -> bool {
     true
 }
 
-/// Runs on the bridge worker, never synchronously on Flutter's frame thread.
-pub fn shutdown_telemetry() -> LocalDiagnostics {
+/// Native flushing runs outside Flutter's frame thread; browser timers and
+/// console output are owned by the browser runtime.
+pub async fn shutdown_telemetry() -> LocalDiagnostics {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        tokio::task::spawn_blocking(shutdown_local)
+            .await
+            .unwrap_or_else(|_| LocalDiagnostics::unavailable())
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        shutdown_local()
+    }
+}
+fn shutdown_local() -> LocalDiagnostics {
     logger().map_or_else(LocalDiagnostics::unavailable, |mut logger| {
         logger.traces.shutdown();
         logger.logger.shutdown();

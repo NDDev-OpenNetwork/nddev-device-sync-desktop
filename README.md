@@ -2,8 +2,8 @@
 
 Desktop client and shared Flutter presentation for
 [NDDev OpenNetwork](https://nddev.ai), AGPL-3.0-only. `packages/nds_ui` owns the
-en/ru interface used by desktop and mobile; `packages/nds_native` generates a
-thin bridge to the Rust accounts module. NDS tokens never enter Dart.
+en/ru interface used by desktop, mobile and web; `packages/nds_native` generates
+a thin bridge to shared Rust modules. NDS tokens and unwrapped keys never enter Dart.
 
 The same observability SDK used by the server and agent owns event validation,
 redaction, trace context, debug windows and local diagnostics. Flutter framework
@@ -19,7 +19,7 @@ shows a safe localized startup screen; a missing sink remains explicitly degrade
 `just check` includes real framework/root-isolate failure tests using the native
 library. The observability repository's isolated pipeline can additionally consume
 that private test log through `NDS_CLIENT_EVENTS_FILE` and verify searchable
-failure records in OpenObserve. Authenticated clients use the shared native
+failure records in OpenObserve. Authenticated clients use the shared
 accounts sender for signed event and OTLP span delivery; the server applies its
 operator policy and binds tenant/user/device identity. Clipboard and alerts
 shows per-signal acknowledgements, losses, policy and last successful receipt.
@@ -68,13 +68,13 @@ acceptance. `scripts/check-artifact.py` rejects integration entrypoints and
 native test plugins in debug bundles. Integration dependencies exist only
 inside the acceptance driver's temporary scope.
 
-Vault records use bounded native cursor pages. The UI supports create/edit,
+Vault records use bounded cursor pages. The UI supports create/edit,
 encrypted tombstones and explicit conflict choices guarded by the displayed
 revision and observed sequence. A save confirms a durable local outbox receipt;
 the UI separately shows pending changes and the last fully caught-up timestamp.
 Background reads keep editors enabled and retain keyboard focus. A user action
 waits for an already running read and supersedes its presentation result.
-Secret values are copied through native clipboard operations and are never
+Secret values are copied through platform clipboard operations and are never
 returned by the bridge. Shared text is explicit, bounded to 8 KiB and encrypted.
 Android refuses private/unsupported input and marks delivered values sensitive
 so they do not re-enter shared capture.
@@ -90,3 +90,17 @@ X11 session for Linux clipboard acceptance, for example
 `xvfb-run -a env -u WAYLAND_DISPLAY GDK_BACKEND=x11 python3 scripts/identity-acceptance.py --fixture /private/fixture.json --vault`.
 The test must observe the native operation completing before reading the OS
 clipboard. Production UI confirmation uses the same native completion receipt.
+
+The browser assembly uses the same UI and a stable, single-threaded Rust/WASM
+bundle. `initializeNdsBridge` supplies the preloaded ES module to FRB without
+dynamic JavaScript evaluation; its default native loader remains unchanged.
+The composition root exports only the vault worker's four journal entrypoints.
+Browser storage, HTTP, credentials and clipboard are owned by their adapters;
+native tools are not exposed as browser capabilities.
+
+The UI distinguishes cached offline authorization, local pending operation IDs,
+committed revisions and complete sync time. Foreground reconciliation observes
+shared logout decisions and retries a pending remote logout. Storage persistence
+reports the browser's actual grant; it does not prevent explicit site-data
+removal. Browser clipboard requests reserve user activation before asynchronous
+secret access. Qualify the full browser assembly separately from native gates.

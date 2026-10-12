@@ -8,7 +8,7 @@ import '../third_party/nddev_device_sync_telemetry/view.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `logger`, `start_delivery`
+// These functions are ignored because they are not marked as `pub`: `logger`, `shutdown_local`, `start_delivery`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ProcessTelemetry`
 
 LocalDiagnostics clientDiagnostics() =>
@@ -27,6 +27,7 @@ bool recordClientFailure({required FailureKind kind}) =>
 bool recordClientLifecycle({required ClientLifecycle state}) =>
     RustLib.instance.api.crateApiTelemetryRecordClientLifecycle(state: state);
 
-/// Runs on the bridge worker, never synchronously on Flutter's frame thread.
+/// Native flushing runs outside Flutter's frame thread; browser timers and
+/// console output are owned by the browser runtime.
 Future<LocalDiagnostics> shutdownTelemetry() =>
     RustLib.instance.api.crateApiTelemetryShutdownTelemetry();

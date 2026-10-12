@@ -70,10 +70,10 @@ class _UtilitiesState extends State<UtilitiesScreen>
     } catch (error) {
       var code = 'unexpected';
       if (error is native.ClientError) {
-        code = await error.code();
+        code = error.code();
         error.dispose();
       } else if (error is native.VaultError) {
-        code = await error.code();
+        code = error.code();
       } else if (error is native.AgentError) {
         code = error.name;
       }
@@ -287,10 +287,21 @@ class _UtilitiesState extends State<UtilitiesScreen>
                           !native.supportsNativeClipboard() ||
                           _clipboard?.present != true
                       ? null
-                      : () => _action(() async {
-                          await widget.client.clipboardCopy();
-                          if (mounted) setState(() => _copied = true);
-                        }),
+                      : () {
+                          String? ticket;
+                          try {
+                            ticket = widget.client.reserveClipboardCopy();
+                          } catch (_) {
+                            setState(
+                              () => _error = 'vault_dependency_unavailable',
+                            );
+                            return;
+                          }
+                          _action(() async {
+                            await widget.client.clipboardCopy(ticket: ticket);
+                            if (mounted) setState(() => _copied = true);
+                          });
+                        },
                   child: Text(l.copySharedClipboard),
                 ),
                 if (_busy) const LinearProgressIndicator(),

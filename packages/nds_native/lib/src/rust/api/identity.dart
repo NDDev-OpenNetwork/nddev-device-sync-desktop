@@ -10,9 +10,9 @@ import 'modules.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `data_directory`, `device_observations`, `incident_view`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`, `wake_replica`
-// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Replica`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`
+// These functions are ignored because they are not marked as `pub`: `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe`, `publish_state_inner`, `start_replica`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClipboardReservation`, `Replica`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`, `drop`
 
 bool supportsNativeClipboard() =>
     RustLib.instance.api.crateApiIdentitySupportsNativeClipboard();
@@ -24,7 +24,7 @@ String newVaultRecordId() =>
 abstract class NdsClient implements RustOpaqueInterface {
   void cancel();
 
-  Future<void> clipboardCopy();
+  Future<void> clipboardCopy({String? ticket});
 
   Future<String> clipboardPublishArchive({
     required LocalAgent agent,
@@ -50,8 +50,7 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> logout();
 
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<NdsClient> newInstance({required String endpoint}) =>
+  factory NdsClient({required String endpoint}) =>
       RustLib.instance.api.crateApiIdentityNdsClientNew(endpoint: endpoint);
 
   Future<List<PasskeyView>> passkeys();
@@ -66,11 +65,18 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<VaultView> publishLocalState({required LocalAgent agent});
 
+  /// Reconcile shared local authorization on foreground ticks/resume. Pending
+  /// logout retries through the identity owner; no presentation auth rules.
+  Future<View> reconcile();
+
   Future<View> refresh();
 
   Future<View> refreshDevices();
 
   Future<View> requestEmail({required String email, required String locale});
+
+  /// Called synchronously in the explicit user gesture, before async decryption.
+  String? reserveClipboardCopy();
 
   Future<View> revokeDevice({required String id});
 
@@ -89,27 +95,30 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<StatePage> syncStates({required String after});
 
-  Future<void> vaultCopySecret({required String id});
+  Future<void> vaultCopySecret({required String id, String? ticket});
 
-  Future<String> vaultDelete({
+  Future<VaultView> vaultDelete({
     required String id,
     required BigInt expectedRevision,
+    String? expectedPending,
   });
 
   Future<RecordPage> vaultRecords({required String after});
 
   Future<VaultView> vaultRefresh();
 
-  Future<String> vaultResolve({
+  Future<VaultView> vaultResolve({
     required String id,
     required BigInt expectedRevision,
+    String? expectedPending,
     required BigInt expectedCursor,
     required bool useConflict,
   });
 
-  Future<String> vaultSave({
+  Future<VaultView> vaultSave({
     String? id,
     required BigInt expectedRevision,
+    String? expectedPending,
     required String title,
     required String username,
     required String secret,

@@ -1,6 +1,6 @@
 [package]
 name = "nds_native"
-version = "0.0.1-alpha.18"
+version = "0.0.1-alpha.19"
 edition = "2024"
 rust-version = "1.99"
 license = "AGPL-3.0-only"
@@ -9,30 +9,36 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
-nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "cf8b39f5f273b976ee03d72b102b5c3a3fafcfe5" }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-vault.git", rev = "2e23e9dca57d42fd86bc8c8b5513716c0204a50a" }
 tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
-flutter_rust_bridge = "=2.13.0"
-nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "e4f41528fdd668ce32105576546e84d2bea5b05f" }
-nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="d08e6b34c9ff6af1fdc179291f5386ec73c84926"}
-time = {version="0.3",features=["parsing"]}
+flutter_rust_bridge = { version="=2.13.0",default-features=false,features=["anyhow","dart-opaque","portable-atomic","rust-async","thread-pool"] }
+nddev-device-sync-accounts = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-accounts", rev = "b9c1b4c3756f2a5976c5f3aaf6371901a627fa3e" }
+nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="d5d16cc3f59aa879136c40d160e756d70c87b5da"}
+time = {version="0.3",features=["parsing","wasm-bindgen"]}
 tracing = "0.1"
 serde_json = "1"
 serde = "1"
 uuid = { version="1.27", features=["v4", "v7"] }
-nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "88f427a219a4edd60b7221598ac9f9e3dcfb48b4" }
+nddev-device-sync-agent = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-agent", rev = "6f241f5e8e1d03ebf42dcfd6dc2e08ef5db2f7f4" }
 nddev-device-sync-sysinfo = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-sysinfo", rev = "7a18e05f8a1351988af6903c588b0b3ec776c2b0" }
-nddev-device-sync-clipboard = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-clipboard", rev = "dd18ce830795c9f77f854095057e68a2aa7203fd" }
+nddev-device-sync-clipboard = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-clipboard", rev = "7fae8fecb4597f8cd1454c7cc8e86ca4f72a5ea7" }
 nddev-device-sync-cleaner = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-cleaner", rev = "1c1a14dddca3d06456b5abef30570cdb3650aac8" }
 nddev-device-sync-updater = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-updater", rev = "f228b0da9fa737454bd4334f442194f615d56586" }
 nddev-device-sync-gds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-gds", rev = "ecbfb40eeeed21c8e53794f4caff603cee226d32" }
 nddev-device-sync-rds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-rds", rev = "9f12f64578722f808935ee1ded1c0246a248945d" }
-nddev-device-sync-telemetry = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability", rev = "469a77aea2e234b50d0554625a761d52985e7cb0", features = ["client-traces"] }
+nddev-device-sync-telemetry = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-observability", rev = "f3a7c16d0df0f0dc3912284db2e97d6894aaf5a0", features = ["client-traces"] }
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
 
 [target.'cfg(target_os = "android")'.dependencies]
 jni = "0.22.4"
 jni-legacy = { package = "jni", version = "0.21.1" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen="=0.2.129"
+wasm-bindgen-futures="=0.4.79"
+js-sys="=0.3.106"
+uuid = { version="1.27",features=["js"] }

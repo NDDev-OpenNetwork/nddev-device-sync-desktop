@@ -86,9 +86,7 @@ class _StateScreenState extends State<StateScreen> with WidgetsBindingObserver {
         });
       }
     } catch (error) {
-      final code = error is native.VaultError
-          ? await error.code()
-          : 'unexpected';
+      final code = error is native.VaultError ? error.code() : 'unexpected';
       if (mounted && (!polling || code != 'vault_busy')) {
         setState(() => _error = code);
       }

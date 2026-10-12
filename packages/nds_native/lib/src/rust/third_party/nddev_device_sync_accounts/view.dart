@@ -12,7 +12,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientError>>
 abstract class ClientError implements RustOpaqueInterface {
   /// An allowlisted code for localization; never an underlying I/O message.
-  Future<String> code();
+  String code();
 }
 
 class DeliveryView {
@@ -44,7 +44,7 @@ class DeliveryView {
     required this.lastSuccessAt,
   });
 
-  static Future<DeliveryView> default_() =>
+  static DeliveryView default_() =>
       RustLib.instance.api.nddevDeviceSyncAccountsViewDeliveryViewDefault();
 
   @override
@@ -126,7 +126,7 @@ enum ExportPolicy {
   enabled,
   disabled;
 
-  static Future<ExportPolicy> default_() =>
+  static ExportPolicy default_() =>
       RustLib.instance.api.nddevDeviceSyncAccountsViewExportPolicyDefault();
 }
 
@@ -161,6 +161,9 @@ class View {
   final String serverVersion;
   final bool authenticated;
   final bool sessionVerified;
+  final bool offlineAuthorized;
+  final bool offlineCacheReady;
+  final bool logoutPending;
   final bool credentialRevalidationRequired;
   final PlatformInt64 sessionCheckedAt;
   final String userId;
@@ -184,6 +187,9 @@ class View {
     required this.serverVersion,
     required this.authenticated,
     required this.sessionVerified,
+    required this.offlineAuthorized,
+    required this.offlineCacheReady,
+    required this.logoutPending,
     required this.credentialRevalidationRequired,
     required this.sessionCheckedAt,
     required this.userId,
@@ -197,7 +203,7 @@ class View {
     required this.retryAfterSeconds,
   });
 
-  static Future<View> default_() =>
+  static View default_() =>
       RustLib.instance.api.nddevDeviceSyncAccountsViewViewDefault();
 
   @override
@@ -212,6 +218,9 @@ class View {
       serverVersion.hashCode ^
       authenticated.hashCode ^
       sessionVerified.hashCode ^
+      offlineAuthorized.hashCode ^
+      offlineCacheReady.hashCode ^
+      logoutPending.hashCode ^
       credentialRevalidationRequired.hashCode ^
       sessionCheckedAt.hashCode ^
       userId.hashCode ^
@@ -239,6 +248,9 @@ class View {
           serverVersion == other.serverVersion &&
           authenticated == other.authenticated &&
           sessionVerified == other.sessionVerified &&
+          offlineAuthorized == other.offlineAuthorized &&
+          offlineCacheReady == other.offlineCacheReady &&
+          logoutPending == other.logoutPending &&
           credentialRevalidationRequired ==
               other.credentialRevalidationRequired &&
           sessionCheckedAt == other.sessionCheckedAt &&
