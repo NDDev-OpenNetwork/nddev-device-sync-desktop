@@ -11,6 +11,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.3
+  cupertino_icons: 2.0.0
   nds_native:
     path: ../nds_native
   nddev_opennetwork_design_system:
