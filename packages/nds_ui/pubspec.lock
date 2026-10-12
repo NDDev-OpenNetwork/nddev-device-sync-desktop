@@ -250,7 +250,7 @@ packages:
       path: "packages/flutter"
       ref: b9e989b14e7196d7292c20847869fa92964bec21
       resolved-ref: b9e989b14e7196d7292c20847869fa92964bec21
-      url: "https://github.com/NDDev-OpenNetwork/nddev-opennetwork-design-system.git"
+      url: "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-opennetwork-design-system.git"
     source: git
     version: "0.0.1-alpha.8"
   nds_native:
