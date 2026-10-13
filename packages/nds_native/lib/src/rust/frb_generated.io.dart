@@ -4,6 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/identity.dart';
+import 'api/module_types.dart';
 import 'api/modules.dart';
 import 'api/telemetry.dart';
 
@@ -16,7 +17,6 @@ import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
 import 'third_party/nddev_device_sync_accounts/view.dart';
-import 'third_party/nddev_device_sync_agent/view.dart';
 import 'third_party/nddev_device_sync_cleaner/view.dart';
 import 'third_party/nddev_device_sync_clipboard/view.dart';
 import 'third_party/nddev_device_sync_gds/view.dart';
@@ -129,13 +129,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ActionResult dco_decode_action_result(dynamic raw);
 
   @protected
-  AgentError dco_decode_agent_error(dynamic raw);
-
-  @protected
   bool dco_decode_bool(dynamic raw);
-
-  @protected
-  AgentError dco_decode_box_autoadd_agent_error(dynamic raw);
 
   @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
@@ -154,6 +148,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int dco_decode_box_autoadd_i_32(dynamic raw);
+
+  @protected
+  ModuleError dco_decode_box_autoadd_module_error(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -267,7 +264,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<IncidentView> dco_decode_list_incident_view(dynamic raw);
 
   @protected
-  List<ModuleState> dco_decode_list_module_state(dynamic raw);
+  List<ModuleObservation> dco_decode_list_module_observation(dynamic raw);
 
   @protected
   List<PasskeyView> dco_decode_list_passkey_view(dynamic raw);
@@ -291,16 +288,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Memory dco_decode_memory(dynamic raw);
 
   @protected
-  ModuleState dco_decode_module_state(dynamic raw);
+  ModuleError dco_decode_module_error(dynamic raw);
+
+  @protected
+  ModuleObservation dco_decode_module_observation(dynamic raw);
 
   @protected
   Network dco_decode_network(dynamic raw);
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
-
-  @protected
-  AgentError? dco_decode_opt_box_autoadd_agent_error(dynamic raw);
 
   @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
@@ -319,6 +316,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
+
+  @protected
+  ModuleError? dco_decode_opt_box_autoadd_module_error(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
@@ -474,13 +474,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ActionResult sse_decode_action_result(SseDeserializer deserializer);
 
   @protected
-  AgentError sse_decode_agent_error(SseDeserializer deserializer);
-
-  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
-
-  @protected
-  AgentError sse_decode_box_autoadd_agent_error(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
@@ -501,6 +495,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
+  ModuleError sse_decode_box_autoadd_module_error(SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
@@ -620,7 +617,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  List<ModuleState> sse_decode_list_module_state(SseDeserializer deserializer);
+  List<ModuleObservation> sse_decode_list_module_observation(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<PasskeyView> sse_decode_list_passkey_view(SseDeserializer deserializer);
@@ -646,18 +645,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Memory sse_decode_memory(SseDeserializer deserializer);
 
   @protected
-  ModuleState sse_decode_module_state(SseDeserializer deserializer);
+  ModuleError sse_decode_module_error(SseDeserializer deserializer);
+
+  @protected
+  ModuleObservation sse_decode_module_observation(SseDeserializer deserializer);
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
-
-  @protected
-  AgentError? sse_decode_opt_box_autoadd_agent_error(
-    SseDeserializer deserializer,
-  );
 
   @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
@@ -682,6 +679,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
+  ModuleError? sse_decode_opt_box_autoadd_module_error(
+    SseDeserializer deserializer,
+  );
 
   @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
@@ -849,16 +851,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_action_result(ActionResult self, SseSerializer serializer);
 
   @protected
-  void sse_encode_agent_error(AgentError self, SseSerializer serializer);
-
-  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_agent_error(
-    AgentError self,
-    SseSerializer serializer,
-  );
 
   @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
@@ -886,6 +879,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_module_error(
+    ModuleError self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
@@ -1018,8 +1017,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_list_module_state(
-    List<ModuleState> self,
+  void sse_encode_list_module_observation(
+    List<ModuleObservation> self,
     SseSerializer serializer,
   );
 
@@ -1063,19 +1062,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_memory(Memory self, SseSerializer serializer);
 
   @protected
-  void sse_encode_module_state(ModuleState self, SseSerializer serializer);
+  void sse_encode_module_error(ModuleError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_module_observation(
+    ModuleObservation self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_agent_error(
-    AgentError? self,
-    SseSerializer serializer,
-  );
 
   @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
@@ -1103,6 +1102,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_module_error(
+    ModuleError? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);

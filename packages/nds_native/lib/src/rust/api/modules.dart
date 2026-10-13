@@ -4,13 +4,13 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
-import '../third_party/nddev_device_sync_agent/view.dart';
 import '../third_party/nddev_device_sync_cleaner/view.dart';
 import '../third_party/nddev_device_sync_clipboard/view.dart';
 import '../third_party/nddev_device_sync_gds/view.dart';
 import '../third_party/nddev_device_sync_rds/view.dart';
 import '../third_party/nddev_device_sync_sysinfo/view.dart';
 import '../third_party/nddev_device_sync_updater/view.dart';
+import 'module_types.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -45,7 +45,7 @@ abstract class LocalAgent implements RustOpaqueInterface {
   static Future<LocalAgent> discover() =>
       RustLib.instance.api.crateApiModulesLocalAgentDiscover();
 
-  List<ModuleState> modules();
+  List<ModuleObservation> modules();
 
   Future<RemoteSnapshot> remoteSessions();
 

@@ -1,7 +1,7 @@
 use flutter_rust_bridge::frb;
 #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
 use nddev_device_sync_agent::NativeAgent;
-use nddev_device_sync_agent::view::{AgentError, ModuleState};
+use nddev_device_sync_domain::modules::{ModuleError, ModuleObservation};
 
 #[frb(opaque)]
 pub struct LocalAgent {
@@ -19,18 +19,18 @@ pub fn supports_local_agent() -> bool {
 }
 
 impl LocalAgent {
-    pub async fn discover() -> Result<Self, AgentError> {
+    pub async fn discover() -> Result<Self, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             Ok(Self {
                 inner: tokio::task::spawn_blocking(NativeAgent::discover)
                     .await
-                    .map_err(|_| AgentError::Unavailable)??,
+                    .map_err(|_| ModuleError::Unavailable)??,
             })
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     #[frb(sync)]
@@ -39,32 +39,32 @@ impl LocalAgent {
         self.inner.close();
     }
     #[frb(sync)]
-    pub fn modules(&self) -> Result<Vec<ModuleState>, AgentError> {
+    pub fn modules(&self) -> Result<Vec<ModuleObservation>, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             Ok(self.inner.modules())
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn system_info(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::sysinfo::SystemSnapshot, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::sysinfo::SystemSnapshot, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.system_info().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn clipboard_entries(
         &self,
         before: Option<u64>,
-    ) -> Result<nddev_device_sync_agent::view::clipboard::Page, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::clipboard::Page, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.clipboard_entries(before).await
@@ -72,10 +72,14 @@ impl LocalAgent {
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
             let _ = before;
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
-    pub async fn clipboard_content(&self, entry: u64, mime: String) -> Result<Vec<u8>, AgentError> {
+    pub async fn clipboard_content(
+        &self,
+        entry: u64,
+        mime: String,
+    ) -> Result<Vec<u8>, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.clipboard_content(entry, mime).await
@@ -83,73 +87,73 @@ impl LocalAgent {
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
             let _ = (entry, mime);
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn cleaner_diagnostics(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::cleaner::Diagnostics, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::cleaner::Diagnostics, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.cleaner_diagnostics().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn cleaner_preview(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::cleaner::CleanerRunSummary, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::cleaner::CleanerRunSummary, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.cleaner_preview().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn cleaner_last_run(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::cleaner::CleanerRunSummary, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::cleaner::CleanerRunSummary, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.cleaner_last_run().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn update_plan(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::updater::Plan, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::updater::Plan, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.update_plan().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn update_last_run(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::updater::UpdateRunSummary, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::updater::UpdateRunSummary, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.update_last_run().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn repository_status(
         &self,
         path: String,
-    ) -> Result<nddev_device_sync_agent::view::gds::Status, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::gds::Status, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner
@@ -159,19 +163,19 @@ impl LocalAgent {
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
             let _ = path;
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
     pub async fn remote_sessions(
         &self,
-    ) -> Result<nddev_device_sync_agent::view::rds::RemoteSnapshot, AgentError> {
+    ) -> Result<nddev_device_sync_agent::view::rds::RemoteSnapshot, ModuleError> {
         #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
         {
             self.inner.remote_sessions().await
         }
         #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
         {
-            Err(AgentError::UnsupportedPlatform)
+            Err(ModuleError::UnsupportedPlatform)
         }
     }
 }

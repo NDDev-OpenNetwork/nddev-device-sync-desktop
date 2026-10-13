@@ -365,7 +365,7 @@
   "exportUnknown": "Server export policy has not been confirmed.",
   "exportEnabled": "Server export is enabled.",
   "exportDisabled": "The operator disabled server export.",
-  "exportPaused": "Delivery is paused while the app is inactive.",
+  "exportPaused": "Delivery is paused. Return to the app to resume.",
   "eventsLabel": "Events",
   "spansLabel": "Operation traces",
   "exportLastSeen": "Last server acceptance: {time}",

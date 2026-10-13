@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 776290764;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1418589908;
 
 // Section: executor
 
@@ -126,7 +126,7 @@ fn wire__crate__api__modules__LocalAgent_cleaner_diagnostics_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -183,7 +183,7 @@ fn wire__crate__api__modules__LocalAgent_cleaner_last_run_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -240,7 +240,7 @@ fn wire__crate__api__modules__LocalAgent_cleaner_preview_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -299,7 +299,7 @@ fn wire__crate__api__modules__LocalAgent_clipboard_content_impl(
             let api_mime = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -360,7 +360,7 @@ fn wire__crate__api__modules__LocalAgent_clipboard_entries_impl(
             let api_before = <Option<u64>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -464,7 +464,7 @@ fn wire__crate__api__modules__LocalAgent_discover_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let output_ok = crate::api::modules::LocalAgent::discover().await?;
                         std::result::Result::Ok(output_ok)
@@ -500,7 +500,7 @@ fn wire__crate__api__modules__LocalAgent_modules_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LocalAgent>,
             >>::sse_decode(&mut deserializer);
             deserializer.end();
-            transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>((move || {
+            transform_result_sse::<_, crate::api::module_types::ModuleError>((move || {
                 let mut api_that_guard = None;
                 let decode_indices_ =
                     flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
@@ -548,7 +548,7 @@ fn wire__crate__api__modules__LocalAgent_remote_sessions_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -606,7 +606,7 @@ fn wire__crate__api__modules__LocalAgent_repository_status_impl(
             let api_path = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -665,7 +665,7 @@ fn wire__crate__api__modules__LocalAgent_system_info_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -721,7 +721,7 @@ fn wire__crate__api__modules__LocalAgent_update_last_run_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -778,7 +778,7 @@ fn wire__crate__api__modules__LocalAgent_update_plan_impl(
             >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, nddev_device_sync_agent::view::AgentError>(
+                transform_result_sse::<_, crate::api::module_types::ModuleError>(
                     (move || async move {
                         let mut api_that_guard = None;
                         let decode_indices_ =
@@ -2179,14 +2179,14 @@ fn wire__crate__api__identity__NdsClient_revoke_passkey_impl(
         },
     )
 }
-fn wire__crate__api__identity__NdsClient_set_foreground_impl(
+fn wire__crate__api__identity__NdsClient_set_lifecycle_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "NdsClient_set_foreground",
+            debug_name: "NdsClient_set_lifecycle",
             port: None,
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
@@ -2203,7 +2203,8 @@ fn wire__crate__api__identity__NdsClient_set_foreground_impl(
             let api_that = <RustOpaqueMoi<
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
             >>::sse_decode(&mut deserializer);
-            let api_active = <bool>::sse_decode(&mut deserializer);
+            let api_state =
+                <nddev_device_sync_telemetry::view::ClientLifecycle>::sse_decode(&mut deserializer);
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
                 let mut api_that_guard = None;
@@ -2221,7 +2222,7 @@ fn wire__crate__api__identity__NdsClient_set_foreground_impl(
                 }
                 let api_that_guard = api_that_guard.unwrap();
                 let output_ok = Ok::<_, ()>({
-                    crate::api::identity::NdsClient::set_foreground(&*api_that_guard, api_active);
+                    crate::api::identity::NdsClient::set_lifecycle(&*api_that_guard, api_state);
                 })?;
                 std::result::Result::Ok(output_ok)
             })())
@@ -3040,6 +3041,38 @@ fn wire__crate__api__telemetry__client_diagnostics_impl(
         },
     )
 }
+fn wire__crate__api__identity__client_work_permitted_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "client_work_permitted",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_state =
+                <nddev_device_sync_telemetry::view::ClientLifecycle>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Ok::<_, ()>(crate::api::identity::client_work_permitted(api_state))?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -3765,13 +3798,13 @@ const _: fn() = || {
         let _: Option<f64> = Memory.swap;
     }
     {
-        let ModuleState = None::<nddev_device_sync_agent::view::ModuleState>.unwrap();
-        let _: String = ModuleState.id;
-        let _: String = ModuleState.version;
-        let _: bool = ModuleState.configured;
-        let _: nddev_device_sync_agent::view::Reachability = ModuleState.reachability;
-        let _: Option<u64> = ModuleState.observed_at_ms;
-        let _: Option<nddev_device_sync_agent::view::AgentError> = ModuleState.error;
+        let ModuleObservation = None::<crate::api::module_types::ModuleObservation>.unwrap();
+        let _: String = ModuleObservation.id;
+        let _: String = ModuleObservation.version;
+        let _: bool = ModuleObservation.configured;
+        let _: crate::api::module_types::Reachability = ModuleObservation.reachability;
+        let _: Option<u64> = ModuleObservation.observed_at_ms;
+        let _: Option<crate::api::module_types::ModuleError> = ModuleObservation.error;
     }
     {
         let Network = None::<nddev_device_sync_sysinfo::view::Network>.unwrap();
@@ -4042,25 +4075,6 @@ impl SseDecode for nddev_device_sync_updater::view::ActionResult {
             exit_code: var_exitCode,
             state: var_state,
             output_truncated: var_outputTruncated,
-        };
-    }
-}
-
-impl SseDecode for nddev_device_sync_agent::view::AgentError {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
-        return match inner {
-            0 => nddev_device_sync_agent::view::AgentError::UnsupportedPlatform,
-            1 => nddev_device_sync_agent::view::AgentError::Unavailable,
-            2 => nddev_device_sync_agent::view::AgentError::Busy,
-            3 => nddev_device_sync_agent::view::AgentError::InvalidInput,
-            4 => nddev_device_sync_agent::view::AgentError::Timeout,
-            5 => nddev_device_sync_agent::view::AgentError::Cancelled,
-            6 => nddev_device_sync_agent::view::AgentError::ProviderFailed,
-            7 => nddev_device_sync_agent::view::AgentError::InvalidResponse,
-            8 => nddev_device_sync_agent::view::AgentError::InvalidContract,
-            _ => unreachable!("Invalid variant for AgentError: {}", inner),
         };
     }
 }
@@ -4618,13 +4632,13 @@ impl SseDecode for Vec<crate::api::identity::IncidentView> {
     }
 }
 
-impl SseDecode for Vec<nddev_device_sync_agent::view::ModuleState> {
+impl SseDecode for Vec<crate::api::module_types::ModuleObservation> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
-            ans_.push(<nddev_device_sync_agent::view::ModuleState>::sse_decode(
+            ans_.push(<crate::api::module_types::ModuleObservation>::sse_decode(
                 deserializer,
             ));
         }
@@ -4739,18 +4753,37 @@ impl SseDecode for nddev_device_sync_sysinfo::view::Memory {
     }
 }
 
-impl SseDecode for nddev_device_sync_agent::view::ModuleState {
+impl SseDecode for crate::api::module_types::ModuleError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::module_types::ModuleError::UnsupportedPlatform,
+            1 => crate::api::module_types::ModuleError::Unavailable,
+            2 => crate::api::module_types::ModuleError::Busy,
+            3 => crate::api::module_types::ModuleError::InvalidInput,
+            4 => crate::api::module_types::ModuleError::Timeout,
+            5 => crate::api::module_types::ModuleError::Cancelled,
+            6 => crate::api::module_types::ModuleError::ProviderFailed,
+            7 => crate::api::module_types::ModuleError::InvalidResponse,
+            8 => crate::api::module_types::ModuleError::InvalidContract,
+            _ => unreachable!("Invalid variant for ModuleError: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::module_types::ModuleObservation {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
         let mut var_version = <String>::sse_decode(deserializer);
         let mut var_configured = <bool>::sse_decode(deserializer);
         let mut var_reachability =
-            <nddev_device_sync_agent::view::Reachability>::sse_decode(deserializer);
+            <crate::api::module_types::Reachability>::sse_decode(deserializer);
         let mut var_observedAtMs = <Option<u64>>::sse_decode(deserializer);
         let mut var_error =
-            <Option<nddev_device_sync_agent::view::AgentError>>::sse_decode(deserializer);
-        return nddev_device_sync_agent::view::ModuleState {
+            <Option<crate::api::module_types::ModuleError>>::sse_decode(deserializer);
+        return crate::api::module_types::ModuleObservation {
             id: var_id,
             version: var_version,
             configured: var_configured,
@@ -4778,19 +4811,6 @@ impl SseDecode for Option<String> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<String>::sse_decode(deserializer));
-        } else {
-            return None;
-        }
-    }
-}
-
-impl SseDecode for Option<nddev_device_sync_agent::view::AgentError> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        if (<bool>::sse_decode(deserializer)) {
-            return Some(<nddev_device_sync_agent::view::AgentError>::sse_decode(
-                deserializer,
-            ));
         } else {
             return None;
         }
@@ -4869,6 +4889,19 @@ impl SseDecode for Option<i32> {
     }
 }
 
+impl SseDecode for Option<crate::api::module_types::ModuleError> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::module_types::ModuleError>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4930,15 +4963,15 @@ impl SseDecode for nddev_device_sync_updater::view::Plan {
     }
 }
 
-impl SseDecode for nddev_device_sync_agent::view::Reachability {
+impl SseDecode for crate::api::module_types::Reachability {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => nddev_device_sync_agent::view::Reachability::NotChecked,
-            1 => nddev_device_sync_agent::view::Reachability::Reachable,
-            2 => nddev_device_sync_agent::view::Reachability::Unavailable,
-            3 => nddev_device_sync_agent::view::Reachability::Failed,
+            0 => crate::api::module_types::Reachability::NotChecked,
+            1 => crate::api::module_types::Reachability::Reachable,
+            2 => crate::api::module_types::Reachability::Unavailable,
+            3 => crate::api::module_types::Reachability::Failed,
             _ => unreachable!("Invalid variant for Reachability: {}", inner),
         };
     }
@@ -5526,7 +5559,7 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        62 => {
+        63 => {
             wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -5560,53 +5593,52 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        39 => {
-            wire__crate__api__identity__NdsClient_set_foreground_impl(ptr, rust_vec_len, data_len)
-        }
+        39 => wire__crate__api__identity__NdsClient_set_lifecycle_impl(ptr, rust_vec_len, data_len),
         40 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
         53 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        54 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
+        54 => wire__crate__api__identity__client_work_permitted_impl(ptr, rust_vec_len, data_len),
+        55 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        55 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
-        56 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+        56 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        57 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        57 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+        58 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        58 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
-        59 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
-        60 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
-        61 => {
+        59 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
+        60 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
+        61 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        62 => {
             wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
         }
-        63 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        64 => {
+        64 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        65 => {
             wire__crate__api__identity__supports_native_clipboard_impl(ptr, rust_vec_len, data_len)
         }
-        65 => wire__crate__api__identity__supports_native_clipboard_read_impl(
+        66 => wire__crate__api__identity__supports_native_clipboard_read_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        66 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        67 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
-        68 => {
+        67 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        68 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        69 => {
             wire__nddev_device_sync_vault__view__vault_error_code_impl(ptr, rust_vec_len, data_len)
         }
-        69 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        70 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        70 => {
+        71 => {
             wire__nddev_device_sync_accounts__view__view_default_impl(ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -5699,34 +5731,6 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_updater::vie
     for nddev_device_sync_updater::view::ActionResult
 {
     fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_updater::view::ActionResult> {
-        self.into()
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_agent::view::AgentError> {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self.0 {
-            nddev_device_sync_agent::view::AgentError::UnsupportedPlatform => 0.into_dart(),
-            nddev_device_sync_agent::view::AgentError::Unavailable => 1.into_dart(),
-            nddev_device_sync_agent::view::AgentError::Busy => 2.into_dart(),
-            nddev_device_sync_agent::view::AgentError::InvalidInput => 3.into_dart(),
-            nddev_device_sync_agent::view::AgentError::Timeout => 4.into_dart(),
-            nddev_device_sync_agent::view::AgentError::Cancelled => 5.into_dart(),
-            nddev_device_sync_agent::view::AgentError::ProviderFailed => 6.into_dart(),
-            nddev_device_sync_agent::view::AgentError::InvalidResponse => 7.into_dart(),
-            nddev_device_sync_agent::view::AgentError::InvalidContract => 8.into_dart(),
-            _ => unreachable!(),
-        }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<nddev_device_sync_agent::view::AgentError>
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_agent::view::AgentError>>
-    for nddev_device_sync_agent::view::AgentError
-{
-    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_agent::view::AgentError> {
         self.into()
     }
 }
@@ -6357,7 +6361,35 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_sysinfo::vie
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_agent::view::ModuleState> {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::module_types::ModuleError> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::api::module_types::ModuleError::UnsupportedPlatform => 0.into_dart(),
+            crate::api::module_types::ModuleError::Unavailable => 1.into_dart(),
+            crate::api::module_types::ModuleError::Busy => 2.into_dart(),
+            crate::api::module_types::ModuleError::InvalidInput => 3.into_dart(),
+            crate::api::module_types::ModuleError::Timeout => 4.into_dart(),
+            crate::api::module_types::ModuleError::Cancelled => 5.into_dart(),
+            crate::api::module_types::ModuleError::ProviderFailed => 6.into_dart(),
+            crate::api::module_types::ModuleError::InvalidResponse => 7.into_dart(),
+            crate::api::module_types::ModuleError::InvalidContract => 8.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::api::module_types::ModuleError>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::module_types::ModuleError>>
+    for crate::api::module_types::ModuleError
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::api::module_types::ModuleError> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::module_types::ModuleObservation> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.0.id.into_into_dart().into_dart(),
@@ -6371,13 +6403,13 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_agent::view:
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<nddev_device_sync_agent::view::ModuleState>
+    for FrbWrapper<crate::api::module_types::ModuleObservation>
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_agent::view::ModuleState>>
-    for nddev_device_sync_agent::view::ModuleState
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::module_types::ModuleObservation>>
+    for crate::api::module_types::ModuleObservation
 {
-    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_agent::view::ModuleState> {
+    fn into_into_dart(self) -> FrbWrapper<crate::api::module_types::ModuleObservation> {
         self.into()
     }
 }
@@ -6467,25 +6499,25 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_updater::vie
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_agent::view::Reachability> {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::module_types::Reachability> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self.0 {
-            nddev_device_sync_agent::view::Reachability::NotChecked => 0.into_dart(),
-            nddev_device_sync_agent::view::Reachability::Reachable => 1.into_dart(),
-            nddev_device_sync_agent::view::Reachability::Unavailable => 2.into_dart(),
-            nddev_device_sync_agent::view::Reachability::Failed => 3.into_dart(),
+            crate::api::module_types::Reachability::NotChecked => 0.into_dart(),
+            crate::api::module_types::Reachability::Reachable => 1.into_dart(),
+            crate::api::module_types::Reachability::Unavailable => 2.into_dart(),
+            crate::api::module_types::Reachability::Failed => 3.into_dart(),
             _ => unreachable!(),
         }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<nddev_device_sync_agent::view::Reachability>
+    for FrbWrapper<crate::api::module_types::Reachability>
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_agent::view::Reachability>>
-    for nddev_device_sync_agent::view::Reachability
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::module_types::Reachability>>
+    for crate::api::module_types::Reachability
 {
-    fn into_into_dart(self) -> FrbWrapper<nddev_device_sync_agent::view::Reachability> {
+    fn into_into_dart(self) -> FrbWrapper<crate::api::module_types::Reachability> {
         self.into()
     }
 }
@@ -6933,29 +6965,6 @@ impl SseEncode for nddev_device_sync_updater::view::ActionResult {
     }
 }
 
-impl SseEncode for nddev_device_sync_agent::view::AgentError {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(
-            match self {
-                nddev_device_sync_agent::view::AgentError::UnsupportedPlatform => 0,
-                nddev_device_sync_agent::view::AgentError::Unavailable => 1,
-                nddev_device_sync_agent::view::AgentError::Busy => 2,
-                nddev_device_sync_agent::view::AgentError::InvalidInput => 3,
-                nddev_device_sync_agent::view::AgentError::Timeout => 4,
-                nddev_device_sync_agent::view::AgentError::Cancelled => 5,
-                nddev_device_sync_agent::view::AgentError::ProviderFailed => 6,
-                nddev_device_sync_agent::view::AgentError::InvalidResponse => 7,
-                nddev_device_sync_agent::view::AgentError::InvalidContract => 8,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
-    }
-}
-
 impl SseEncode for bool {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7371,12 +7380,12 @@ impl SseEncode for Vec<crate::api::identity::IncidentView> {
     }
 }
 
-impl SseEncode for Vec<nddev_device_sync_agent::view::ModuleState> {
+impl SseEncode for Vec<crate::api::module_types::ModuleObservation> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <nddev_device_sync_agent::view::ModuleState>::sse_encode(item, serializer);
+            <crate::api::module_types::ModuleObservation>::sse_encode(item, serializer);
         }
     }
 }
@@ -7457,15 +7466,38 @@ impl SseEncode for nddev_device_sync_sysinfo::view::Memory {
     }
 }
 
-impl SseEncode for nddev_device_sync_agent::view::ModuleState {
+impl SseEncode for crate::api::module_types::ModuleError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::module_types::ModuleError::UnsupportedPlatform => 0,
+                crate::api::module_types::ModuleError::Unavailable => 1,
+                crate::api::module_types::ModuleError::Busy => 2,
+                crate::api::module_types::ModuleError::InvalidInput => 3,
+                crate::api::module_types::ModuleError::Timeout => 4,
+                crate::api::module_types::ModuleError::Cancelled => 5,
+                crate::api::module_types::ModuleError::ProviderFailed => 6,
+                crate::api::module_types::ModuleError::InvalidResponse => 7,
+                crate::api::module_types::ModuleError::InvalidContract => 8,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::module_types::ModuleObservation {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.id, serializer);
         <String>::sse_encode(self.version, serializer);
         <bool>::sse_encode(self.configured, serializer);
-        <nddev_device_sync_agent::view::Reachability>::sse_encode(self.reachability, serializer);
+        <crate::api::module_types::Reachability>::sse_encode(self.reachability, serializer);
         <Option<u64>>::sse_encode(self.observed_at_ms, serializer);
-        <Option<nddev_device_sync_agent::view::AgentError>>::sse_encode(self.error, serializer);
+        <Option<crate::api::module_types::ModuleError>>::sse_encode(self.error, serializer);
     }
 }
 
@@ -7483,16 +7515,6 @@ impl SseEncode for Option<String> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <String>::sse_encode(value, serializer);
-        }
-    }
-}
-
-impl SseEncode for Option<nddev_device_sync_agent::view::AgentError> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <bool>::sse_encode(self.is_some(), serializer);
-        if let Some(value) = self {
-            <nddev_device_sync_agent::view::AgentError>::sse_encode(value, serializer);
         }
     }
 }
@@ -7557,6 +7579,16 @@ impl SseEncode for Option<i32> {
     }
 }
 
+impl SseEncode for Option<crate::api::module_types::ModuleError> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::module_types::ModuleError>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7602,15 +7634,15 @@ impl SseEncode for nddev_device_sync_updater::view::Plan {
     }
 }
 
-impl SseEncode for nddev_device_sync_agent::view::Reachability {
+impl SseEncode for crate::api::module_types::Reachability {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(
             match self {
-                nddev_device_sync_agent::view::Reachability::NotChecked => 0,
-                nddev_device_sync_agent::view::Reachability::Reachable => 1,
-                nddev_device_sync_agent::view::Reachability::Unavailable => 2,
-                nddev_device_sync_agent::view::Reachability::Failed => 3,
+                crate::api::module_types::Reachability::NotChecked => 0,
+                crate::api::module_types::Reachability::Reachable => 1,
+                crate::api::module_types::Reachability::Unavailable => 2,
+                crate::api::module_types::Reachability::Failed => 3,
                 _ => {
                     unimplemented!("");
                 }
