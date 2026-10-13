@@ -37,6 +37,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
   Object? _result;
   String? _error;
   bool _busy = true;
+  bool _publishing = false;
   bool _cancelled = false;
   int _epoch = 0;
   final _repository = TextEditingController();
@@ -48,6 +49,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
     if (_busy || client == null || agent == null) return;
     setState(() {
       _busy = true;
+      _publishing = true;
       _published = null;
       _error = null;
     });
@@ -69,7 +71,12 @@ class _ModulesScreenState extends State<ModulesScreen> {
         });
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted) {
+        setState(() {
+          _publishing = false;
+          _busy = false;
+        });
+      }
     }
   }
 
@@ -144,7 +151,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
   }
 
   void _cancel() {
-    if (!_busy || _agent == null || _cancelled) return;
+    if (!_busy || _publishing || _agent == null || _cancelled) return;
     _epoch++;
     _agent!.close();
     setState(() {
@@ -516,7 +523,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                         ),
                       if (_selected == 'rds')
                         action(l.moduleRefresh, () => _agent!.remoteSessions()),
-                      if (_busy && _agent != null)
+                      if (_busy && !_publishing && _agent != null)
                         TextButton(
                           onPressed: _cancelled ? null : _cancel,
                           child: Text(l.moduleCancel),
