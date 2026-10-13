@@ -60,9 +60,13 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   .vaultCounts(view.pending, view.conflicts),
         );
       }
-    } catch (_) {
+    } catch (error) {
       if (mounted && widget.client == client) {
-        setState(() => _error = 'publish');
+        setState(() {
+          _error = error == native.VaultError.capacityExhausted
+              ? 'sync_capacity_exhausted'
+              : 'publish';
+        });
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -176,6 +180,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
     'cancelled' => l.moduleCancelled,
     'invalidInput' => l.moduleInputError,
     'invalidResponse' || 'invalidContract' => l.moduleResponseError,
+    'sync_capacity_exhausted' => l.serverCapacityExhausted,
     'publish' => l.statePublishError,
     _ => l.providerFailed,
   };
