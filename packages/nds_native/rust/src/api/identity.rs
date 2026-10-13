@@ -698,14 +698,14 @@ impl NdsClient {
     ) -> Result<VaultView, VaultError> {
         use nddev_device_sync_domain::state::Snapshot;
         let schedule = self.schedule();
-        if schedule
-            .lock()
-            .unwrap_or_else(|e| e.into_inner())
-            .is_capacity_blocked()
-        {
-            return Err(VaultError::CapacityExhausted);
-        }
         let result = observe("sync.states.publish", async {
+            if schedule
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .is_capacity_blocked()
+            {
+                return Err(VaultError::CapacityExhausted);
+            }
             let vault = self.vault().await?;
             self.inner
                 .refresh_devices()
