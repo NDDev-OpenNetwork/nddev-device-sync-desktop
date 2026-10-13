@@ -14,6 +14,14 @@ import 'package:nds_native/rds.dart' as rds;
 import 'l10n/app_localizations.dart';
 import 'diagnostics.dart';
 
+@visibleForTesting
+String localGitComparisonText(gds.Branch branch, AppLocalizations l) =>
+    switch (branch.comparisonState) {
+      'available' => '${branch.ahead} / ${branch.behind}',
+      'not-applicable' => l.gdsComparisonNotApplicable,
+      _ => l.gdsUnavailable,
+    };
+
 /// Presentation over canonical native responses. Local tools retain their state
 /// and safety policies; this screen exposes bounded read/preview operations.
 class ModulesScreen extends StatefulWidget {
@@ -349,9 +357,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
         _rows([(l.result, value.result), (l.exitClass, value.exitClass)]),
         if (value.status case final status?)
           _rows([
-            (l.branch, status.branch.name ?? l.unavailable),
-            (l.upstream, status.branch.upstream ?? l.unavailable),
-            (l.aheadBehind, '${status.branch.ahead} / ${status.branch.behind}'),
+            (l.branch, status.branch.name ?? l.gdsUnavailable),
+            (l.upstream, status.branch.upstream ?? l.gdsUnavailable),
+            (l.aheadBehind, localGitComparisonText(status.branch, l)),
             (l.staged, '${status.changes.staged}'),
             (l.unstaged, '${status.changes.unstaged}'),
             (l.untracked, '${status.changes.untracked}'),

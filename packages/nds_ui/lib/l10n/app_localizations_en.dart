@@ -321,6 +321,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aheadBehind => 'Ahead / behind';
 
   @override
+  String get gdsUnavailable => 'Not available';
+
+  @override
+  String get gdsComparisonNotApplicable => 'Not applicable';
+
+  @override
   String get staged => 'Staged changes';
 
   @override
