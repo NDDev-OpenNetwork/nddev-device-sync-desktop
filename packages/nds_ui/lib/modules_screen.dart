@@ -32,7 +32,7 @@ class ModulesScreen extends StatefulWidget {
 
 class _ModulesScreenState extends State<ModulesScreen> {
   native.LocalAgent? _agent;
-  List<native.ModuleState> _modules = [];
+  List<native.ModuleObservation> _modules = [];
   String _selected = 'sysinfo';
   Object? _result;
   String? _error;
@@ -90,7 +90,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
         _busy = false;
       });
     } catch (error) {
-      if (error is! native.AgentError) {
+      if (error is! native.ModuleError) {
         widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
       }
       if (mounted && epoch == _epoch) {
@@ -114,12 +114,12 @@ class _ModulesScreenState extends State<ModulesScreen> {
       final result = await operation();
       if (mounted && epoch == _epoch) setState(() => _result = result);
     } catch (error) {
-      if (error is! native.AgentError) {
+      if (error is! native.ModuleError) {
         widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge);
       }
       if (mounted && epoch == _epoch) {
         setState(
-          () => _error = error is native.AgentError ? error.name : 'unknown',
+          () => _error = error is native.ModuleError ? error.name : 'unknown',
         );
       }
     } finally {

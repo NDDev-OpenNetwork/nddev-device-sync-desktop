@@ -6,6 +6,7 @@ import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
 
 import 'l10n/app_localizations.dart';
+import 'activity.dart';
 
 class StateScreen extends StatefulWidget {
   const StateScreen({super.key, required this.client});
@@ -14,18 +15,17 @@ class StateScreen extends StatefulWidget {
   State<StateScreen> createState() => _StateScreenState();
 }
 
-class _StateScreenState extends State<StateScreen> with WidgetsBindingObserver {
+class _StateScreenState extends State<StateScreen> {
   native.StatePage? _page;
   bool _busy = false;
   String? _error;
   Timer? _clock;
-  bool _paused = false;
+  bool get _paused => !ApplicationActivityScope.read(context).value;
   String _after = '';
   BigInt? _cursor;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _clock = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted &&
           !_busy &&
@@ -42,13 +42,7 @@ class _StateScreenState extends State<StateScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     _clock?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _paused = state != AppLifecycleState.resumed;
   }
 
   Future<void> _read({

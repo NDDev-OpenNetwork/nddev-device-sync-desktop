@@ -3,13 +3,11 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../frb_generated.dart';
+import '../frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`
-
-enum AgentError {
+enum ModuleError {
   unsupportedPlatform,
   unavailable,
   busy,
@@ -21,15 +19,15 @@ enum AgentError {
   invalidContract,
 }
 
-class ModuleState {
+class ModuleObservation {
   final String id;
   final String version;
   final bool configured;
   final Reachability reachability;
   final BigInt? observedAtMs;
-  final AgentError? error;
+  final ModuleError? error;
 
-  const ModuleState({
+  const ModuleObservation({
     required this.id,
     required this.version,
     required this.configured,
@@ -50,7 +48,7 @@ class ModuleState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ModuleState &&
+      other is ModuleObservation &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           version == other.version &&
@@ -60,6 +58,4 @@ class ModuleState {
           error == other.error;
 }
 
-/// Portable presentation metadata. Reachability describes the last native
-/// query, not the success of historical maintenance or a remote connection.
 enum Reachability { notChecked, reachable, unavailable, failed }

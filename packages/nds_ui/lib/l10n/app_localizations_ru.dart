@@ -753,7 +753,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get exportPaused =>
-      'Отправка приостановлена, пока приложение неактивно.';
+      'Отправка приостановлена. Вернитесь в приложение, чтобы продолжить.';
 
   @override
   String get eventsLabel => 'События';

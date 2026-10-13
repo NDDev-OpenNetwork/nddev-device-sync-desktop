@@ -5,6 +5,7 @@
 
 import '../frb_generated.dart';
 import '../third_party/nddev_device_sync_accounts/view.dart';
+import '../third_party/nddev_device_sync_telemetry/view.dart';
 import '../third_party/nddev_device_sync_vault/view.dart';
 import 'modules.dart';
 
@@ -13,6 +14,11 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These functions are ignored because they are not marked as `pub`: `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe`, `publish_state_inner`, `replica_start_error`, `start_replica`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClipboardReservation`, `Replica`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`, `drop`
+
+/// Flutter reports raw lifecycle once. The shared application policy decides
+/// whether this target may perform bounded replica and delivery work.
+bool clientWorkPermitted({required ClientLifecycle state}) =>
+    RustLib.instance.api.crateApiIdentityClientWorkPermitted(state: state);
 
 /// Native read preserves Android's sensitivity/URI refusal contract. Browser
 /// copy support does not imply a native clipboard read adapter exists.
@@ -87,7 +93,7 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> revokePasskey({required String id});
 
-  void setForeground({required bool active});
+  void setLifecycle({required ClientLifecycle state});
 
   View snapshot();
 

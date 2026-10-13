@@ -5,6 +5,10 @@ Desktop client and shared Flutter presentation for
 en/ru interface used by desktop, mobile and web; `packages/nds_native` generates
 a thin bridge to shared Rust modules. NDS tokens and unwrapped keys never enter Dart.
 
+Module presentation uses FRB's compile-checked mirrors of the three required
+core types. The bridge exports their fields and enums; domain helper methods
+remain Rust-only.
+
 The same observability SDK used by the server and agent owns event validation,
 redaction, trace context, debug windows and local diagnostics. Flutter framework
 and root-isolate async failures pass only a fixed error class through the generated
@@ -27,6 +31,11 @@ Pause/resume, bounded retention and cancellation belong to the shared sender.
 Browser batches persist through page restart in the SDK spool; the UI reports
 actual payload-write readiness separately from policy and remote acknowledgements.
 Startup capture belongs only to the first verified client subscription.
+
+One Flutter lifecycle adapter feeds the core activity policy. Visible desktop
+and browser clients keep bounded synchronization and delivery when input focus
+moves elsewhere. Hidden clients pause and reconcile on resume; mobile activity
+restrictions follow the same core policy. Screens consume that shared decision.
 
 Use Flutter 3.47.7/Dart 3.13.5, Rust 1.99.0 and flutter_rust_bridge_codegen 2.13.0.
 Install the Rust target matching the platform being built. `flutter pub get

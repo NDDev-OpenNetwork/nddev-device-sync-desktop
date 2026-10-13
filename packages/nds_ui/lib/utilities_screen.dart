@@ -7,6 +7,7 @@ import 'package:nds_native/nds_native.dart' as native;
 import 'package:nds_native/clipboard.dart' as archive;
 
 import 'l10n/app_localizations.dart';
+import 'activity.dart';
 
 class UtilitiesScreen extends StatefulWidget {
   const UtilitiesScreen({super.key, required this.client});
@@ -15,8 +16,7 @@ class UtilitiesScreen extends StatefulWidget {
   State<UtilitiesScreen> createState() => _UtilitiesState();
 }
 
-class _UtilitiesState extends State<UtilitiesScreen>
-    with WidgetsBindingObserver {
+class _UtilitiesState extends State<UtilitiesScreen> {
   final _text = TextEditingController();
   Timer? _clock;
   native.ClipboardView? _clipboard;
@@ -25,13 +25,13 @@ class _UtilitiesState extends State<UtilitiesScreen>
   native.IncidentPage? _incidents;
   String? _error;
   bool _copied = false;
-  bool _busy = false, _paused = false, _polling = false;
+  bool _busy = false, _polling = false;
+  bool get _paused => !ApplicationActivityScope.read(context).value;
   Completer<void>? _pollCompletion;
   bool _clipboardUnavailable = false, _incidentsUnavailable = false;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _clock = Timer.periodic(const Duration(seconds: 2), (_) {
       if (mounted &&
           !_busy &&
@@ -44,13 +44,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _paused = state != AppLifecycleState.resumed;
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _clock?.cancel();
     _text.clear();
     _text.dispose();
@@ -79,7 +73,7 @@ class _UtilitiesState extends State<UtilitiesScreen>
         error.dispose();
       } else if (error is native.VaultError) {
         code = error.code();
-      } else if (error is native.AgentError) {
+      } else if (error is native.ModuleError) {
         code = error.name;
       }
       if (mounted) setState(() => _error = code);

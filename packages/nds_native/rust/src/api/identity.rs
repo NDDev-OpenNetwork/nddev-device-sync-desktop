@@ -4,6 +4,8 @@ use nddev_device_sync_accounts::{
     IdentityClient,
     view::{ClientError, PasskeyView, View},
 };
+use nddev_device_sync_application::lifecycle::{BatchOutcome, ReplicaSchedule};
+use nddev_device_sync_telemetry::view::ClientLifecycle;
 use nddev_device_sync_vault::{
     VaultClient,
     view::{RecordPage, StatePage, VaultError, VaultView},
@@ -23,7 +25,7 @@ pub struct NdsClient {
     inner: Arc<IdentityClient>,
     vault: tokio::sync::Mutex<Option<Arc<VaultClient>>>,
     replica: Mutex<Option<Replica>>,
-    foreground: AtomicBool,
+    active: AtomicBool,
     delivery: Mutex<Option<super::telemetry::Delivery>>,
     #[cfg(not(target_arch = "wasm32"))]
     clipboard: nddev_device_sync_clipboard::os::TextClipboard,
@@ -56,7 +58,7 @@ impl NdsClient {
             inner: Arc::new(IdentityClient::new(&endpoint)?),
             vault: tokio::sync::Mutex::new(None),
             replica: Mutex::default(),
-            foreground: AtomicBool::new(true),
+            active: AtomicBool::new(true),
             delivery: Mutex::default(),
             #[cfg(not(target_arch = "wasm32"))]
             clipboard: Default::default(),
@@ -70,7 +72,7 @@ impl NdsClient {
     /// logout retries through the identity owner; no presentation auth rules.
     pub async fn reconcile(&self) -> Result<View, ClientError> {
         let view = self.inner.view();
-        if !self.foreground.load(Ordering::Relaxed) || !view.flow.is_empty() {
+        if !self.active.load(Ordering::Relaxed) || !view.flow.is_empty() {
             return Ok(view);
         }
         if view.logout_pending {
@@ -182,7 +184,7 @@ impl NdsClient {
                 delivery.take();
                 *delivery = super::telemetry::start_delivery(
                     self.inner.clone(),
-                    self.foreground.load(Ordering::Relaxed),
+                    self.active.load(Ordering::Relaxed),
                 );
             }
         }
@@ -203,8 +205,13 @@ impl NdsClient {
         Ok(view)
     }
     #[frb(sync)]
-    pub fn set_foreground(&self, active: bool) {
-        self.foreground.store(active, Ordering::Relaxed);
+    pub fn set_lifecycle(&self, state: ClientLifecycle) {
+        let active = client_work_permitted(state);
+        // Focus changes that retain permission need not interrupt an in-flight
+        // request or reset delivery. Hidden/resume transitions still wake tasks.
+        if self.active.swap(active, Ordering::Relaxed) == active {
+            return;
+        }
         if let Some(delivery) = &*self
             .delivery
             .lock()
@@ -233,7 +240,7 @@ impl NdsClient {
         let vault = self.vault().await?;
         let weak = Arc::downgrade(&vault);
         let (active, mut enabled) =
-            tokio::sync::watch::channel(self.foreground.load(Ordering::Relaxed));
+            tokio::sync::watch::channel(self.active.load(Ordering::Relaxed));
         let identity = self.inner.clone();
         let mut slot = self.replica.lock().unwrap_or_else(|e| e.into_inner());
         if slot.as_ref().is_some_and(|replica| {
@@ -247,7 +254,7 @@ impl NdsClient {
         slot.take();
         let task = runtime::spawn(async move {
             let mut delay = Duration::ZERO;
-            let mut failures = 0u32;
+            let mut schedule = ReplicaSchedule::default();
             let mut published = false;
             loop {
                 if !*enabled.borrow() {
@@ -276,21 +283,16 @@ impl NdsClient {
                         Ok(view)
                     }) => result
                 };
-                delay = match result {
-                    Ok(view) => {
-                        failures = 0;
-                        if view.catching_up {
-                            Duration::from_millis(200)
-                        } else {
-                            Duration::from_secs(15)
-                        }
-                    }
-                    Err(VaultError::Locked) => break,
-                    Err(_) => {
-                        failures = failures.saturating_add(1);
-                        Duration::from_secs(1u64 << failures.min(5))
-                    }
+                let outcome = match result {
+                    Ok(view) if view.catching_up => BatchOutcome::CatchingUp,
+                    Ok(_) => BatchOutcome::CaughtUp,
+                    Err(VaultError::Locked) => BatchOutcome::Locked,
+                    Err(_) => BatchOutcome::Retryable,
                 };
+                let Some(next) = schedule.after(outcome) else {
+                    break;
+                };
+                delay = next;
             }
         });
         *slot = Some(Replica {
@@ -399,7 +401,7 @@ impl NdsClient {
         Ok(result)
     }
     fn wake_replica(&self) {
-        if self.foreground.load(Ordering::Relaxed)
+        if self.active.load(Ordering::Relaxed)
             && let Some(replica) = &*self
                 .replica
                 .lock()
@@ -462,7 +464,7 @@ impl NdsClient {
     pub async fn clipboard_publish_native(&self) -> Result<String, ClientError> {
         #[cfg(target_os = "android")]
         {
-            if !self.foreground.load(Ordering::Relaxed) {
+            if !self.active.load(Ordering::Relaxed) {
                 return Err(ClientError::Busy);
             }
             // Preserve the native allowlisted refusal reason, never its content.
@@ -635,9 +637,9 @@ impl NdsClient {
     }
     async fn publish_state_inner(
         &self,
-        modules: Vec<nddev_device_sync_agent::view::ModuleState>,
+        modules: Vec<nddev_device_sync_domain::modules::ModuleObservation>,
     ) -> Result<VaultView, VaultError> {
-        use nddev_device_sync_domain::state::{Reachability, Snapshot, State};
+        use nddev_device_sync_domain::state::Snapshot;
         observe("sync.states.publish", async {
             let vault = self.vault().await?;
             self.inner
@@ -652,26 +654,7 @@ impl NdsClient {
                 data,
             };
             for module in modules {
-                let reachability = match module.reachability {
-                    nddev_device_sync_agent::view::Reachability::NotChecked => {
-                        Reachability::NotChecked
-                    }
-                    nddev_device_sync_agent::view::Reachability::Reachable => {
-                        Reachability::Reachable
-                    }
-                    nddev_device_sync_agent::view::Reachability::Unavailable => {
-                        Reachability::Unavailable
-                    }
-                    nddev_device_sync_agent::view::Reachability::Failed => Reachability::Failed,
-                };
-                values.push(capture(State::Module {
-                    module_id: module.id,
-                    version: module.version,
-                    configured: module.configured,
-                    reachability,
-                    checked_at_ms: module.observed_at_ms,
-                    error_class: module.error.map(|error| error.to_string()),
-                }));
+                values.push(capture(module.state()));
             }
             vault.publish_states(values).await
         })
@@ -701,6 +684,38 @@ impl NdsClient {
             .take();
         self.inner.cancel_sign_in();
     }
+}
+
+/// Flutter reports raw lifecycle once. The shared application policy decides
+/// whether this target may perform bounded replica and delivery work.
+#[frb(sync)]
+pub fn client_work_permitted(state: ClientLifecycle) -> bool {
+    use nddev_device_sync_application::lifecycle::ClientLifecycle as Activity;
+    use nddev_device_sync_domain::Platform;
+    let activity = match state {
+        ClientLifecycle::Detached => Activity::Detached,
+        ClientLifecycle::Resumed => Activity::Resumed,
+        ClientLifecycle::Inactive => Activity::Inactive,
+        ClientLifecycle::Hidden => Activity::Hidden,
+        ClientLifecycle::Paused => Activity::Paused,
+        ClientLifecycle::Ready => return false,
+    };
+    let platform = if cfg!(target_arch = "wasm32") {
+        Platform::Web
+    } else if cfg!(target_os = "linux") {
+        Platform::Linux
+    } else if cfg!(target_os = "macos") {
+        Platform::Macos
+    } else if cfg!(target_os = "windows") {
+        Platform::Windows
+    } else if cfg!(target_os = "android") {
+        Platform::Android
+    } else if cfg!(target_os = "ios") {
+        Platform::Ios
+    } else {
+        return false;
+    };
+    activity.permits_work(platform)
 }
 
 fn replica_start_error(error: VaultError) -> ClientError {
@@ -861,4 +876,24 @@ pub fn supports_native_clipboard() -> bool {
 #[frb(sync)]
 pub fn new_vault_record_id() -> String {
     uuid::Uuid::new_v4().to_string()
+}
+
+#[cfg(all(
+    test,
+    any(target_os = "linux", target_os = "macos", target_os = "windows")
+))]
+mod activity_tests {
+    use super::*;
+
+    #[test]
+    fn visible_inactive_keeps_admission_and_hidden_resumed_transitions_change_it() {
+        let client = NdsClient::new("https://example.invalid".into()).unwrap();
+        client.set_lifecycle(ClientLifecycle::Inactive);
+        assert!(client.active.load(Ordering::Relaxed));
+        client.set_lifecycle(ClientLifecycle::Hidden);
+        assert!(!client.active.load(Ordering::Relaxed));
+        client.set_lifecycle(ClientLifecycle::Resumed);
+        assert!(client.active.load(Ordering::Relaxed));
+        assert!(!client_work_permitted(ClientLifecycle::Ready));
+    }
 }
