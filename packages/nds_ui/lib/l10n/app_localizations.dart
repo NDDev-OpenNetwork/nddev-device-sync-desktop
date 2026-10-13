@@ -1535,6 +1535,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The vault could not access required local storage or server services.'**
   String get vaultDependencyUnavailable;
+
+  /// No description provided for @serverCapacityExhausted.
+  ///
+  /// In en, this message translates to:
+  /// **'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.'**
+  String get serverCapacityExhausted;
 }
 
 class _AppLocalizationsDelegate

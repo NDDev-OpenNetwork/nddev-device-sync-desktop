@@ -263,6 +263,7 @@ class _VaultScreenState extends State<VaultScreen> {
     'vault_authentication_failed' => l.vaultProofError,
     'vault_busy' => l.operationBusy,
     'vault_storage_full' => l.storageFull,
+    'sync_capacity_exhausted' => l.serverCapacityExhausted,
     'vault_dependency_unavailable' => l.vaultDependencyUnavailable,
     _ => l.genericError,
   };

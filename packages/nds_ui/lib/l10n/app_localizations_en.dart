@@ -830,4 +830,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get vaultDependencyUnavailable =>
       'The vault could not access required local storage or server services.';
+
+  @override
+  String get serverCapacityExhausted =>
+      'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.';
 }
