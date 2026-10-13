@@ -662,6 +662,18 @@ abstract class AppLocalizations {
   /// **'Ahead / behind'**
   String get aheadBehind;
 
+  /// No description provided for @gdsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get gdsUnavailable;
+
+  /// No description provided for @gdsComparisonNotApplicable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not applicable'**
+  String get gdsComparisonNotApplicable;
+
   /// No description provided for @staged.
   ///
   /// In en, this message translates to:

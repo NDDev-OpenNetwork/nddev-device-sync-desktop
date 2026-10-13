@@ -108,6 +108,8 @@
   "branch": "Branch",
   "upstream": "Upstream",
   "aheadBehind": "Ahead / behind",
+  "gdsUnavailable": "Not available",
+  "gdsComparisonNotApplicable": "Not applicable",
   "staged": "Staged changes",
   "unstaged": "Unstaged changes",
   "untracked": "Untracked files",
