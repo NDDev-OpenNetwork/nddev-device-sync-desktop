@@ -836,4 +836,8 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get vaultDependencyUnavailable =>
       'Vault не смог получить доступ к необходимому локальному хранилищу или серверным сервисам.';
+
+  @override
+  String get serverCapacityExhausted =>
+      'На сервере достигнут лимит хранения. Ваши зашифрованные изменения остаются на этом устройстве. Автоматическая синхронизация приостановлена. Повторите её вручную, когда ограничение будет устранено.';
 }

@@ -70,6 +70,9 @@ class _StateScreenState extends State<StateScreen> {
         }
         return;
       }
+      if (view.syncError == 'sync_capacity_exhausted' && mounted) {
+        setState(() => _error = view.syncError);
+      }
       if (polling && _cursor == view.cursor) return;
       final page = await widget.client.syncStates(after: after);
       if (mounted) {
@@ -181,6 +184,8 @@ class _StateScreenState extends State<StateScreen> {
                 Text(
                   _error == 'vault_locked'
                       ? l.vaultLocked
+                      : _error == 'sync_capacity_exhausted'
+                      ? l.serverCapacityExhausted
                       : _error == 'vault_busy'
                       ? l.operationBusy
                       : l.statePublishError,
