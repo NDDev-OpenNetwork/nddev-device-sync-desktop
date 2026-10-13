@@ -108,6 +108,8 @@
   "branch": "Ветка",
   "upstream": "Отслеживаемая ветка",
   "aheadBehind": "Впереди / позади",
+  "gdsUnavailable": "Недоступно",
+  "gdsComparisonNotApplicable": "Неприменимо",
   "staged": "Подготовлено изменений",
   "unstaged": "Изменений вне индекса",
   "untracked": "Неотслеживаемых файлов",

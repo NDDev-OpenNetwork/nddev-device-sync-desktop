@@ -322,6 +322,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get aheadBehind => 'Впереди / позади';
 
   @override
+  String get gdsUnavailable => 'Недоступно';
+
+  @override
+  String get gdsComparisonNotApplicable => 'Неприменимо';
+
+  @override
   String get staged => 'Подготовлено изменений';
 
   @override
