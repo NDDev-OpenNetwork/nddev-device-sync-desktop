@@ -8,6 +8,7 @@ import 'package:nds_native/nds_native.dart' as native;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'l10n/app_localizations.dart';
+import 'activity.dart';
 import 'modules_screen.dart';
 import 'diagnostics.dart';
 import 'vault_screen.dart';
@@ -40,9 +41,16 @@ class _NdsAppState extends State<NdsApp> {
   Locale? _locale;
   int _page = 0;
   native.NdsClient? _client;
+  late final ApplicationActivity _activity;
   @override
   void initState() {
     super.initState();
+    _activity = ApplicationActivity(
+      nativeReady: widget.nativeReady,
+      onLifecycle: widget.diagnostics?.lifecycle,
+      onBridgeFailure: () =>
+          widget.diagnostics?.reportFailure(native.FailureKind.nativeBridge),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && widget.nativeReady) widget.diagnostics?.clientReady();
     });
@@ -50,73 +58,80 @@ class _NdsAppState extends State<NdsApp> {
 
   @override
   void dispose() {
+    _activity.dispose();
     widget.diagnostics?.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => MaterialApp(
-      title: 'NDDev OpenNetwork',
-      debugShowCheckedModeBanner: false,
-      theme: OpenNetworkTheme.dark(width: constraints.maxWidth),
-      locale: _locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          widget.diagnostics?.locale = Localizations.localeOf(context);
-          if (!widget.nativeReady) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const OpenNetworkBrand(),
-                toolbarHeight:
-                    OpenNetworkBrand.heightOf(context) +
-                    OpenNetworkSpacing.four,
-              ),
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(OpenNetworkSpacing.six),
-                  child: Text(AppLocalizations.of(context)!.startupFailed),
+  Widget build(BuildContext context) => ApplicationActivityScope(
+    activity: _activity,
+    child: LayoutBuilder(
+      builder: (context, constraints) => MaterialApp(
+        title: 'NDDev OpenNetwork',
+        debugShowCheckedModeBanner: false,
+        theme: OpenNetworkTheme.dark(width: constraints.maxWidth),
+        locale: _locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) {
+            widget.diagnostics?.locale = Localizations.localeOf(context);
+            if (!widget.nativeReady) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: const OpenNetworkBrand(),
+                  toolbarHeight:
+                      OpenNetworkBrand.heightOf(context) +
+                      OpenNetworkSpacing.four,
                 ),
+                body: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(OpenNetworkSpacing.six),
+                    child: Text(AppLocalizations.of(context)!.startupFailed),
+                  ),
+                ),
+              );
+            }
+            final identity = _IdentityScreen(
+              onLocale: (locale) => setState(() => _locale = locale),
+              diagnostics: widget.diagnostics,
+              onClient: (client) {
+                _activity.attach(client);
+                setState(() => _client = client);
+              },
+            );
+            if (!native.supportsLocalAgent()) return identity;
+            final l = AppLocalizations.of(context)!;
+            return Scaffold(
+              body: IndexedStack(
+                index: _page,
+                children: [
+                  identity,
+                  ModulesScreen(
+                    onLocale: (locale) => setState(() => _locale = locale),
+                    diagnostics: widget.diagnostics,
+                    client: _client,
+                  ),
+                ],
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: _page,
+                onDestinationSelected: (page) => setState(() => _page = page),
+                destinations: [
+                  NavigationDestination(
+                    icon: const Icon(Icons.account_circle_outlined),
+                    label: l.sessionTab,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.devices),
+                    label: l.localModules,
+                  ),
+                ],
               ),
             );
-          }
-          final identity = _IdentityScreen(
-            onLocale: (locale) => setState(() => _locale = locale),
-            diagnostics: widget.diagnostics,
-            onClient: (client) => setState(() => _client = client),
-          );
-          if (!native.supportsLocalAgent()) return identity;
-          final l = AppLocalizations.of(context)!;
-          return Scaffold(
-            body: IndexedStack(
-              index: _page,
-              children: [
-                identity,
-                ModulesScreen(
-                  onLocale: (locale) => setState(() => _locale = locale),
-                  diagnostics: widget.diagnostics,
-                  client: _client,
-                ),
-              ],
-            ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _page,
-              onDestinationSelected: (page) => setState(() => _page = page),
-              destinations: [
-                NavigationDestination(
-                  icon: const Icon(Icons.account_circle_outlined),
-                  label: l.sessionTab,
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.devices),
-                  label: l.localModules,
-                ),
-              ],
-            ),
-          );
-        },
+          },
+        ),
       ),
     ),
   );
@@ -135,8 +150,7 @@ class _IdentityScreen extends StatefulWidget {
   State<_IdentityScreen> createState() => _IdentityScreenState();
 }
 
-class _IdentityScreenState extends State<_IdentityScreen>
-    with WidgetsBindingObserver {
+class _IdentityScreenState extends State<_IdentityScreen> {
   final _endpoint = TextEditingController(
     text: kIsWeb
         ? Uri.base.origin
@@ -148,7 +162,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
   native.View? _view;
   bool _busy = false;
   int _actionEpoch = 0;
-  bool _paused = false;
+  bool get _paused => !ApplicationActivityScope.read(context).value;
   bool _browserOpened = false;
   String? _error;
   Timer? _poll;
@@ -160,7 +174,6 @@ class _IdentityScreenState extends State<_IdentityScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && _endpoint.text.trim().isNotEmpty) unawaited(_connect());
     });
@@ -173,9 +186,9 @@ class _IdentityScreenState extends State<_IdentityScreen>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _paused = state != AppLifecycleState.resumed;
-    _client?.setForeground(active: !_paused);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ApplicationActivityScope.of(context);
     if (_paused) {
       _poll?.cancel();
     } else {
@@ -209,7 +222,6 @@ class _IdentityScreenState extends State<_IdentityScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _clock?.cancel();
     _poll?.cancel();
     _client?.cancel();
@@ -286,7 +298,7 @@ class _IdentityScreenState extends State<_IdentityScreen>
       client.dispose();
       throw StateError('cancelled');
     }
-    client.setForeground(active: !_paused);
+    ApplicationActivityScope.read(context).attach(client);
     _client = client;
     return client.refresh();
   }, prepare: true);

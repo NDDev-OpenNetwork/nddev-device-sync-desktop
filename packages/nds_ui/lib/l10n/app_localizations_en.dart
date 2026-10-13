@@ -748,7 +748,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportDisabled => 'The operator disabled server export.';
 
   @override
-  String get exportPaused => 'Delivery is paused while the app is inactive.';
+  String get exportPaused => 'Delivery is paused. Return to the app to resume.';
 
   @override
   String get eventsLabel => 'Events';

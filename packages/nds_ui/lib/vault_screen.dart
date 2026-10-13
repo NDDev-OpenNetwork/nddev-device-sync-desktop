@@ -7,6 +7,7 @@ import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
 
 import 'l10n/app_localizations.dart';
+import 'activity.dart';
 import 'state_screen.dart';
 
 class VaultScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class VaultScreen extends StatefulWidget {
   State<VaultScreen> createState() => _VaultScreenState();
 }
 
-class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
+class _VaultScreenState extends State<VaultScreen> {
   native.VaultView? _view;
   List<native.RecordView> _records = [];
   native.RecordView? _editing;
@@ -29,7 +30,8 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   final _secret = TextEditingController();
   final _scroll = ScrollController();
   String? _error, _readError;
-  bool _busy = false, _paused = false;
+  bool _busy = false;
+  bool get _paused => !ApplicationActivityScope.read(context).value;
   Timer? _refresh;
   Completer<void>? _backgroundRead;
   int _actionEpoch = 0;
@@ -37,7 +39,6 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _refresh = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted &&
           !_paused &&
@@ -52,13 +53,7 @@ class _VaultScreenState extends State<VaultScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _paused = state != AppLifecycleState.resumed;
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _refresh?.cancel();
     _secret.clear();
     for (final controller in [_title, _username, _secret]) {

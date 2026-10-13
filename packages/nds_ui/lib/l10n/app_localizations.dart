@@ -1407,7 +1407,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportPaused.
   ///
   /// In en, this message translates to:
-  /// **'Delivery is paused while the app is inactive.'**
+  /// **'Delivery is paused. Return to the app to resume.'**
   String get exportPaused;
 
   /// No description provided for @eventsLabel.

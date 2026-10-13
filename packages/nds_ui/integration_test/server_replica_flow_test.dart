@@ -33,6 +33,9 @@ void main() {
         framework?.call(details);
       };
       addTearDown(() async {
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
         await tester.pumpWidget(const SizedBox.shrink());
         FlutterError.onError = framework;
         http.close(force: true);
@@ -110,6 +113,11 @@ void main() {
           () => find.byKey(const Key('vault-title')).evaluate().isNotEmpty,
         );
         if (role == 'owner') {
+          // A visible desktop window may lose input focus while the owner edits.
+          // Local save must still converge through the real background replica.
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.inactive,
+          );
           await tester.enterText(
             find.byKey(const Key('vault-title')),
             'Linux shared record',
@@ -121,6 +129,12 @@ void main() {
           await visible('vault-save');
           await waitUntil(
             () => find.text('Linux shared record').evaluate().isNotEmpty,
+          );
+          await waitUntil(
+            () => find.text('Pending: 0 · Conflicts: 0').evaluate().isNotEmpty,
+          );
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.resumed,
           );
           await tester.pageBack();
           await tester.pumpAndSettle();

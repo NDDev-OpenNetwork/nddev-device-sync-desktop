@@ -1,6 +1,6 @@
 [package]
 name = "nds_native"
-version = "0.0.1-alpha.19"
+version = "0.0.1-alpha.20"
 edition = "2024"
 rust-version = "1.99"
 license = "AGPL-3.0-only"
@@ -9,27 +9,28 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
-nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault.git", rev = "5c0fcaae710ba3e938b2a00a935e09cfaef7ff96" }
+nddev-device-sync-application = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev = "61daab3363fb74b54b2d55e34fad968fb8594421" }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault.git", rev = "c85dcade97acd8108b649ec4f69f0ce9208d8433" }
 tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 # ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = { version="=2.13.0",default-features=false,features=["anyhow","dart-opaque","portable-atomic","rust-async","thread-pool"] }
-nddev-device-sync-accounts = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts", rev = "6c666a90e5951931cd9a4d5c5975b160c17571ca" }
-nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="d5d16cc3f59aa879136c40d160e756d70c87b5da"}
+nddev-device-sync-accounts = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts", rev = "99d504db29326dc9148857a55526332c50c12354" }
+nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="61daab3363fb74b54b2d55e34fad968fb8594421"}
 time = {version="0.3",features=["parsing","wasm-bindgen"]}
 tracing = "0.1"
 serde_json = "1"
 serde = "1"
 uuid = { version="1.27", features=["v4", "v7"] }
-nddev-device-sync-agent = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent", rev = "0df32bf5e37d9972464971cdc94932dddf9d835f" }
+nddev-device-sync-agent = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent", rev = "24912038c4ad1ce9febe73a6339327eb03f58b5e" }
 nddev-device-sync-sysinfo = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-sysinfo", rev = "7a18e05f8a1351988af6903c588b0b3ec776c2b0" }
-nddev-device-sync-clipboard = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard", rev = "b6999d3842b3d9ecd7b7ce2efb5a205a4f5fb718" }
+nddev-device-sync-clipboard = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard", rev = "d435645e3fdaef1989980c3dbecf9968b94f952c" }
 nddev-device-sync-cleaner = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-cleaner", rev = "1c1a14dddca3d06456b5abef30570cdb3650aac8" }
 nddev-device-sync-updater = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-updater", rev = "f228b0da9fa737454bd4334f442194f615d56586" }
-nddev-device-sync-gds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-gds", rev = "ecbfb40eeeed21c8e53794f4caff603cee226d32" }
+nddev-device-sync-gds = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds", rev = "e3c0d2ae36da7026e07f08a13ec38aacac2869f8" }
 nddev-device-sync-rds = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-rds", rev = "9f12f64578722f808935ee1ded1c0246a248945d" }
-nddev-device-sync-telemetry = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability", rev = "e4eb0c57df475eaea3769b995a7e8343cb3a55b5", features = ["client-traces"] }
+nddev-device-sync-telemetry = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability", rev = "bb019a4b78f9a921c72e445c7e1ff5c0fe9c24ea", features = ["client-traces"] }
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
 
