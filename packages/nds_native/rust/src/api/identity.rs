@@ -878,8 +878,16 @@ async fn observe<T>(
 ) -> Result<T, VaultError> {
     let span = nddev_device_sync_telemetry::operation_span("vault", "process")
         .map_err(|_| VaultError::Unavailable)?;
+    let completion = span.clone();
     async {
         let start=Instant::now();let result=work.await;
+        nddev_device_sync_telemetry::finish_operation_span(
+            &completion,
+            matches!(
+                &result,
+                Err(VaultError::Unavailable | VaultError::Authentication | VaultError::StorageFull | VaultError::CapacityExhausted)
+            ),
+        );
         match &result {
             Ok(_)=>tracing::event!(target:"nds_native",tracing::Level::INFO,{event.name=event,module="vault",duration_ms=start.elapsed().as_millis() as u64,outcome="ok"}),
             Err(error)=>tracing::event!(target:"nds_native",tracing::Level::WARN,{event.name=event,module="vault",duration_ms=start.elapsed().as_millis() as u64,error.type=%error,outcome="error"}),
