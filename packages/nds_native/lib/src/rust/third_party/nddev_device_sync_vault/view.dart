@@ -270,6 +270,7 @@ enum VaultError {
   unavailable,
   busy,
   storageFull,
+  capacityExhausted,
   registrationRequired;
 
   /// Stable presentation class; never an underlying driver/secret message.
