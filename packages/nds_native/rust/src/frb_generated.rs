@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1418589908;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1734544312;
 
 // Section: executor
 
@@ -855,6 +855,54 @@ fn wire__crate__api__identity__NdsClient_cancel_impl(
         },
     )
 }
+fn wire__crate__api__identity__NdsClient_cancel_github_catalog_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_cancel_github_catalog",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok = Ok::<_, ()>({
+                    crate::api::identity::NdsClient::cancel_github_catalog(&*api_that_guard);
+                })?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__identity__NdsClient_clipboard_copy_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1212,6 +1260,127 @@ fn wire__crate__api__identity__NdsClient_delivery_snapshot_impl(
                 ))?;
                 std::result::Result::Ok(output_ok)
             })())
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_github_catalog_credentials_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_github_catalog_credentials",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_after = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::catalog_types::GithubCatalogError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok =
+                            crate::api::identity::NdsClient::github_catalog_credentials(
+                                &*api_that_guard,
+                                api_after,
+                            )
+                            .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_github_repository_page_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_github_repository_page",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_next_page = <bool>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::catalog_types::GithubCatalogError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::github_repository_page(
+                            &*api_that_guard,
+                            api_next_page,
+                        )
+                        .await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
@@ -2176,6 +2345,61 @@ fn wire__crate__api__identity__NdsClient_revoke_passkey_impl(
                     .await,
                 )
             }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_select_github_credential_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_select_github_credential",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_record_ref = <String>::sse_decode(&mut deserializer);
+            let api_revision = <String>::sse_decode(&mut deserializer);
+            let api_pending_id = <Option<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, crate::api::catalog_types::GithubCatalogError>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok = crate::api::identity::NdsClient::select_github_credential(
+                    &*api_that_guard,
+                    api_record_ref,
+                    api_revision,
+                    api_pending_id,
+                )?;
+                std::result::Result::Ok(output_ok)
+            })(
+            ))
         },
     )
 }
@@ -4454,6 +4678,168 @@ impl SseDecode for nddev_device_sync_gds::view::GitStatus {
     }
 }
 
+impl SseDecode for crate::api::catalog_types::GithubCatalogContinuationView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::catalog_types::GithubCatalogContinuationView::More,
+            1 => crate::api::catalog_types::GithubCatalogContinuationView::EndOfAccessScope,
+            2 => crate::api::catalog_types::GithubCatalogContinuationView::LimitReached,
+            _ => unreachable!(
+                "Invalid variant for GithubCatalogContinuationView: {}",
+                inner
+            ),
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubCatalogError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::catalog_types::GithubCatalogError::InvalidInput,
+            1 => crate::api::catalog_types::GithubCatalogError::AuthorizationRequired,
+            2 => crate::api::catalog_types::GithubCatalogError::CredentialChanged,
+            3 => crate::api::catalog_types::GithubCatalogError::Busy,
+            4 => crate::api::catalog_types::GithubCatalogError::Cancelled,
+            5 => crate::api::catalog_types::GithubCatalogError::Timeout,
+            6 => crate::api::catalog_types::GithubCatalogError::Unavailable,
+            7 => crate::api::catalog_types::GithubCatalogError::ProviderFailed,
+            8 => crate::api::catalog_types::GithubCatalogError::InvalidResponse,
+            _ => unreachable!("Invalid variant for GithubCatalogError: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubCredentialReference {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_recordRef = <String>::sse_decode(deserializer);
+        let mut var_title = <String>::sse_decode(deserializer);
+        let mut var_username = <String>::sse_decode(deserializer);
+        let mut var_revision = <String>::sse_decode(deserializer);
+        let mut var_pendingId = <Option<String>>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubCredentialReference {
+            record_ref: var_recordRef,
+            title: var_title,
+            username: var_username,
+            revision: var_revision,
+            pending_id: var_pendingId,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubCredentialReferencePage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_items =
+            <Vec<crate::api::catalog_types::GithubCredentialReference>>::sse_decode(deserializer);
+        let mut var_nextAfter = <String>::sse_decode(deserializer);
+        let mut var_hasMore = <bool>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubCredentialReferencePage {
+            items: var_items,
+            next_after: var_nextAfter,
+            has_more: var_hasMore,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubOwnerKindView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::catalog_types::GithubOwnerKindView::User,
+            1 => crate::api::catalog_types::GithubOwnerKindView::Organization,
+            _ => unreachable!("Invalid variant for GithubOwnerKindView: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubOwnerView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_login = <String>::sse_decode(deserializer);
+        let mut var_kind =
+            <crate::api::catalog_types::GithubOwnerKindView>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubOwnerView {
+            id: var_id,
+            login: var_login,
+            kind: var_kind,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubRepositoryGroupView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_owner = <crate::api::catalog_types::GithubOwnerView>::sse_decode(deserializer);
+        let mut var_repositories =
+            <Vec<crate::api::catalog_types::GithubRepositorySummaryView>>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubRepositoryGroupView {
+            owner: var_owner,
+            repositories: var_repositories,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubRepositoryPageView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_principal =
+            <crate::api::catalog_types::GithubOwnerView>::sse_decode(deserializer);
+        let mut var_groups =
+            <Vec<crate::api::catalog_types::GithubRepositoryGroupView>>::sse_decode(deserializer);
+        let mut var_observedAtMs = <String>::sse_decode(deserializer);
+        let mut var_continuation =
+            <crate::api::catalog_types::GithubCatalogContinuationView>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubRepositoryPageView {
+            principal: var_principal,
+            groups: var_groups,
+            observed_at_ms: var_observedAtMs,
+            continuation: var_continuation,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubRepositorySummaryView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_visibility =
+            <crate::api::catalog_types::GithubRepositoryVisibilityView>::sse_decode(deserializer);
+        let mut var_archived = <bool>::sse_decode(deserializer);
+        let mut var_defaultBranch = <Option<String>>::sse_decode(deserializer);
+        return crate::api::catalog_types::GithubRepositorySummaryView {
+            id: var_id,
+            name: var_name,
+            visibility: var_visibility,
+            archived: var_archived,
+            default_branch: var_defaultBranch,
+        };
+    }
+}
+
+impl SseDecode for crate::api::catalog_types::GithubRepositoryVisibilityView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::catalog_types::GithubRepositoryVisibilityView::Public,
+            1 => crate::api::catalog_types::GithubRepositoryVisibilityView::Private,
+            2 => crate::api::catalog_types::GithubRepositoryVisibilityView::Internal,
+            _ => unreachable!(
+                "Invalid variant for GithubRepositoryVisibilityView: {}",
+                inner
+            ),
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_sysinfo::view::Gpu {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4613,6 +4999,48 @@ impl SseDecode for Vec<nddev_device_sync_gds::view::Finding> {
             ans_.push(<nddev_device_sync_gds::view::Finding>::sse_decode(
                 deserializer,
             ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::catalog_types::GithubCredentialReference> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::api::catalog_types::GithubCredentialReference>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::catalog_types::GithubRepositoryGroupView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::api::catalog_types::GithubRepositoryGroupView>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::catalog_types::GithubRepositorySummaryView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::api::catalog_types::GithubRepositorySummaryView>::sse_decode(deserializer),
+            );
         }
         return ans_;
     }
@@ -5230,9 +5658,10 @@ impl SseDecode for nddev_device_sync_vault::view::VaultError {
             2 => nddev_device_sync_vault::view::VaultError::Authentication,
             3 => nddev_device_sync_vault::view::VaultError::Unavailable,
             4 => nddev_device_sync_vault::view::VaultError::Busy,
-            5 => nddev_device_sync_vault::view::VaultError::StorageFull,
-            6 => nddev_device_sync_vault::view::VaultError::CapacityExhausted,
-            7 => nddev_device_sync_vault::view::VaultError::RegistrationRequired,
+            5 => nddev_device_sync_vault::view::VaultError::SelectionChanged,
+            6 => nddev_device_sync_vault::view::VaultError::StorageFull,
+            7 => nddev_device_sync_vault::view::VaultError::CapacityExhausted,
+            8 => nddev_device_sync_vault::view::VaultError::RegistrationRequired,
             _ => unreachable!("Invalid variant for VaultError: {}", inner),
         };
     }
@@ -5393,174 +5822,186 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__api__identity__NdsClient_clipboard_copy_impl(
+        17 => wire__crate__api__identity__NdsClient_clipboard_copy_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__api__identity__NdsClient_clipboard_publish_archive_impl(
+        18 => wire__crate__api__identity__NdsClient_clipboard_publish_archive_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__identity__NdsClient_clipboard_publish_native_impl(
+        19 => wire__crate__api__identity__NdsClient_clipboard_publish_native_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__api__identity__NdsClient_clipboard_publish_text_impl(
+        20 => wire__crate__api__identity__NdsClient_clipboard_publish_text_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__api__identity__NdsClient_clipboard_snapshot_impl(
+        21 => wire__crate__api__identity__NdsClient_clipboard_snapshot_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__api__identity__NdsClient_incident_action_impl(
+        23 => wire__crate__api__identity__NdsClient_github_catalog_credentials_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => {
+        24 => wire__crate__api__identity__NdsClient_github_repository_page_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        25 => wire__crate__api__identity__NdsClient_incident_action_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        26 => {
             wire__crate__api__identity__NdsClient_incidents_impl(port, ptr, rust_vec_len, data_len)
         }
-        24 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
-        26 => {
+        27 => wire__crate__api__identity__NdsClient_logout_impl(port, ptr, rust_vec_len, data_len),
+        29 => {
             wire__crate__api__identity__NdsClient_passkeys_impl(port, ptr, rust_vec_len, data_len)
         }
-        27 => wire__crate__api__identity__NdsClient_poll_github_impl(
+        30 => wire__crate__api__identity__NdsClient_poll_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        28 => wire__crate__api__identity__NdsClient_poll_passkey_impl(
+        31 => wire__crate__api__identity__NdsClient_poll_passkey_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__identity__NdsClient_prepare_device_impl(
+        32 => wire__crate__api__identity__NdsClient_prepare_device_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__api__identity__NdsClient_publish_device_state_impl(
+        33 => wire__crate__api__identity__NdsClient_publish_device_state_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__api__identity__NdsClient_publish_local_state_impl(
+        34 => wire__crate__api__identity__NdsClient_publish_local_state_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => {
+        35 => {
             wire__crate__api__identity__NdsClient_reconcile_impl(port, ptr, rust_vec_len, data_len)
         }
-        33 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire__crate__api__identity__NdsClient_refresh_devices_impl(
+        36 => wire__crate__api__identity__NdsClient_refresh_impl(port, ptr, rust_vec_len, data_len),
+        37 => wire__crate__api__identity__NdsClient_refresh_devices_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => wire__crate__api__identity__NdsClient_request_email_impl(
+        38 => wire__crate__api__identity__NdsClient_request_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__api__identity__NdsClient_revoke_device_impl(
+        40 => wire__crate__api__identity__NdsClient_revoke_device_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        38 => wire__crate__api__identity__NdsClient_revoke_passkey_impl(
+        41 => wire__crate__api__identity__NdsClient_revoke_passkey_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        41 => wire__crate__api__identity__NdsClient_start_github_impl(
+        45 => wire__crate__api__identity__NdsClient_start_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        42 => wire__crate__api__identity__NdsClient_start_passkey_impl(
+        46 => wire__crate__api__identity__NdsClient_start_passkey_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        43 => wire__crate__api__identity__NdsClient_sync_states_impl(
+        47 => wire__crate__api__identity__NdsClient_sync_states_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        44 => wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
+        48 => wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        45 => wire__crate__api__identity__NdsClient_vault_delete_impl(
+        49 => wire__crate__api__identity__NdsClient_vault_delete_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        46 => wire__crate__api__identity__NdsClient_vault_records_impl(
+        50 => wire__crate__api__identity__NdsClient_vault_records_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        47 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+        51 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => wire__crate__api__identity__NdsClient_vault_resolve_impl(
+        52 => wire__crate__api__identity__NdsClient_vault_resolve_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        49 => {
+        53 => {
             wire__crate__api__identity__NdsClient_vault_save_impl(port, ptr, rust_vec_len, data_len)
         }
-        50 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
+        54 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        51 => {
+        55 => {
             wire__crate__api__identity__NdsClient_vault_sync_impl(port, ptr, rust_vec_len, data_len)
         }
-        52 => wire__crate__api__identity__NdsClient_verify_email_impl(
+        56 => wire__crate__api__identity__NdsClient_verify_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => {
+        67 => {
             wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -5583,63 +6024,73 @@ fn pde_ffi_dispatcher_sync_impl(
         7 => wire__crate__api__modules__LocalAgent_close_impl(ptr, rust_vec_len, data_len),
         9 => wire__crate__api__modules__LocalAgent_modules_impl(ptr, rust_vec_len, data_len),
         15 => wire__crate__api__identity__NdsClient_cancel_impl(ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__identity__NdsClient_delivery_snapshot_impl(
+        16 => wire__crate__api__identity__NdsClient_cancel_github_catalog_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__api__identity__NdsClient_new_impl(ptr, rust_vec_len, data_len),
-        36 => wire__crate__api__identity__NdsClient_reserve_clipboard_copy_impl(
+        22 => wire__crate__api__identity__NdsClient_delivery_snapshot_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        39 => wire__crate__api__identity__NdsClient_set_lifecycle_impl(ptr, rust_vec_len, data_len),
-        40 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
-        53 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        54 => wire__crate__api__identity__client_work_permitted_impl(ptr, rust_vec_len, data_len),
-        55 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
+        28 => wire__crate__api__identity__NdsClient_new_impl(ptr, rust_vec_len, data_len),
+        39 => wire__crate__api__identity__NdsClient_reserve_clipboard_copy_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        56 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
-        57 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+        42 => wire__crate__api__identity__NdsClient_select_github_credential_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        58 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+        43 => wire__crate__api__identity__NdsClient_set_lifecycle_impl(ptr, rust_vec_len, data_len),
+        44 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
+        57 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
+        58 => wire__crate__api__identity__client_work_permitted_impl(ptr, rust_vec_len, data_len),
+        59 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        59 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
-        60 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
-        61 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
-        62 => {
+        60 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        61 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        62 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        63 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
+        64 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
+        65 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        66 => {
             wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
         }
-        64 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        65 => {
+        68 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        69 => {
             wire__crate__api__identity__supports_native_clipboard_impl(ptr, rust_vec_len, data_len)
         }
-        66 => wire__crate__api__identity__supports_native_clipboard_read_impl(
+        70 => wire__crate__api__identity__supports_native_clipboard_read_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        67 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        68 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
-        69 => {
+        71 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        72 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        73 => {
             wire__nddev_device_sync_vault__view__vault_error_code_impl(ptr, rust_vec_len, data_len)
         }
-        70 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        74 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        71 => {
+        75 => {
             wire__nddev_device_sync_accounts__view__view_default_impl(ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -6233,6 +6684,235 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_gds::view::G
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubCatalogContinuationView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::More => 0.into_dart(),
+            Self::EndOfAccessScope => 1.into_dart(),
+            Self::LimitReached => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubCatalogContinuationView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubCatalogContinuationView>
+    for crate::api::catalog_types::GithubCatalogContinuationView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubCatalogContinuationView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubCatalogError {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::InvalidInput => 0.into_dart(),
+            Self::AuthorizationRequired => 1.into_dart(),
+            Self::CredentialChanged => 2.into_dart(),
+            Self::Busy => 3.into_dart(),
+            Self::Cancelled => 4.into_dart(),
+            Self::Timeout => 5.into_dart(),
+            Self::Unavailable => 6.into_dart(),
+            Self::ProviderFailed => 7.into_dart(),
+            Self::InvalidResponse => 8.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubCatalogError
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubCatalogError>
+    for crate::api::catalog_types::GithubCatalogError
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubCatalogError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubCredentialReference {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.record_ref.into_into_dart().into_dart(),
+            self.title.into_into_dart().into_dart(),
+            self.username.into_into_dart().into_dart(),
+            self.revision.into_into_dart().into_dart(),
+            self.pending_id.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubCredentialReference
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubCredentialReference>
+    for crate::api::catalog_types::GithubCredentialReference
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubCredentialReference {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubCredentialReferencePage {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.items.into_into_dart().into_dart(),
+            self.next_after.into_into_dart().into_dart(),
+            self.has_more.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubCredentialReferencePage
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubCredentialReferencePage>
+    for crate::api::catalog_types::GithubCredentialReferencePage
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubCredentialReferencePage {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubOwnerKindView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::User => 0.into_dart(),
+            Self::Organization => 1.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubOwnerKindView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubOwnerKindView>
+    for crate::api::catalog_types::GithubOwnerKindView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubOwnerKindView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubOwnerView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.login.into_into_dart().into_dart(),
+            self.kind.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubOwnerView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubOwnerView>
+    for crate::api::catalog_types::GithubOwnerView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubOwnerView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubRepositoryGroupView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.owner.into_into_dart().into_dart(),
+            self.repositories.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubRepositoryGroupView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubRepositoryGroupView>
+    for crate::api::catalog_types::GithubRepositoryGroupView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubRepositoryGroupView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubRepositoryPageView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.principal.into_into_dart().into_dart(),
+            self.groups.into_into_dart().into_dart(),
+            self.observed_at_ms.into_into_dart().into_dart(),
+            self.continuation.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubRepositoryPageView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubRepositoryPageView>
+    for crate::api::catalog_types::GithubRepositoryPageView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubRepositoryPageView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubRepositorySummaryView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.visibility.into_into_dart().into_dart(),
+            self.archived.into_into_dart().into_dart(),
+            self.default_branch.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubRepositorySummaryView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubRepositorySummaryView>
+    for crate::api::catalog_types::GithubRepositorySummaryView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubRepositorySummaryView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::catalog_types::GithubRepositoryVisibilityView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Public => 0.into_dart(),
+            Self::Private => 1.into_dart(),
+            Self::Internal => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::catalog_types::GithubRepositoryVisibilityView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::catalog_types::GithubRepositoryVisibilityView>
+    for crate::api::catalog_types::GithubRepositoryVisibilityView
+{
+    fn into_into_dart(self) -> crate::api::catalog_types::GithubRepositoryVisibilityView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_sysinfo::view::Gpu> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -6782,9 +7462,10 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view:
             nddev_device_sync_vault::view::VaultError::Authentication => 2.into_dart(),
             nddev_device_sync_vault::view::VaultError::Unavailable => 3.into_dart(),
             nddev_device_sync_vault::view::VaultError::Busy => 4.into_dart(),
-            nddev_device_sync_vault::view::VaultError::StorageFull => 5.into_dart(),
-            nddev_device_sync_vault::view::VaultError::CapacityExhausted => 6.into_dart(),
-            nddev_device_sync_vault::view::VaultError::RegistrationRequired => 7.into_dart(),
+            nddev_device_sync_vault::view::VaultError::SelectionChanged => 5.into_dart(),
+            nddev_device_sync_vault::view::VaultError::StorageFull => 6.into_dart(),
+            nddev_device_sync_vault::view::VaultError::CapacityExhausted => 7.into_dart(),
+            nddev_device_sync_vault::view::VaultError::RegistrationRequired => 8.into_dart(),
             _ => unreachable!(),
         }
     }
@@ -7254,6 +7935,151 @@ impl SseEncode for nddev_device_sync_gds::view::GitStatus {
     }
 }
 
+impl SseEncode for crate::api::catalog_types::GithubCatalogContinuationView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::catalog_types::GithubCatalogContinuationView::More => 0,
+                crate::api::catalog_types::GithubCatalogContinuationView::EndOfAccessScope => 1,
+                crate::api::catalog_types::GithubCatalogContinuationView::LimitReached => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubCatalogError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::catalog_types::GithubCatalogError::InvalidInput => 0,
+                crate::api::catalog_types::GithubCatalogError::AuthorizationRequired => 1,
+                crate::api::catalog_types::GithubCatalogError::CredentialChanged => 2,
+                crate::api::catalog_types::GithubCatalogError::Busy => 3,
+                crate::api::catalog_types::GithubCatalogError::Cancelled => 4,
+                crate::api::catalog_types::GithubCatalogError::Timeout => 5,
+                crate::api::catalog_types::GithubCatalogError::Unavailable => 6,
+                crate::api::catalog_types::GithubCatalogError::ProviderFailed => 7,
+                crate::api::catalog_types::GithubCatalogError::InvalidResponse => 8,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubCredentialReference {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.record_ref, serializer);
+        <String>::sse_encode(self.title, serializer);
+        <String>::sse_encode(self.username, serializer);
+        <String>::sse_encode(self.revision, serializer);
+        <Option<String>>::sse_encode(self.pending_id, serializer);
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubCredentialReferencePage {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::catalog_types::GithubCredentialReference>>::sse_encode(
+            self.items, serializer,
+        );
+        <String>::sse_encode(self.next_after, serializer);
+        <bool>::sse_encode(self.has_more, serializer);
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubOwnerKindView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::catalog_types::GithubOwnerKindView::User => 0,
+                crate::api::catalog_types::GithubOwnerKindView::Organization => 1,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubOwnerView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.login, serializer);
+        <crate::api::catalog_types::GithubOwnerKindView>::sse_encode(self.kind, serializer);
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubRepositoryGroupView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::catalog_types::GithubOwnerView>::sse_encode(self.owner, serializer);
+        <Vec<crate::api::catalog_types::GithubRepositorySummaryView>>::sse_encode(
+            self.repositories,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubRepositoryPageView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::catalog_types::GithubOwnerView>::sse_encode(self.principal, serializer);
+        <Vec<crate::api::catalog_types::GithubRepositoryGroupView>>::sse_encode(
+            self.groups,
+            serializer,
+        );
+        <String>::sse_encode(self.observed_at_ms, serializer);
+        <crate::api::catalog_types::GithubCatalogContinuationView>::sse_encode(
+            self.continuation,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubRepositorySummaryView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <crate::api::catalog_types::GithubRepositoryVisibilityView>::sse_encode(
+            self.visibility,
+            serializer,
+        );
+        <bool>::sse_encode(self.archived, serializer);
+        <Option<String>>::sse_encode(self.default_branch, serializer);
+    }
+}
+
+impl SseEncode for crate::api::catalog_types::GithubRepositoryVisibilityView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::catalog_types::GithubRepositoryVisibilityView::Public => 0,
+                crate::api::catalog_types::GithubRepositoryVisibilityView::Private => 1,
+                crate::api::catalog_types::GithubRepositoryVisibilityView::Internal => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for nddev_device_sync_sysinfo::view::Gpu {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7368,6 +8194,36 @@ impl SseEncode for Vec<nddev_device_sync_gds::view::Finding> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <nddev_device_sync_gds::view::Finding>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::catalog_types::GithubCredentialReference> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::catalog_types::GithubCredentialReference>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::catalog_types::GithubRepositoryGroupView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::catalog_types::GithubRepositoryGroupView>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::catalog_types::GithubRepositorySummaryView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::catalog_types::GithubRepositorySummaryView>::sse_encode(item, serializer);
         }
     }
 }
@@ -7836,9 +8692,10 @@ impl SseEncode for nddev_device_sync_vault::view::VaultError {
                 nddev_device_sync_vault::view::VaultError::Authentication => 2,
                 nddev_device_sync_vault::view::VaultError::Unavailable => 3,
                 nddev_device_sync_vault::view::VaultError::Busy => 4,
-                nddev_device_sync_vault::view::VaultError::StorageFull => 5,
-                nddev_device_sync_vault::view::VaultError::CapacityExhausted => 6,
-                nddev_device_sync_vault::view::VaultError::RegistrationRequired => 7,
+                nddev_device_sync_vault::view::VaultError::SelectionChanged => 5,
+                nddev_device_sync_vault::view::VaultError::StorageFull => 6,
+                nddev_device_sync_vault::view::VaultError::CapacityExhausted => 7,
+                nddev_device_sync_vault::view::VaultError::RegistrationRequired => 8,
                 _ => {
                     unimplemented!("");
                 }

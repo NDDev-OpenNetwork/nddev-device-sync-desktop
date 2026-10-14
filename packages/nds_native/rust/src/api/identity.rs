@@ -23,6 +23,7 @@ use zeroize::Zeroizing;
 #[frb(opaque)]
 pub struct NdsClient {
     inner: Arc<IdentityClient>,
+    pub(crate) catalog: Mutex<super::catalog::CatalogState>,
     vault: tokio::sync::Mutex<Option<Arc<VaultClient>>>,
     replica: Mutex<Option<Replica>>,
     replica_schedule: Mutex<Arc<Mutex<ReplicaSchedule>>>,
@@ -54,9 +55,18 @@ impl Drop for Replica {
 }
 
 impl NdsClient {
+    #[frb(ignore)]
+    pub(crate) fn catalog_identity(&self) -> &Arc<IdentityClient> {
+        &self.inner
+    }
+    #[frb(ignore)]
+    pub(crate) fn catalog_active(&self) -> bool {
+        self.active.load(Ordering::Relaxed)
+    }
     pub fn new(endpoint: String) -> Result<Self, ClientError> {
         Ok(Self {
             inner: Arc::new(IdentityClient::new(&endpoint)?),
+            catalog: Mutex::default(),
             vault: tokio::sync::Mutex::new(None),
             replica: Mutex::default(),
             replica_schedule: Mutex::default(),
@@ -67,6 +77,7 @@ impl NdsClient {
         })
     }
     pub async fn refresh(&self) -> Result<View, ClientError> {
+        self.invalidate_catalog();
         self.stop_replica().await;
         self.inner.refresh().await
     }
@@ -100,6 +111,7 @@ impl NdsClient {
                         .lock()
                         .unwrap_or_else(|e| e.into_inner())
                         .take();
+                    self.invalidate_catalog();
                     self.vault.lock().await.take();
                     return Err(error);
                 }
@@ -108,6 +120,7 @@ impl NdsClient {
         // A known device revocation closes device capabilities while the NDS
         // session remains valid for inventory and explicit sign-out.
         if !view.authenticated || revoked {
+            self.invalidate_catalog();
             self.stop_replica().await;
             self.delivery
                 .lock()
@@ -118,6 +131,7 @@ impl NdsClient {
         Ok(self.inner.view())
     }
     pub async fn request_email(&self, email: String, locale: String) -> Result<View, ClientError> {
+        self.invalidate_catalog();
         self.inner.request_email(email, &locale).await
     }
     pub async fn verify_email(&self, code: String) -> Result<View, ClientError> {
@@ -126,6 +140,7 @@ impl NdsClient {
         Ok(view)
     }
     pub async fn start_github(&self, locale: String) -> Result<View, ClientError> {
+        self.invalidate_catalog();
         self.inner.start_github(&locale).await
     }
     pub async fn start_passkey(
@@ -133,6 +148,7 @@ impl NdsClient {
         registration: bool,
         locale: String,
     ) -> Result<View, ClientError> {
+        self.invalidate_catalog();
         self.inner.start_passkey(registration, &locale).await
     }
     pub async fn passkeys(&self) -> Result<Vec<PasskeyView>, ClientError> {
@@ -141,6 +157,7 @@ impl NdsClient {
     pub async fn revoke_passkey(&self, id: String) -> Result<View, ClientError> {
         let view = self.inner.revoke_passkey(id).await?;
         if !view.authenticated {
+            self.invalidate_catalog();
             self.delivery
                 .lock()
                 .unwrap_or_else(|error| error.into_inner())
@@ -167,6 +184,7 @@ impl NdsClient {
         Ok(view)
     }
     pub async fn logout(&self) -> Result<View, ClientError> {
+        self.invalidate_catalog();
         self.delivery
             .lock()
             .unwrap_or_else(|error| error.into_inner())
@@ -222,6 +240,7 @@ impl NdsClient {
                 .lock()
                 .unwrap_or_else(|error| error.into_inner())
                 .take();
+            self.invalidate_catalog();
             self.stop_replica().await;
         }
         Ok(view)
@@ -233,6 +252,9 @@ impl NdsClient {
         // request or reset delivery. Hidden/resume transitions still wake tasks.
         if self.active.swap(active, Ordering::Relaxed) == active {
             return;
+        }
+        if !active {
+            self.invalidate_catalog();
         }
         if let Some(delivery) = &*self
             .delivery
@@ -259,6 +281,7 @@ impl NdsClient {
         }
     }
     async fn reset_replica_session(&self) {
+        self.invalidate_catalog();
         self.stop_replica().await;
         self.vault.lock().await.take();
         // Detach the old session policy: a late result cannot block the new one.
@@ -268,9 +291,6 @@ impl NdsClient {
             .unwrap_or_else(|e| e.into_inner()) = Arc::default();
     }
     async fn start_replica(&self, initial_delay: Duration) -> Result<(), VaultError> {
-        if self.capacity_blocked() {
-            return Ok(());
-        }
         let vault = self.vault().await?;
         let weak = Arc::downgrade(&vault);
         let (active, mut enabled) =
@@ -302,21 +322,24 @@ impl NdsClient {
                     changed = enabled.changed() => { if changed.is_err() { break; } delay = Duration::ZERO; continue; }
                     _ = runtime::sleep(delay) => {}
                 }
-                if schedule
+                let inbox_only = schedule
                     .lock()
                     .unwrap_or_else(|e| e.into_inner())
-                    .is_capacity_blocked()
-                {
-                    break;
-                }
+                    .is_capacity_blocked();
+                let mut inbox_at_head = None;
                 let Some(vault) = weak.upgrade() else {
                     break;
                 };
                 let result = tokio::select! {
                     changed = enabled.changed() => { if changed.is_err() { break; } delay = Duration::ZERO; continue; }
                     result = observe("sync.replica.batch", async {
+                        if inbox_only {
+                            let progress = vault.synchronize_inbox().await?;
+                            inbox_at_head = Some(progress.inbox_at_head);
+                            return Ok(progress.view);
+                        }
                         let view = vault.synchronize().await?;
-                        if !published && !view.catching_up {
+                        if !published && !view.catching_up && !schedule.lock().unwrap_or_else(|e| e.into_inner()).is_capacity_blocked() {
                             let view = vault.publish_states(device_observations(&identity)?).await?;
                             published = true;
                             return Ok(view);
@@ -324,10 +347,15 @@ impl NdsClient {
                         Ok(view)
                     }) => result
                 };
+                let outcome = match (result.is_ok(), inbox_at_head) {
+                    (true, Some(true)) => BatchOutcome::InboxHead,
+                    (true, Some(false)) => BatchOutcome::InboxMore,
+                    _ => batch_outcome(&result),
+                };
                 let Some(next) = schedule
                     .lock()
                     .unwrap_or_else(|e| e.into_inner())
-                    .after(batch_outcome(&result))
+                    .after(outcome)
                 else {
                     break;
                 };
@@ -340,7 +368,8 @@ impl NdsClient {
         });
         Ok(())
     }
-    async fn vault(&self) -> Result<Arc<VaultClient>, VaultError> {
+    #[frb(ignore)]
+    pub(crate) async fn vault(&self) -> Result<Arc<VaultClient>, VaultError> {
         let mut slot = self.vault.lock().await;
         if let Some(vault) = &*slot {
             return Ok(vault.clone());
@@ -355,7 +384,11 @@ impl NdsClient {
     pub async fn vault_snapshot(&self) -> Result<VaultView, VaultError> {
         let mut view = self.vault().await?.refresh_local().await?;
         if self.capacity_blocked() {
-            view.sync_error = VaultError::CapacityExhausted.code();
+            // Preserve a real current read/auth error; healthy inbox reads still
+            // display the retained upload-capacity reason.
+            if view.sync_error.is_empty() {
+                view.sync_error = VaultError::CapacityExhausted.code();
+            }
             view.catching_up = true;
         }
         Ok(view)
@@ -758,6 +791,7 @@ impl NdsClient {
     }
     #[frb(sync)]
     pub fn cancel(&self) {
+        self.invalidate_catalog();
         self.delivery
             .lock()
             .unwrap_or_else(|error| error.into_inner())
@@ -876,21 +910,44 @@ async fn observe<T>(
     event: &'static str,
     work: impl std::future::Future<Output = Result<T, VaultError>>,
 ) -> Result<T, VaultError> {
-    let span = nddev_device_sync_telemetry::operation_span("vault", "process")
-        .map_err(|_| VaultError::Unavailable)?;
+    observe_operation("vault", event, work, VaultError::Unavailable, |error| {
+        (
+            error.code(),
+            "error",
+            matches!(
+                error,
+                VaultError::Unavailable
+                    | VaultError::Authentication
+                    | VaultError::StorageFull
+                    | VaultError::CapacityExhausted
+            ),
+        )
+    })
+    .await
+}
+
+// One terminal caller event and process span; transport owners retain their I/O spans.
+#[frb(ignore)]
+pub(crate) async fn observe_operation<T, E>(
+    module: &'static str,
+    event: &'static str,
+    work: impl std::future::Future<Output = Result<T, E>>,
+    unavailable: E,
+    classify: fn(&E) -> (String, &'static str, bool),
+) -> Result<T, E> {
+    let span =
+        nddev_device_sync_telemetry::operation_span(module, "process").map_err(|_| unavailable)?;
     let completion = span.clone();
     async {
-        let start=Instant::now();let result=work.await;
-        nddev_device_sync_telemetry::finish_operation_span(
-            &completion,
-            matches!(
-                &result,
-                Err(VaultError::Unavailable | VaultError::Authentication | VaultError::StorageFull | VaultError::CapacityExhausted)
-            ),
-        );
+        let start = Instant::now();
+        let result = work.await;
         match &result {
-            Ok(_)=>tracing::event!(target:"nds_native",tracing::Level::INFO,{event.name=event,module="vault",duration_ms=start.elapsed().as_millis() as u64,outcome="ok"}),
-            Err(error)=>tracing::event!(target:"nds_native",tracing::Level::WARN,{event.name=event,module="vault",duration_ms=start.elapsed().as_millis() as u64,error.type=%error,outcome="error"}),
+            Ok(_) => tracing::event!(target:"nds_native",tracing::Level::INFO,{event.name=event,module,duration_ms=start.elapsed().as_millis() as u64,outcome="ok"}),
+            Err(error) => {
+                let (error_type, outcome, terminal_failure) = classify(error);
+                nddev_device_sync_telemetry::finish_operation_span(&completion, terminal_failure);
+                tracing::event!(target:"nds_native",tracing::Level::WARN,{event.name=event,module,duration_ms=start.elapsed().as_millis() as u64,error.type=%error_type,outcome});
+            }
         }
         result
     }.instrument(span).await
@@ -988,7 +1045,7 @@ mod activity_tests {
     use super::*;
 
     #[test]
-    fn capacity_blocks_replacement_tasks_and_late_old_results_stay_in_the_old_session() {
+    fn capacity_blocks_uploads_and_late_old_results_stay_in_the_old_session() {
         tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
@@ -996,18 +1053,16 @@ mod activity_tests {
             .block_on(async {
                 let client = NdsClient::new("https://example.invalid".into()).unwrap();
                 let old = client.schedule();
-                assert!(
-                    old.lock()
-                        .unwrap()
-                        .after(BatchOutcome::CapacityExhausted)
-                        .is_none()
+                assert_eq!(
+                    old.lock().unwrap().after(BatchOutcome::CapacityExhausted),
+                    Some(Duration::from_secs(15))
                 );
                 for lifecycle in [ClientLifecycle::Hidden, ClientLifecycle::Resumed] {
                     client.set_lifecycle(lifecycle);
                     client.stop_replica().await;
-                    client.start_replica(Duration::ZERO).await.unwrap();
                     assert!(Arc::ptr_eq(&old, &client.schedule()));
-                    assert!(client.replica.lock().unwrap().is_none());
+                    assert!(client.capacity_blocked());
+                    // Authenticated task/inbox eligibility is covered by the owned peer fixture.
                 }
                 client.reset_replica_session().await;
                 assert!(!Arc::ptr_eq(&old, &client.schedule()));

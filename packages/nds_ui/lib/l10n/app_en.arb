@@ -403,5 +403,50 @@
   "telemetryPersistenceUnavailable": "Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.",
   "vaultStorageUnavailable": "Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.",
   "vaultDependencyUnavailable": "The vault could not access required local storage or server services.",
-  "serverCapacityExhausted": "Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available."
+  "serverCapacityExhausted": "Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.",
+  "catalogTitle": "GitHub repositories",
+  "catalogHelp": "Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.",
+  "catalogCredential": "Vault credential",
+  "catalogRefreshCredentials": "Refresh vault records",
+  "catalogMoreCredentials": "Next vault records",
+  "catalogNoCredentials": "No selectable records on this vault page. Open the vault to add or resolve a credential record.",
+  "catalogRead": "Read first page",
+  "catalogNextPage": "Next repository page",
+  "catalogChooseCredential": "Choose a current vault record.",
+  "catalogSignIn": "Sign in and verify this device to read repositories.",
+  "catalogCredentialChanged": "This vault record changed. Refresh records and select it again.",
+  "catalogInvalidResponse": "GitHub returned a repository page that could not be verified.",
+  "catalogProviderFailed": "GitHub could not return this page. Check the credential’s access and try again.",
+  "catalogUnavailable": "Repository catalog is unavailable.",
+  "catalogObservationUnknown": "Observation time is unavailable.",
+  "catalogObserved": "Observed: {time}",
+  "catalogPrincipal": "GitHub account: {login}",
+  "catalogPageScope": "Only repositories available to the selected credential are shown. Each request replaces this page.",
+  "catalogEmptyPage": "No repositories on this page.",
+  "catalogOrganization": "Organization",
+  "catalogPersonal": "Personal account",
+  "catalogPublic": "Public",
+  "catalogPrivate": "Private",
+  "catalogInternal": "Internal",
+  "catalogArchived": "Archived",
+  "catalogHasMore": "More repositories are available in the next page.",
+  "catalogAccessEnd": "End of the list available to this credential. Other access scopes may include more repositories.",
+  "catalogLimitReached": "Local page limit reached. GitHub still reports more repositories; this listing is incomplete.",
+  "@catalogObserved": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogPrincipal": {
+    "placeholders": {
+      "login": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogCancelled": "Repository request cancelled.",
+  "catalogTimeout": "Repository request timed out. Try again.",
+  "catalogPaused": "Repository requests are paused while this app is in the background."
 }
