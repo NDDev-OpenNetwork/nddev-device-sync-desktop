@@ -1553,6 +1553,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.'**
   String get serverCapacityExhausted;
+
+  /// No description provided for @catalogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub repositories'**
+  String get catalogTitle;
+
+  /// No description provided for @catalogHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.'**
+  String get catalogHelp;
+
+  /// No description provided for @catalogCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault credential'**
+  String get catalogCredential;
+
+  /// No description provided for @catalogRefreshCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh vault records'**
+  String get catalogRefreshCredentials;
+
+  /// No description provided for @catalogMoreCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Next vault records'**
+  String get catalogMoreCredentials;
+
+  /// No description provided for @catalogNoCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'No selectable records on this vault page. Open the vault to add or resolve a credential record.'**
+  String get catalogNoCredentials;
+
+  /// No description provided for @catalogRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read first page'**
+  String get catalogRead;
+
+  /// No description provided for @catalogNextPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Next repository page'**
+  String get catalogNextPage;
+
+  /// No description provided for @catalogChooseCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a current vault record.'**
+  String get catalogChooseCredential;
+
+  /// No description provided for @catalogSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in and verify this device to read repositories.'**
+  String get catalogSignIn;
+
+  /// No description provided for @catalogCredentialChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This vault record changed. Refresh records and select it again.'**
+  String get catalogCredentialChanged;
+
+  /// No description provided for @catalogInvalidResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub returned a repository page that could not be verified.'**
+  String get catalogInvalidResponse;
+
+  /// No description provided for @catalogProviderFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub could not return this page. Check the credential’s access and try again.'**
+  String get catalogProviderFailed;
+
+  /// No description provided for @catalogUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Repository catalog is unavailable.'**
+  String get catalogUnavailable;
+
+  /// No description provided for @catalogObservationUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Observation time is unavailable.'**
+  String get catalogObservationUnknown;
+
+  /// No description provided for @catalogObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Observed: {time}'**
+  String catalogObserved(String time);
+
+  /// No description provided for @catalogPrincipal.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub account: {login}'**
+  String catalogPrincipal(String login);
+
+  /// No description provided for @catalogPageScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Only repositories available to the selected credential are shown. Each request replaces this page.'**
+  String get catalogPageScope;
+
+  /// No description provided for @catalogEmptyPage.
+  ///
+  /// In en, this message translates to:
+  /// **'No repositories on this page.'**
+  String get catalogEmptyPage;
+
+  /// No description provided for @catalogOrganization.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization'**
+  String get catalogOrganization;
+
+  /// No description provided for @catalogPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal account'**
+  String get catalogPersonal;
+
+  /// No description provided for @catalogPublic.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get catalogPublic;
+
+  /// No description provided for @catalogPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get catalogPrivate;
+
+  /// No description provided for @catalogInternal.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal'**
+  String get catalogInternal;
+
+  /// No description provided for @catalogArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get catalogArchived;
+
+  /// No description provided for @catalogHasMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More repositories are available in the next page.'**
+  String get catalogHasMore;
+
+  /// No description provided for @catalogAccessEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End of the list available to this credential. Other access scopes may include more repositories.'**
+  String get catalogAccessEnd;
+
+  /// No description provided for @catalogLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Local page limit reached. GitHub still reports more repositories; this listing is incomplete.'**
+  String get catalogLimitReached;
+
+  /// No description provided for @catalogCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Repository request cancelled.'**
+  String get catalogCancelled;
+
+  /// No description provided for @catalogTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Repository request timed out. Try again.'**
+  String get catalogTimeout;
+
+  /// No description provided for @catalogPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Repository requests are paused while this app is in the background.'**
+  String get catalogPaused;
 }
 
 class _AppLocalizationsDelegate

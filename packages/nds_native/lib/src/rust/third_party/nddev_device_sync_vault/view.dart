@@ -269,6 +269,7 @@ enum VaultError {
   authentication,
   unavailable,
   busy,
+  selectionChanged,
   storageFull,
   capacityExhausted,
   registrationRequired;

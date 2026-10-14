@@ -846,4 +846,113 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get serverCapacityExhausted =>
       'На сервере достигнут лимит хранения. Ваши зашифрованные изменения остаются на этом устройстве. Автоматическая синхронизация приостановлена. Повторите её вручную, когда ограничение будет устранено.';
+
+  @override
+  String get catalogTitle => 'Репозитории GitHub';
+
+  @override
+  String get catalogHelp =>
+      'Выберите запись сейфа с токеном доступа GitHub. Запрос показывает одну страницу репозиториев, доступных этой записи.';
+
+  @override
+  String get catalogCredential => 'Учётные данные из сейфа';
+
+  @override
+  String get catalogRefreshCredentials => 'Обновить записи сейфа';
+
+  @override
+  String get catalogMoreCredentials => 'Следующие записи сейфа';
+
+  @override
+  String get catalogNoCredentials =>
+      'На этой странице сейфа нет доступных записей. Откройте сейф, чтобы добавить запись или разрешить конфликт.';
+
+  @override
+  String get catalogRead => 'Первая страница';
+
+  @override
+  String get catalogNextPage => 'Следующая страница репозиториев';
+
+  @override
+  String get catalogChooseCredential => 'Выберите актуальную запись сейфа.';
+
+  @override
+  String get catalogSignIn =>
+      'Войдите в аккаунт и подтвердите это устройство для просмотра репозиториев.';
+
+  @override
+  String get catalogCredentialChanged =>
+      'Запись сейфа изменилась. Обновите записи и выберите её повторно.';
+
+  @override
+  String get catalogInvalidResponse =>
+      'Не удалось проверить страницу репозиториев, полученную от GitHub.';
+
+  @override
+  String get catalogProviderFailed =>
+      'GitHub не вернул эту страницу. Проверьте доступ учётных данных и повторите запрос.';
+
+  @override
+  String get catalogUnavailable => 'Каталог репозиториев недоступен.';
+
+  @override
+  String get catalogObservationUnknown => 'Время наблюдения недоступно.';
+
+  @override
+  String catalogObserved(String time) {
+    return 'Время наблюдения: $time';
+  }
+
+  @override
+  String catalogPrincipal(String login) {
+    return 'Аккаунт GitHub: $login';
+  }
+
+  @override
+  String get catalogPageScope =>
+      'Показаны только репозитории, доступные выбранным учётным данным. Каждый запрос заменяет эту страницу.';
+
+  @override
+  String get catalogEmptyPage => 'На этой странице нет репозиториев.';
+
+  @override
+  String get catalogOrganization => 'Организация';
+
+  @override
+  String get catalogPersonal => 'Личный аккаунт';
+
+  @override
+  String get catalogPublic => 'Публичный';
+
+  @override
+  String get catalogPrivate => 'Приватный';
+
+  @override
+  String get catalogInternal => 'Внутренний';
+
+  @override
+  String get catalogArchived => 'Архивный';
+
+  @override
+  String get catalogHasMore =>
+      'Следующая страница содержит дополнительные репозитории.';
+
+  @override
+  String get catalogAccessEnd =>
+      'Конец списка, доступного этим учётным данным. При другом доступе список может содержать больше репозиториев.';
+
+  @override
+  String get catalogLimitReached =>
+      'Достигнут локальный лимит страниц. GitHub сообщает о дополнительных репозиториях; этот список неполный.';
+
+  @override
+  String get catalogCancelled => 'Запрос репозиториев отменён.';
+
+  @override
+  String get catalogTimeout =>
+      'Время ожидания запроса истекло. Повторите запрос.';
+
+  @override
+  String get catalogPaused =>
+      'Запросы репозиториев приостановлены, пока приложение находится в фоне.';
 }

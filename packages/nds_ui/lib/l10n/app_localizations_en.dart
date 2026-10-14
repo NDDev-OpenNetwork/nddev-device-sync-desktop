@@ -840,4 +840,112 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get serverCapacityExhausted =>
       'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.';
+
+  @override
+  String get catalogTitle => 'GitHub repositories';
+
+  @override
+  String get catalogHelp =>
+      'Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.';
+
+  @override
+  String get catalogCredential => 'Vault credential';
+
+  @override
+  String get catalogRefreshCredentials => 'Refresh vault records';
+
+  @override
+  String get catalogMoreCredentials => 'Next vault records';
+
+  @override
+  String get catalogNoCredentials =>
+      'No selectable records on this vault page. Open the vault to add or resolve a credential record.';
+
+  @override
+  String get catalogRead => 'Read first page';
+
+  @override
+  String get catalogNextPage => 'Next repository page';
+
+  @override
+  String get catalogChooseCredential => 'Choose a current vault record.';
+
+  @override
+  String get catalogSignIn =>
+      'Sign in and verify this device to read repositories.';
+
+  @override
+  String get catalogCredentialChanged =>
+      'This vault record changed. Refresh records and select it again.';
+
+  @override
+  String get catalogInvalidResponse =>
+      'GitHub returned a repository page that could not be verified.';
+
+  @override
+  String get catalogProviderFailed =>
+      'GitHub could not return this page. Check the credential’s access and try again.';
+
+  @override
+  String get catalogUnavailable => 'Repository catalog is unavailable.';
+
+  @override
+  String get catalogObservationUnknown => 'Observation time is unavailable.';
+
+  @override
+  String catalogObserved(String time) {
+    return 'Observed: $time';
+  }
+
+  @override
+  String catalogPrincipal(String login) {
+    return 'GitHub account: $login';
+  }
+
+  @override
+  String get catalogPageScope =>
+      'Only repositories available to the selected credential are shown. Each request replaces this page.';
+
+  @override
+  String get catalogEmptyPage => 'No repositories on this page.';
+
+  @override
+  String get catalogOrganization => 'Organization';
+
+  @override
+  String get catalogPersonal => 'Personal account';
+
+  @override
+  String get catalogPublic => 'Public';
+
+  @override
+  String get catalogPrivate => 'Private';
+
+  @override
+  String get catalogInternal => 'Internal';
+
+  @override
+  String get catalogArchived => 'Archived';
+
+  @override
+  String get catalogHasMore =>
+      'More repositories are available in the next page.';
+
+  @override
+  String get catalogAccessEnd =>
+      'End of the list available to this credential. Other access scopes may include more repositories.';
+
+  @override
+  String get catalogLimitReached =>
+      'Local page limit reached. GitHub still reports more repositories; this listing is incomplete.';
+
+  @override
+  String get catalogCancelled => 'Repository request cancelled.';
+
+  @override
+  String get catalogTimeout => 'Repository request timed out. Try again.';
+
+  @override
+  String get catalogPaused =>
+      'Repository requests are paused while this app is in the background.';
 }

@@ -13,6 +13,14 @@ void main(List<String> args) async {
             !RegExp(r'^[a-f0-9]{40}$').hasMatch(sourceCommit))) {
       throw const FormatException('source_commit must be an immutable Git SHA');
     }
+    final workerDigest = input.userDefines['gds_worker_sha256'];
+    if (workerDigest != null &&
+        (workerDigest is! String ||
+            !RegExp(r'^[a-f0-9]{64}$').hasMatch(workerDigest))) {
+      throw const FormatException(
+        'gds_worker_sha256 must be an artifact digest',
+      );
+    }
     // The upstream build helper logs its environment at CONFIG level. Never
     // forward those diagnostics; compiler failures still propagate as errors.
     final safeLogger = Logger.detached('nds_native_build')..level = Level.OFF;
@@ -26,6 +34,8 @@ void main(List<String> args) async {
       extraCargoEnvironmentVariables: {
         'RUSTUP_AUTO_INSTALL': '0',
         'NDS_SOURCE_COMMIT': sourceCommit as String? ?? 'unknown',
+        if (workerDigest != null)
+          'NDS_GDS_WORKER_SHA256': workerDigest as String,
       },
     ).run(input: input, output: output, logger: safeLogger);
   });

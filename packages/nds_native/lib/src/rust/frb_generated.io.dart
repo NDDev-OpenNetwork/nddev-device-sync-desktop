@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/catalog_types.dart';
 import 'api/identity.dart';
 import 'api/module_types.dart';
 import 'api/modules.dart';
@@ -222,6 +223,46 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GitStatus dco_decode_git_status(dynamic raw);
 
   @protected
+  GithubCatalogContinuationView dco_decode_github_catalog_continuation_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubCatalogError dco_decode_github_catalog_error(dynamic raw);
+
+  @protected
+  GithubCredentialReference dco_decode_github_credential_reference(dynamic raw);
+
+  @protected
+  GithubCredentialReferencePage dco_decode_github_credential_reference_page(
+    dynamic raw,
+  );
+
+  @protected
+  GithubOwnerKindView dco_decode_github_owner_kind_view(dynamic raw);
+
+  @protected
+  GithubOwnerView dco_decode_github_owner_view(dynamic raw);
+
+  @protected
+  GithubRepositoryGroupView dco_decode_github_repository_group_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubRepositoryPageView dco_decode_github_repository_page_view(dynamic raw);
+
+  @protected
+  GithubRepositorySummaryView dco_decode_github_repository_summary_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubRepositoryVisibilityView dco_decode_github_repository_visibility_view(
+    dynamic raw,
+  );
+
+  @protected
   Gpu dco_decode_gpu(dynamic raw);
 
   @protected
@@ -259,6 +300,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<Finding> dco_decode_list_finding(dynamic raw);
+
+  @protected
+  List<GithubCredentialReference> dco_decode_list_github_credential_reference(
+    dynamic raw,
+  );
+
+  @protected
+  List<GithubRepositoryGroupView> dco_decode_list_github_repository_group_view(
+    dynamic raw,
+  );
+
+  @protected
+  List<GithubRepositorySummaryView>
+  dco_decode_list_github_repository_summary_view(dynamic raw);
 
   @protected
   List<IncidentView> dco_decode_list_incident_view(dynamic raw);
@@ -571,6 +626,54 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GitStatus sse_decode_git_status(SseDeserializer deserializer);
 
   @protected
+  GithubCatalogContinuationView sse_decode_github_catalog_continuation_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubCatalogError sse_decode_github_catalog_error(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubCredentialReference sse_decode_github_credential_reference(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubCredentialReferencePage sse_decode_github_credential_reference_page(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubOwnerKindView sse_decode_github_owner_kind_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubOwnerView sse_decode_github_owner_view(SseDeserializer deserializer);
+
+  @protected
+  GithubRepositoryGroupView sse_decode_github_repository_group_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubRepositoryPageView sse_decode_github_repository_page_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubRepositorySummaryView sse_decode_github_repository_summary_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubRepositoryVisibilityView sse_decode_github_repository_visibility_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Gpu sse_decode_gpu(SseDeserializer deserializer);
 
   @protected
@@ -610,6 +713,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<Finding> sse_decode_list_finding(SseDeserializer deserializer);
+
+  @protected
+  List<GithubCredentialReference> sse_decode_list_github_credential_reference(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<GithubRepositoryGroupView> sse_decode_list_github_repository_group_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<GithubRepositorySummaryView>
+  sse_decode_list_github_repository_summary_view(SseDeserializer deserializer);
 
   @protected
   List<IncidentView> sse_decode_list_incident_view(
@@ -965,6 +1082,66 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_git_status(GitStatus self, SseSerializer serializer);
 
   @protected
+  void sse_encode_github_catalog_continuation_view(
+    GithubCatalogContinuationView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_catalog_error(
+    GithubCatalogError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_credential_reference(
+    GithubCredentialReference self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_credential_reference_page(
+    GithubCredentialReferencePage self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_owner_kind_view(
+    GithubOwnerKindView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_owner_view(
+    GithubOwnerView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_repository_group_view(
+    GithubRepositoryGroupView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_repository_page_view(
+    GithubRepositoryPageView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_repository_summary_view(
+    GithubRepositorySummaryView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_repository_visibility_view(
+    GithubRepositoryVisibilityView self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_gpu(Gpu self, SseSerializer serializer);
 
   @protected
@@ -1009,6 +1186,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_finding(List<Finding> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_github_credential_reference(
+    List<GithubCredentialReference> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_github_repository_group_view(
+    List<GithubRepositoryGroupView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_github_repository_summary_view(
+    List<GithubRepositorySummaryView> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_incident_view(

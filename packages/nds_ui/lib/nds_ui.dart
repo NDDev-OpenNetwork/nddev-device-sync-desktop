@@ -14,6 +14,7 @@ import 'diagnostics.dart';
 import 'vault_screen.dart';
 import 'utilities_screen.dart';
 import 'passkeys_screen.dart';
+import 'repositories_screen.dart';
 
 Future<void> runNdsApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -641,6 +642,18 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                               ),
                             ),
                       child: Text(l.utilitiesTitle),
+                    ),
+                    OutlinedButton(
+                      key: const Key('open-github-catalog'),
+                      onPressed: _busy || _paused
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    RepositoriesScreen(client: _client!),
+                              ),
+                            ),
+                      child: Text(l.catalogTitle),
                     ),
                     OutlinedButton(
                       key: const Key('manage-passkeys'),

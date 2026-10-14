@@ -2,6 +2,9 @@
 """Build with explicit, cache-tracked native source identity; restore app config."""
 import argparse
 import os
+import hashlib
+import json
+import tempfile
 from pathlib import Path
 import re
 import signal
@@ -39,8 +42,43 @@ print('Building native source: ' + commit, flush=True)
 def interrupted(_signal, _frame):
     raise KeyboardInterrupt
 handlers = {sig: signal.signal(sig, interrupted) for sig in [signal.SIGTERM, signal.SIGINT]}
+worker_staging = None
 try:
-    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n'.encode())
+    worker_digest = None
+    if arguments[0] == 'linux':
+        worker_staging = tempfile.TemporaryDirectory(prefix='nds-gds-worker-build-')
+        manifest = source / 'packages/nds_native/rust/Cargo.toml'
+        metadata = json.loads(subprocess.check_output(
+            ['cargo', 'metadata', '--locked', '--format-version', '1', '--manifest-path', str(manifest)],
+            cwd=source, text=True, timeout=120))
+        agent = [p for p in metadata['packages'] if p['name'] == 'nddev-device-sync-agent']
+        gds = [p for p in metadata['packages'] if p['name'] == 'nddev-device-sync-gds']
+        if len(agent) != 1 or len(gds) != 1:
+            raise SystemExit('One locked Agent and GDS package required')
+        subprocess.run(
+            ['cargo', 'run', '--locked', '--manifest-path', agent[0]['manifest_path'],
+             '--bin', 'nds-package-gds-worker', '--', '--bundle', worker_staging.name],
+            cwd=source, check=True, timeout=600)
+        staging = Path(worker_staging.name)
+        receipt_path = staging / 'nds-gds-worker.build.json'
+        if receipt_path.stat().st_size > 16384:
+            raise SystemExit('Worker receipt exceeds its bound')
+        receipt = json.loads(receipt_path.read_text())
+        worker_digest = receipt['sha256']
+        worker = staging / 'nds-gds-readonly-worker'
+        if (receipt['schema_version'] != 1 or receipt['worker'] != worker.name or
+                receipt['target'] != 'x86_64-unknown-linux-gnu' or
+                receipt['source'] != gds[0]['source'] or
+                receipt['host_build_environment'] != {'NDS_GDS_WORKER_SHA256': worker_digest} or
+                not re.fullmatch('[a-f0-9]{64}', worker_digest) or
+                worker.is_symlink() or not worker.is_file() or
+                not 0 < worker.stat().st_size <= 128 * 1024 * 1024):
+            raise SystemExit('Worker package differs from locked shared source')
+        with worker.open('rb') as payload:
+            if hashlib.file_digest(payload, 'sha256').hexdigest() != worker_digest:
+                raise SystemExit('Worker package digest differs')
+    worker_define = '' if worker_digest is None else f'      gds_worker_sha256: "{worker_digest}"\n'
+    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n{worker_define}'.encode())
     environment = os.environ.copy()
     environment['CARGO_BUILD_JOBS'] = '4'
     executable = shutil.which('flutter')
@@ -63,7 +101,18 @@ try:
             else: process.kill()
             process.wait(timeout=10)
         raise
+    if status == 0 and worker_staging is not None:
+        mode = 'debug' if '--debug' in arguments else 'profile' if '--profile' in arguments else 'release'
+        bundle = app / 'build/linux/x64' / mode / 'bundle'
+        if not bundle.is_dir():
+            raise SystemExit('Expected Linux bundle for worker delivery')
+        for name in ['nds-gds-readonly-worker', 'nds-gds-worker.build.json']:
+            shutil.copy2(Path(worker_staging.name) / name, bundle / name)
+        with (bundle / 'nds-gds-readonly-worker').open('rb') as payload:
+            if hashlib.file_digest(payload, 'sha256').hexdigest() != worker_digest:
+                raise SystemExit('Delivered worker digest differs')
     raise SystemExit(status)
 finally:
     spec.write_bytes(original)
     for sig, handler in handlers.items(): signal.signal(sig, handler)
+    if worker_staging is not None: worker_staging.cleanup()
