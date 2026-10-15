@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:code_assets/code_assets.dart';
 import 'package:flutter_rust_bridge_hooks/flutter_rust_bridge_hooks.dart';
 import 'package:logging/logging.dart';
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
+    if (!input.config.buildCodeAssets) return;
     final development = input.userDefines['development_http'];
     if (development != null && development is! bool) {
       throw const FormatException('development_http must be a boolean');
