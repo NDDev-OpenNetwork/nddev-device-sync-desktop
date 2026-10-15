@@ -37,7 +37,8 @@ and browser clients keep bounded synchronization and delivery when input focus
 moves elsewhere. Hidden clients pause and reconcile on resume; mobile activity
 restrictions follow the same core policy. Screens consume that shared decision.
 
-Use Flutter 3.47.7/Dart 3.13.5, Rust 1.99.0 and flutter_rust_bridge_codegen 2.13.0.
+Use Flutter/Dart from `toolchains.lock.json`, the compiler from
+`packages/nds_native/rust/rust-toolchain.toml` and flutter_rust_bridge_codegen 2.13.0.
 Install the Rust target matching the platform being built. `flutter pub get
 --enforce-lockfile`, `just check`, `just generated-check` and `just build-linux`
 cover dependencies, static checks, generated-source drift and the Linux build.
