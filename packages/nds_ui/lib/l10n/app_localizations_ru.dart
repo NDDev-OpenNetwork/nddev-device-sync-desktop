@@ -955,4 +955,39 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get catalogPaused =>
       'Запросы репозиториев приостановлены, пока приложение находится в фоне.';
+
+  @override
+  String get screenView => 'Просмотреть экран';
+
+  @override
+  String get screenEnded => 'Просмотр экрана завершён.';
+
+  @override
+  String get screenOpening => 'Ожидание доступа к экрану…';
+
+  @override
+  String get screenUnavailable => 'Экран недоступен.';
+
+  @override
+  String get screenStop => 'Завершить просмотр';
+
+  @override
+  String get screenRequests => 'Запросы просмотра экрана';
+
+  @override
+  String get screenRequestsHelp =>
+      'Обновите запросы от ваших устройств. Передача экрана начинается после разрешения этого запроса.';
+
+  @override
+  String get screenConsent =>
+      'Разрешить этому устройству просмотр экрана в запрошенной сессии?';
+
+  @override
+  String get screenAllow => 'Разрешить просмотр экрана';
+
+  @override
+  String get screenAccessAllowed => 'Доступ к экрану разрешён для этой сессии.';
+
+  @override
+  String get screenStopSharing => 'Прекратить передачу';
 }

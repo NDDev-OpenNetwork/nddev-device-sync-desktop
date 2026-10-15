@@ -60,7 +60,7 @@ jobs:
       - run: rustup toolchain install 1.99.0 --profile minimal
       - name: Native Linux build dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libclang-dev libssl-dev libx11-dev nasm
       - name: Native macOS targets
         if: runner.os == 'macOS'
         run: rustup target add --toolchain 1.99.0 aarch64-apple-darwin x86_64-apple-darwin
@@ -88,6 +88,8 @@ jobs:
           just-version: '1.58.0'
       - run: python scripts/bootstrap-ci.py
       - run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt,clippy
+      - name: Native library build dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libclang-dev libssl-dev libx11-dev nasm
       - run: cargo install --locked --version 1.0.127 cargo-expand
       - name: Install verified bridge generator
         run: |

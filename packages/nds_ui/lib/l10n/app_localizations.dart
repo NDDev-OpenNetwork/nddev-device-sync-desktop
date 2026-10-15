@@ -1739,6 +1739,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Repository requests are paused while this app is in the background.'**
   String get catalogPaused;
+
+  /// No description provided for @screenView.
+  ///
+  /// In en, this message translates to:
+  /// **'View screen'**
+  String get screenView;
+
+  /// No description provided for @screenEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen viewing ended.'**
+  String get screenEnded;
+
+  /// No description provided for @screenOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for screen access…'**
+  String get screenOpening;
+
+  /// No description provided for @screenUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The screen is unavailable.'**
+  String get screenUnavailable;
+
+  /// No description provided for @screenStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop viewing'**
+  String get screenStop;
+
+  /// No description provided for @screenRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen requests'**
+  String get screenRequests;
+
+  /// No description provided for @screenRequestsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh requests from your devices. Sharing starts only after you allow this request.'**
+  String get screenRequestsHelp;
+
+  /// No description provided for @screenConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this device to view your screen for the requested session?'**
+  String get screenConsent;
+
+  /// No description provided for @screenAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow screen viewing'**
+  String get screenAllow;
+
+  /// No description provided for @screenAccessAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen access is allowed for this session.'**
+  String get screenAccessAllowed;
+
+  /// No description provided for @screenStopSharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop sharing'**
+  String get screenStopSharing;
 }
 
 class _AppLocalizationsDelegate

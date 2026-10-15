@@ -948,4 +948,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get catalogPaused =>
       'Repository requests are paused while this app is in the background.';
+
+  @override
+  String get screenView => 'View screen';
+
+  @override
+  String get screenEnded => 'Screen viewing ended.';
+
+  @override
+  String get screenOpening => 'Waiting for screen access…';
+
+  @override
+  String get screenUnavailable => 'The screen is unavailable.';
+
+  @override
+  String get screenStop => 'Stop viewing';
+
+  @override
+  String get screenRequests => 'Screen requests';
+
+  @override
+  String get screenRequestsHelp =>
+      'Refresh requests from your devices. Sharing starts only after you allow this request.';
+
+  @override
+  String get screenConsent =>
+      'Allow this device to view your screen for the requested session?';
+
+  @override
+  String get screenAllow => 'Allow screen viewing';
+
+  @override
+  String get screenAccessAllowed =>
+      'Screen access is allowed for this session.';
+
+  @override
+  String get screenStopSharing => 'Stop sharing';
 }

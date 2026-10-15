@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_rust_bridge_hooks/flutter_rust_bridge_hooks.dart';
 import 'package:logging/logging.dart';
 
@@ -21,6 +24,33 @@ void main(List<String> args) async {
         'gds_worker_sha256 must be an artifact digest',
       );
     }
+    final preparation = input.packageRoot.resolve('tool/prepare_native.py');
+    final cache =
+        Platform.environment['NDS_NATIVE_BUILD_HOME'] ??
+        Directory.fromUri(input.outputDirectoryShared.resolve('nds-native/'))
+            .path;
+    final prepared = await Process.run(
+      Platform.isWindows ? 'python' : 'python3',
+      [File.fromUri(preparation).path, '--cache', cache, '--json'],
+    );
+    stderr.write(prepared.stderr);
+    if (prepared.exitCode != 0) {
+      throw const ProcessException(
+        'prepare_native',
+        [],
+        'Native input preparation failed',
+      );
+    }
+    final native = (jsonDecode(
+      prepared.stdout as String,
+    ) as Map<String, dynamic>).cast<String, String>();
+    output.dependencies.addAll([
+      preparation,
+      input.packageRoot.resolve('rust/Cargo.toml'),
+      input.packageRoot.resolve('rust/Cargo.lock'),
+      input.packageRoot.resolve('rust/rust-toolchain.toml'),
+      File('${native['cargo_home']}${Platform.pathSeparator}config.toml').uri,
+    ]);
     // The upstream build helper logs its environment at CONFIG level. Never
     // forward those diagnostics; compiler failures still propagate as errors.
     final safeLogger = Logger.detached('nds_native_build')..level = Level.OFF;
@@ -32,6 +62,15 @@ void main(List<String> args) async {
       features: development == true ? const ['development-http'] : const [],
       extraCargoBuildArgs: const ['--locked', '--jobs', '4'],
       extraCargoEnvironmentVariables: {
+        'CARGO_HOME': native['cargo_home']!,
+        'CARGO_NET_GIT_FETCH_WITH_CLI': 'true',
+        'GIT_CONFIG_GLOBAL': Platform.isWindows ? 'NUL' : '/dev/null',
+        'GIT_CONFIG_NOSYSTEM': '1',
+        'GIT_TERMINAL_PROMPT': '0',
+        'NDS_NATIVE_BUILD_HOME': native['cache']!,
+        'PATH':
+            '${native['rust_bin']}${Platform.isWindows ? ';' : ':'}'
+            '${Platform.environment['PATH'] ?? ''}',
         'RUSTUP_AUTO_INSTALL': '0',
         'NDS_SOURCE_COMMIT': sourceCommit as String? ?? 'unknown',
         if (workerDigest != null)

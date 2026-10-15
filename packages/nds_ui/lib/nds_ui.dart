@@ -10,6 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'l10n/app_localizations.dart';
 import 'activity.dart';
 import 'modules_screen.dart';
+import 'screen_viewer.dart';
+import 'screen_requests.dart';
 import 'diagnostics.dart';
 import 'vault_screen.dart';
 import 'utilities_screen.dart';
@@ -544,6 +546,37 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                               Text(
                                 '${device.platform} · ${device.revoked ? l.deviceRevoked : l.deviceActive}',
                               ),
+                              if (!device.isCurrent &&
+                                  !device.revoked &&
+                                  native.screenSupported())
+                                TextButton(
+                                  onPressed: _busy
+                                      ? null
+                                      : () => Navigator.of(context).push(
+                                          MaterialPageRoute<void>(
+                                            builder: (_) => ScreenViewer(
+                                              client: _client!,
+                                              deviceId: device.deviceId,
+                                            ),
+                                          ),
+                                        ),
+                                  child: Text(l.screenView),
+                                ),
+                              if (device.isCurrent &&
+                                  !device.revoked &&
+                                  native.screenSupported())
+                                TextButton(
+                                  onPressed: _busy
+                                      ? null
+                                      : () => Navigator.of(context).push(
+                                          MaterialPageRoute<void>(
+                                            builder: (_) => ScreenRequests(
+                                              client: _client!,
+                                            ),
+                                          ),
+                                        ),
+                                  child: Text(l.screenRequests),
+                                ),
                               if (device.isCurrent) Text(l.thisDevice),
                               Text(
                                 '${l.deviceCreated}: ${_date(device.createdAt)}',

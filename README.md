@@ -43,12 +43,24 @@ Install the Rust target matching the platform being built. `flutter pub get
 cover dependencies, static checks, generated-source drift and the Linux build.
 Run the same native build on each other supported host before claiming support.
 
+Native preparation is shared by the Flutter hook, build wrapper, generator and
+`just check`. It locates the immutable RDS SDK through Cargo, verifies its clean
+Git source, and calls that module's checked provider preparer. Generated inputs
+and a dedicated Cargo home stay in build caches; user Cargo/Git configuration is
+not changed. Public source fetching is non-interactive and needs no SSH agent.
+For direct Cargo checks, wrap the command with
+`python packages/nds_native/tool/prepare_native.py --` and supply
+`--manifest-path packages/nds_native/rust/Cargo.toml --locked` to Cargo.
+The product lock remains authoritative; source discovery does not build a second
+runtime. Concurrent preparation shares one bounded OS lock.
+
 The Linux alpha uses Flutter's supported Skia GPU backend. Requalify Impeller
 after an engine update passes native interaction acceptance under low VRAM;
 this selection does not enable software rendering.
 
 `flutter run -d linux` opens the client. Enter the HTTPS origin of an NDS server
-supporting protocol v2. Native credential storage must be available and unlocked.
+with compatible control-plane and encrypted-sync endpoints. Native credential
+storage must be available and unlocked.
 GitHub sign-in requires the server's actual provider configuration and explicit
 browser approval; an unavailable provider stays unavailable.
 
@@ -69,6 +81,11 @@ Missing tools report unavailable. `just module-acceptance /absolute/path/to/clip
 runs actual Flutter interactions with installed providers, a fresh clipboard
 archive with capture disabled, and a temporary Git repository. It does not read
 or change the personal clipboard archive or execute cleanup/updates.
+
+Screen requests and viewing use the shared Rust owner, Accounts authorization
+and Core contracts. The current viewer backend is Linux X11; other targets
+report unsupported. Native subsystem qualification is separate from final
+Accounts-authenticated Flutter viewing, whose acceptance remains incomplete.
 
 `python scripts/build.py linux --debug` builds committed source with an explicit,
 cache-tracked native source SHA; ordinary `flutter build` retains development

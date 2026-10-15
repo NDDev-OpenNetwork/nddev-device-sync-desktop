@@ -12,7 +12,9 @@ import 'modules.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `batch_outcome`, `capacity_blocked`, `catalog_active`, `catalog_identity`, `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe_operation`, `observe`, `publish_state_inner`, `replica_start_error`, `reset_replica_session`, `schedule`, `start_replica`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
+import 'screen.dart';
+
+// These functions are ignored because they are not marked as `pub`: `batch_outcome`, `cancel_work`, `capacity_blocked`, `catalog_active`, `catalog_identity`, `clear_replica_fenced`, `clipboard_error`, `data_directory`, `device_observations`, `ensure_delivery`, `incident_view`, `observe_cleanup`, `observe_in_span`, `observe_operation`, `observe`, `publish_state_inner`, `replica_auth_error`, `replica_start_error`, `reset_replica_session`, `schedule`, `spawn_replica`, `start_replica_fenced`, `stop_replica`, `vault`, `wake_replica`, `write_clipboard`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClipboardReservation`, `Replica`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `drop`, `drop`
 
@@ -103,6 +105,20 @@ abstract class NdsClient implements RustOpaqueInterface {
   Future<View> revokeDevice({required String id});
 
   Future<View> revokePasskey({required String id});
+
+  Future<ScreenHost> screenAccept({required String id});
+
+  void screenCancel();
+
+  Future<void> screenClose();
+
+  Future<ScreenRequest?> screenIncoming();
+
+  Future<ScreenView> screenOpen({required String target});
+
+  Future<void> screenPrepare();
+
+  Future<void> screenStop();
 
   void selectGithubCredential({
     required String recordRef,

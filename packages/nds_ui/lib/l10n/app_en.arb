@@ -448,5 +448,16 @@
   },
   "catalogCancelled": "Repository request cancelled.",
   "catalogTimeout": "Repository request timed out. Try again.",
-  "catalogPaused": "Repository requests are paused while this app is in the background."
+  "catalogPaused": "Repository requests are paused while this app is in the background.",
+  "screenView": "View screen",
+  "screenEnded": "Screen viewing ended.",
+  "screenOpening": "Waiting for screen access…",
+  "screenUnavailable": "The screen is unavailable.",
+  "screenStop": "Stop viewing",
+  "screenRequests": "Screen requests",
+  "screenRequestsHelp": "Refresh requests from your devices. Sharing starts only after you allow this request.",
+  "screenConsent": "Allow this device to view your screen for the requested session?",
+  "screenAllow": "Allow screen viewing",
+  "screenAccessAllowed": "Screen access is allowed for this session.",
+  "screenStopSharing": "Stop sharing"
 }

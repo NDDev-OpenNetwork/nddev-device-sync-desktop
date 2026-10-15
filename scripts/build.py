@@ -10,6 +10,7 @@ import re
 import signal
 import shutil
 import subprocess
+import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('flutter_arguments', nargs=argparse.REMAINDER)
@@ -17,6 +18,9 @@ args = parser.parse_args()
 if not args.flutter_arguments:
     parser.error('a Flutter build target is required')
 source = Path(__file__).resolve().parents[1]
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(source / 'packages/nds_native/tool'))
+from prepare_native import build_environment
 app = Path.cwd()
 spec = app / 'pubspec.yaml'
 original = spec.read_bytes()
@@ -39,6 +43,7 @@ if dirty:
 if app != source and f'ref: {commit}' not in original.decode():
     raise SystemExit('The app must consume this exact shared native source')
 print('Building native source: ' + commit, flush=True)
+os.environ.update(build_environment())
 def interrupted(_signal, _frame):
     raise KeyboardInterrupt
 handlers = {sig: signal.signal(sig, interrupted) for sig in [signal.SIGTERM, signal.SIGINT]}

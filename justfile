@@ -1,6 +1,9 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 check:
+    python3 packages/nds_native/tool/prepare_native.py -- just _check
+
+_check:
     python3 scripts/check-native-dependencies.py
     flutter pub get --enforce-lockfile
     cd packages/nds_ui && flutter pub get --enforce-lockfile

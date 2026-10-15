@@ -10,6 +10,7 @@ import 'api/catalog_types.dart';
 import 'api/identity.dart';
 import 'api/module_types.dart';
 import 'api/modules.dart';
+import 'api/screen.dart';
 import 'api/telemetry.dart';
 
 import 'dart:async';
@@ -53,6 +54,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   get rust_arc_decrement_strong_count_NdsClientPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient;
 
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_ScreenFramePtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_ScreenHostPtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_ScreenViewPtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView;
+
   @protected
   Action
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
@@ -74,6 +87,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   NdsClient
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenFrame
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenHost
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenView
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
     dynamic raw,
   );
 
@@ -102,6 +133,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ScreenFrame
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenHost
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenView
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    dynamic raw,
+  );
+
+  @protected
   Action
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
     dynamic raw,
@@ -122,6 +171,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   NdsClient
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenFrame
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenHost
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    dynamic raw,
+  );
+
+  @protected
+  ScreenView
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
     dynamic raw,
   );
 
@@ -154,6 +221,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ModuleError dco_decode_box_autoadd_module_error(dynamic raw);
+
+  @protected
+  ScreenRequest dco_decode_box_autoadd_screen_request(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -378,6 +448,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ModuleError? dco_decode_opt_box_autoadd_module_error(dynamic raw);
 
   @protected
+  ScreenRequest? dco_decode_opt_box_autoadd_screen_request(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
 
   @protected
@@ -406,6 +479,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RemoteSnapshot dco_decode_remote_snapshot(dynamic raw);
+
+  @protected
+  ScreenFailure dco_decode_screen_failure(dynamic raw);
+
+  @protected
+  ScreenLayout dco_decode_screen_layout(dynamic raw);
+
+  @protected
+  ScreenRequest dco_decode_screen_request(dynamic raw);
 
   @protected
   SessionState dco_decode_session_state(dynamic raw);
@@ -477,6 +559,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ScreenFrame
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenHost
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenView
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Action
   sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
     SseDeserializer deserializer,
@@ -501,6 +601,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ScreenFrame
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenHost
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenView
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Action
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
     SseDeserializer deserializer,
@@ -521,6 +639,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   NdsClient
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenFrame
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenHost
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ScreenView
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
     SseDeserializer deserializer,
   );
 
@@ -555,6 +691,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ModuleError sse_decode_box_autoadd_module_error(SseDeserializer deserializer);
+
+  @protected
+  ScreenRequest sse_decode_box_autoadd_screen_request(
+    SseDeserializer deserializer,
+  );
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
@@ -805,6 +946,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ScreenRequest? sse_decode_opt_box_autoadd_screen_request(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
@@ -833,6 +979,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RemoteSnapshot sse_decode_remote_snapshot(SseDeserializer deserializer);
+
+  @protected
+  ScreenFailure sse_decode_screen_failure(SseDeserializer deserializer);
+
+  @protected
+  ScreenLayout sse_decode_screen_layout(SseDeserializer deserializer);
+
+  @protected
+  ScreenRequest sse_decode_screen_request(SseDeserializer deserializer);
 
   @protected
   SessionState sse_decode_session_state(SseDeserializer deserializer);
@@ -909,6 +1064,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    ScreenFrame self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    ScreenHost self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    ScreenView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
   sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
     Action self,
     SseSerializer serializer,
@@ -937,6 +1113,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    ScreenFrame self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    ScreenHost self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    ScreenView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
     Action self,
     SseSerializer serializer,
@@ -960,6 +1157,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
     NdsClient self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    ScreenFrame self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    ScreenHost self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    ScreenView self,
     SseSerializer serializer,
   );
 
@@ -1002,6 +1220,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_module_error(
     ModuleError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_screen_request(
+    ScreenRequest self,
     SseSerializer serializer,
   );
 
@@ -1307,6 +1531,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_screen_request(
+    ScreenRequest? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
 
   @protected
@@ -1338,6 +1568,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     RemoteSnapshot self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_screen_failure(ScreenFailure self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_screen_layout(ScreenLayout self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_screen_request(ScreenRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_session_state(SessionState self, SseSerializer serializer);
@@ -1459,6 +1698,54 @@ class RustLibWire implements BaseWire {
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
         ptr,
       );
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+        ptr,
+      );
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+        ptr,
+      );
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+        ptr,
+      );
 }
 
 @JS('wasm_bindgen')
@@ -1504,6 +1791,36 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void
   rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNdsClient(
+    int ptr,
+  );
+
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenFrame(
+    int ptr,
+  );
+
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenHost(
+    int ptr,
+  );
+
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
     int ptr,
   );
 }
