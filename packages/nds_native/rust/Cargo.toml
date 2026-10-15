@@ -9,8 +9,8 @@ crate-type = ["cdylib", "staticlib"]
 [features]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
-nddev-device-sync-application = { git = "https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev = "19ceef8a233b68ace3b18ebeb852633ed26d208c" }
-nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault", rev = "cb843cc15e1cb56a6c28823341ccfd0a0610e85b" }
+nddev-device-sync-application = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev = "889f0f4a9b6416e92eaaac111471a9d700ef8468" }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault", rev = "4ffbe18ab065907a14c82c806684e3782a6187dc" }
 tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 tokio-util = { version = "0.7", features = ["rt"] }
@@ -18,7 +18,7 @@ tokio-util = { version = "0.7", features = ["rt"] }
 # fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = { version="=2.13.0",default-features=false,features=["anyhow","dart-opaque","portable-atomic","rust-async","thread-pool"] }
 nddev-device-sync-accounts = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts", rev = "aa387beaf08ba53ec630d6fb64b6861f7075486b" }
-nddev-device-sync-domain = {git="https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git", rev="19ceef8a233b68ace3b18ebeb852633ed26d208c"}
+nddev-device-sync-domain = {git="https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev="889f0f4a9b6416e92eaaac111471a9d700ef8468"}
 time = {version="0.3",features=["parsing","wasm-bindgen"]}
 tracing = "0.1"
 serde_json = "1"
@@ -50,3 +50,9 @@ rds-net = { version = "=0.1.0", git = "https://github.com/NDDev-Technocracy-Open
 
 rds-core = { version = "=0.1.0", git = "https://github.com/NDDev-Technocracy-OpenNetwork/remote-device-sync", rev = "2761dbdb76baee0edc2557b02ac7a90472312ab7", default-features = false }
 rds-desktop = { version = "=0.1.0", git = "https://github.com/NDDev-Technocracy-OpenNetwork/remote-device-sync", rev = "2761dbdb76baee0edc2557b02ac7a90472312ab7", default-features = false, features = ["x11"] }
+
+# ponytail (Core adoption): normalize immutable transitive legacy URLs to this
+# root's canonical Core source. Remove when all transitive manifests use it.
+[patch."https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git"]
+nddev-device-sync-application = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev = "889f0f4a9b6416e92eaaac111471a9d700ef8468" }
+nddev-device-sync-domain = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev = "889f0f4a9b6416e92eaaac111471a9d700ef8468" }

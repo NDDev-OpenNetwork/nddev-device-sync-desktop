@@ -188,6 +188,8 @@ class _StateScreenState extends State<StateScreen> {
                       ? l.serverCapacityExhausted
                       : _error == 'vault_busy'
                       ? l.operationBusy
+                      : _error == 'vault_cancelled'
+                      ? l.moduleCancelled
                       : l.statePublishError,
                   key: const Key('state-error'),
                 ),

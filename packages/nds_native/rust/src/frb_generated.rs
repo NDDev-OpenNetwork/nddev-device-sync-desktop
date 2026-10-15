@@ -6736,9 +6736,10 @@ impl SseDecode for nddev_device_sync_vault::view::VaultError {
             3 => nddev_device_sync_vault::view::VaultError::Unavailable,
             4 => nddev_device_sync_vault::view::VaultError::Busy,
             5 => nddev_device_sync_vault::view::VaultError::SelectionChanged,
-            6 => nddev_device_sync_vault::view::VaultError::StorageFull,
-            7 => nddev_device_sync_vault::view::VaultError::CapacityExhausted,
-            8 => nddev_device_sync_vault::view::VaultError::RegistrationRequired,
+            6 => nddev_device_sync_vault::view::VaultError::Cancelled,
+            7 => nddev_device_sync_vault::view::VaultError::StorageFull,
+            8 => nddev_device_sync_vault::view::VaultError::CapacityExhausted,
+            9 => nddev_device_sync_vault::view::VaultError::RegistrationRequired,
             _ => unreachable!("Invalid variant for VaultError: {}", inner),
         };
     }
@@ -8710,9 +8711,10 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view:
             nddev_device_sync_vault::view::VaultError::Unavailable => 3.into_dart(),
             nddev_device_sync_vault::view::VaultError::Busy => 4.into_dart(),
             nddev_device_sync_vault::view::VaultError::SelectionChanged => 5.into_dart(),
-            nddev_device_sync_vault::view::VaultError::StorageFull => 6.into_dart(),
-            nddev_device_sync_vault::view::VaultError::CapacityExhausted => 7.into_dart(),
-            nddev_device_sync_vault::view::VaultError::RegistrationRequired => 8.into_dart(),
+            nddev_device_sync_vault::view::VaultError::Cancelled => 6.into_dart(),
+            nddev_device_sync_vault::view::VaultError::StorageFull => 7.into_dart(),
+            nddev_device_sync_vault::view::VaultError::CapacityExhausted => 8.into_dart(),
+            nddev_device_sync_vault::view::VaultError::RegistrationRequired => 9.into_dart(),
             _ => unreachable!(),
         }
     }
@@ -10050,9 +10052,10 @@ impl SseEncode for nddev_device_sync_vault::view::VaultError {
                 nddev_device_sync_vault::view::VaultError::Unavailable => 3,
                 nddev_device_sync_vault::view::VaultError::Busy => 4,
                 nddev_device_sync_vault::view::VaultError::SelectionChanged => 5,
-                nddev_device_sync_vault::view::VaultError::StorageFull => 6,
-                nddev_device_sync_vault::view::VaultError::CapacityExhausted => 7,
-                nddev_device_sync_vault::view::VaultError::RegistrationRequired => 8,
+                nddev_device_sync_vault::view::VaultError::Cancelled => 6,
+                nddev_device_sync_vault::view::VaultError::StorageFull => 7,
+                nddev_device_sync_vault::view::VaultError::CapacityExhausted => 8,
+                nddev_device_sync_vault::view::VaultError::RegistrationRequired => 9,
                 _ => {
                     unimplemented!("");
                 }

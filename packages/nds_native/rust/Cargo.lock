@@ -3982,7 +3982,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-application"
 version = "0.0.1-alpha.21"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=19ceef8a233b68ace3b18ebeb852633ed26d208c#19ceef8a233b68ace3b18ebeb852633ed26d208c"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=889f0f4a9b6416e92eaaac111471a9d700ef8468#889f0f4a9b6416e92eaaac111471a9d700ef8468"
 dependencies = [
  "nddev-device-sync-domain",
 ]
@@ -4018,7 +4018,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-domain"
 version = "0.0.12"
-source = "git+https://github.com/NDDev-OpenNetwork/nddev-device-sync-core.git?rev=19ceef8a233b68ace3b18ebeb852633ed26d208c#19ceef8a233b68ace3b18ebeb852633ed26d208c"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=889f0f4a9b6416e92eaaac111471a9d700ef8468#889f0f4a9b6416e92eaaac111471a9d700ef8468"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
@@ -4136,7 +4136,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=cb843cc15e1cb56a6c28823341ccfd0a0610e85b#cb843cc15e1cb56a6c28823341ccfd0a0610e85b"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=4ffbe18ab065907a14c82c806684e3782a6187dc#4ffbe18ab065907a14c82c806684e3782a6187dc"
 dependencies = [
  "base64 0.22.1",
  "js-sys",
@@ -4155,6 +4155,7 @@ dependencies = [
  "thiserror 2.0.21",
  "time",
  "tokio",
+ "tokio-util",
  "tracing",
  "uuid",
  "wasm-bindgen",

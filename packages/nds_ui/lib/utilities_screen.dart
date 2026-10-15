@@ -162,6 +162,7 @@ class _UtilitiesState extends State<UtilitiesScreen> {
     'vault_locked' || 'authentication_failed' => l.authError,
     'device_revoked' => l.deviceRevokedHelp,
     'vault_busy' || 'clipboard_busy' || 'busy' || 'conflict' => l.operationBusy,
+    'vault_cancelled' => l.moduleCancelled,
     'vault_invalid_input' || 'invalid_input' => l.vaultInputError,
     'sync_capacity_exhausted' => l.serverCapacityExhausted,
     'vault_dependency_unavailable' ||

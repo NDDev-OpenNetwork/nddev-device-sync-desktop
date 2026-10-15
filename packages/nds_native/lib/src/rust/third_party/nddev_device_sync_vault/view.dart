@@ -270,6 +270,7 @@ enum VaultError {
   unavailable,
   busy,
   selectionChanged,
+  cancelled,
   storageFull,
   capacityExhausted,
   registrationRequired;

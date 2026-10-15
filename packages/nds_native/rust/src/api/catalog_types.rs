@@ -103,6 +103,7 @@ impl From<nddev_device_sync_vault::view::VaultError> for GithubCatalogError {
         use nddev_device_sync_vault::view::VaultError as E;
         match error {
             E::Busy => Self::Busy,
+            E::Cancelled => Self::Cancelled,
             E::Invalid => Self::InvalidResponse,
             E::SelectionChanged => Self::CredentialChanged,
             E::Locked | E::Authentication | E::RegistrationRequired => Self::AuthorizationRequired,
