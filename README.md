@@ -53,6 +53,9 @@ For direct Cargo checks, wrap the command with
 `--manifest-path packages/nds_native/rust/Cargo.toml --locked` to Cargo.
 The product lock remains authoritative; source discovery does not build a second
 runtime. Concurrent preparation shares one bounded OS lock.
+The wrapper verifies source signatures before invoking Flutter. Its isolated
+hook consumes the checked configuration without receiving GitHub credentials;
+direct hook preparation requires the owning preparer's normal GitHub CLI access.
 Standalone worker packaging retains its own locked graph without the shared
 client's native provider overrides.
 

@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: true
 env:
   CARGO_BUILD_JOBS: 4
+  GH_TOKEN: ${{ github.token }}
 jobs:
   builds:
     strategy:

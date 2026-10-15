@@ -38,7 +38,13 @@ void main(List<String> args) async {
             .path;
     final prepared = await Process.run(
       Platform.isWindows ? 'python' : 'python3',
-      [File.fromUri(preparation).path, '--cache', cache, '--json'],
+      [
+        File.fromUri(preparation).path,
+        '--cache',
+        cache,
+        '--json',
+        if (requestedCache != null) '--configured',
+      ],
     );
     stderr.write(prepared.stderr);
     if (prepared.exitCode != 0) {

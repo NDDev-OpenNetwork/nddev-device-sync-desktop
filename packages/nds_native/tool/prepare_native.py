@@ -3,6 +3,7 @@
 import argparse
 from contextlib import contextmanager
 import errno
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -86,7 +87,7 @@ def preparation_lock(path):
                 fcntl.flock(lock, fcntl.LOCK_UN)
 
 
-def prepare(cache):
+def prepare(cache, *, configured=False):
     manifest = tomllib.loads((PACKAGE / "rust/Cargo.toml").read_text())
     dependency = manifest["dependencies"]["nddev-device-sync-rds"]
     revision = dependency["rev"]
@@ -120,6 +121,8 @@ def prepare(cache):
             ',rev=' + json.dumps(revision) + ',default-features=false}\n'
         )
         command = ["rustup", "run", channel, "cargo", "metadata", "--format-version", "1"]
+        if configured:
+            command.append("--offline")
         # Keep source discovery separate from the product's provider patches.
         # Actual product builds always use their checked --locked graph.
         metadata = json.loads(run_command(
@@ -136,12 +139,24 @@ def prepare(cache):
         ).strip()
         if actual != revision or dirty:
             raise ValueError("RDS preparation source has tracked changes")
-        run_command(
-            [sys.executable, str(sdk / "scripts/prepare-library-provider.py"),
-             "--destination", str(destination / "provider"),
-             "--config", str(cargo_home / "config.toml")],
-            env=environment, timeout=240,
-        )
+        if configured:
+            # The outer build already performed the owning source verification.
+            # Hooks consume those inputs without receiving CI credentials.
+            provider = destination / "provider"
+            receipt = json.loads((provider / "library-provider-verification.json").read_text())
+            source = json.loads((sdk / "providers/screen-source.lock.json").read_text())
+            digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+            if (receipt["source"] != source
+                    or receipt["config_sha256"] != digest(cargo_home / "config.toml")
+                    or receipt["build_receipt_sha256"] != digest(provider / "screen-build-verification.json")):
+                raise ValueError("prepared native inputs differ from the owning receipt")
+        else:
+            run_command(
+                [sys.executable, str(sdk / "scripts/prepare-library-provider.py"),
+                 "--destination", str(destination / "provider"),
+                 "--config", str(cargo_home / "config.toml")],
+                env=environment, timeout=240,
+            )
     return {"cargo_home": str(cargo_home), "source_home": str(source_home),
             "rust_bin": str(rust_bin), "cache": str(cache)}
 
@@ -161,14 +176,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", type=Path)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--configured", action="store_true",
+                        help="consume inputs verified by the outer build; do not refresh source verification")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     cache = args.cache or Path(os.environ.get("NDS_NATIVE_BUILD_HOME", Path.cwd() / "build/nds-native"))
     if args.json:
         if args.command:
             parser.error("--json cannot wrap a command")
-        print(json.dumps(prepare(cache)))
+        print(json.dumps(prepare(cache, configured=args.configured)))
     else:
+        if args.configured:
+            parser.error("--configured is only for the hook's --json handoff")
         command = args.command[1:] if args.command[:1] == ["--"] else args.command
         if not command:
             parser.error("a command or --json is required")
