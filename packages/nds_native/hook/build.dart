@@ -25,6 +25,13 @@ void main(List<String> args) async {
       );
     }
     final preparation = input.packageRoot.resolve('tool/prepare_native.py');
+    final pythonExecutable = input.userDefines['native_build_python'];
+    if (pythonExecutable != null &&
+        (pythonExecutable is! String || !File(pythonExecutable).isAbsolute)) {
+      throw const FormatException(
+        'native_build_python must be an absolute path',
+      );
+    }
     final requestedCache = input.userDefines['native_build_cache'];
     if (requestedCache != null &&
         (requestedCache is! String || !Directory(requestedCache).isAbsolute)) {
@@ -37,7 +44,8 @@ void main(List<String> args) async {
         Directory.fromUri(input.outputDirectoryShared.resolve('nds-native/'))
             .path;
     final prepared = await Process.run(
-      Platform.isWindows ? 'python' : 'python3',
+      pythonExecutable as String? ??
+          (Platform.isWindows ? 'python' : 'python3'),
       [
         File.fromUri(preparation).path,
         '--cache',

@@ -87,7 +87,8 @@ try:
                 raise SystemExit('Worker package digest differs')
     worker_define = '' if worker_digest is None else f'      gds_worker_sha256: "{worker_digest}"\n'
     cache_define = '      native_build_cache: ' + json.dumps(os.environ['NDS_NATIVE_BUILD_HOME']) + '\n'
-    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n{worker_define}{cache_define}'.encode())
+    python_define = '      native_build_python: ' + json.dumps(sys.executable) + '\n'
+    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n{worker_define}{cache_define}{python_define}'.encode())
     environment = os.environ.copy()
     environment['CARGO_BUILD_JOBS'] = '4'
     executable = shutil.which('flutter')
