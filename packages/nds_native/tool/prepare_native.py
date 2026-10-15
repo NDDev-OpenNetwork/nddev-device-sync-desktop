@@ -107,7 +107,8 @@ def prepare(cache):
              "--config", str(cargo_home / "config.toml")],
             env=environment, check=True, timeout=240, stdout=sys.stderr,
         )
-    return {"cargo_home": str(cargo_home), "rust_bin": str(rust_bin), "cache": str(cache)}
+    return {"cargo_home": str(cargo_home), "source_home": str(source_home),
+            "rust_bin": str(rust_bin), "cache": str(cache)}
 
 
 def build_environment(cache=None):
@@ -116,6 +117,7 @@ def build_environment(cache=None):
     return dict(os.environ, CARGO_HOME=result["cargo_home"],
                 PATH=result["rust_bin"] + os.pathsep + os.environ.get("PATH", ""),
                 NDS_NATIVE_BUILD_HOME=result["cache"], RUSTUP_AUTO_INSTALL="0",
+                NDS_NATIVE_SOURCE_HOME=result["source_home"],
                 GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1",
                 GIT_TERMINAL_PROMPT="0", CARGO_NET_GIT_FETCH_WITH_CLI="true")
 

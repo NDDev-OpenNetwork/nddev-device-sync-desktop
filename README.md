@@ -53,6 +53,8 @@ For direct Cargo checks, wrap the command with
 `--manifest-path packages/nds_native/rust/Cargo.toml --locked` to Cargo.
 The product lock remains authoritative; source discovery does not build a second
 runtime. Concurrent preparation shares one bounded OS lock.
+Standalone worker packaging retains its own locked graph without the shared
+client's native provider overrides.
 
 The Linux alpha uses Flutter's supported Skia GPU backend. Requalify Impeller
 after an engine update passes native interaction acceptance under low VRAM;

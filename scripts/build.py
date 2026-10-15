@@ -60,10 +60,13 @@ try:
         gds = [p for p in metadata['packages'] if p['name'] == 'nddev-device-sync-gds']
         if len(agent) != 1 or len(gds) != 1:
             raise SystemExit('One locked Agent and GDS package required')
+        # The standalone worker retains its owning graph. Shared's native
+        # provider overrides must not rewrite the Agent/GDS lockfiles.
+        worker_environment = dict(os.environ, CARGO_HOME=os.environ['NDS_NATIVE_SOURCE_HOME'])
         subprocess.run(
             ['cargo', 'run', '--locked', '--manifest-path', agent[0]['manifest_path'],
              '--bin', 'nds-package-gds-worker', '--', '--bundle', worker_staging.name],
-            cwd=source, check=True, timeout=600)
+            cwd=source, env=worker_environment, check=True, timeout=600)
         staging = Path(worker_staging.name)
         receipt_path = staging / 'nds-gds-worker.build.json'
         if receipt_path.stat().st_size > 16384:
