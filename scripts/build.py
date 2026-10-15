@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build with explicit, cache-tracked native source identity; restore app config."""
+"""Build or test with verified native inputs; restore the app configuration."""
 import argparse
 import os
 import hashlib
@@ -25,6 +25,7 @@ app = Path.cwd()
 spec = app / 'pubspec.yaml'
 original = spec.read_bytes()
 arguments = list(args.flutter_arguments)
+is_test = arguments[0] == 'test'
 # Apple bundle versions are numeric. Keep the candidate/build number in the
 # owning pubspec instead of duplicating alpha build numbers in CI commands.
 if arguments[0] in ('ios', 'macos') and not any(arg.startswith('--build-name') for arg in arguments):
@@ -38,11 +39,12 @@ commit = subprocess.check_output(['git','rev-parse','HEAD'], cwd=source, text=Tr
 if not re.fullmatch('[a-f0-9]{40}', commit):
     raise SystemExit('Native source requires a Git commit')
 dirty = subprocess.check_output(['git','status','--porcelain','--untracked-files=no'], cwd=source, text=True).strip()
-if dirty:
+if dirty and not is_test:
     raise SystemExit('Committed native source is required; tracked drift:\n' + '\n'.join(dirty.splitlines()[:32]))
-if app != source and f'ref: {commit}' not in original.decode():
+if (app != source and not (is_test and app == source / 'packages/nds_ui')
+        and f'ref: {commit}' not in original.decode()):
     raise SystemExit('The app must consume this exact shared native source')
-print('Building native source: ' + commit, flush=True)
+print('Building native source: ' + commit + (' (uncommitted)' if dirty else ''), flush=True)
 os.environ.update(build_environment())
 def interrupted(_signal, _frame):
     raise KeyboardInterrupt
@@ -88,13 +90,14 @@ try:
     worker_define = '' if worker_digest is None else f'      gds_worker_sha256: "{worker_digest}"\n'
     cache_define = '      native_build_cache: ' + json.dumps(os.environ['NDS_NATIVE_BUILD_HOME']) + '\n'
     python_define = '      native_build_python: ' + json.dumps(sys.executable) + '\n'
-    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n      source_commit: "{commit}"\n{worker_define}{cache_define}{python_define}'.encode())
+    source_define = '' if dirty else f'      source_commit: "{commit}"\n'
+    spec.write_bytes(original + f'\nhooks:\n  user_defines:\n    nds_native:\n{source_define}{worker_define}{cache_define}{python_define}'.encode())
     environment = os.environ.copy()
     environment['CARGO_BUILD_JOBS'] = '4'
     executable = shutil.which('flutter')
     if executable is None:
         raise SystemExit('Flutter is unavailable')
-    process = subprocess.Popen([executable,'build',*arguments],
+    process = subprocess.Popen([executable,*([] if is_test else ['build']),*arguments],
         env=environment, start_new_session=os.name != 'nt')
     try:
         status = process.wait(timeout=1800)
