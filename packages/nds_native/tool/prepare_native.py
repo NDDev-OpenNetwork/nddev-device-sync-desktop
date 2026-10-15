@@ -21,7 +21,7 @@ RDS_REPOSITORY = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-dev
 
 def run_command(arguments, *, cwd=None, env=None, timeout=30, capture=False):
     process = subprocess.Popen(
-        arguments, cwd=cwd, env=env, text=True,
+        arguments, cwd=cwd, env=env, text=True, encoding="utf-8",
         stdout=subprocess.PIPE if capture else sys.stderr,
         start_new_session=os.name != "nt",
     )

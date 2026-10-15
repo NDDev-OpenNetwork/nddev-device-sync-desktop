@@ -89,9 +89,6 @@ void main(List<String> args) async {
         'GIT_CONFIG_NOSYSTEM': '1',
         'GIT_TERMINAL_PROMPT': '0',
         'NDS_NATIVE_BUILD_HOME': native['cache']!,
-        'PATH':
-            '${native['rust_bin']}${Platform.isWindows ? ';' : ':'}'
-            '${Platform.environment['PATH'] ?? ''}',
         'RUSTUP_AUTO_INSTALL': '0',
         'NDS_SOURCE_COMMIT': sourceCommit as String? ?? 'unknown',
         if (workerDigest != null)
