@@ -25,8 +25,15 @@ void main(List<String> args) async {
       );
     }
     final preparation = input.packageRoot.resolve('tool/prepare_native.py');
+    final requestedCache = input.userDefines['native_build_cache'];
+    if (requestedCache != null &&
+        (requestedCache is! String || !Directory(requestedCache).isAbsolute)) {
+      throw const FormatException(
+        'native_build_cache must be an absolute path',
+      );
+    }
     final cache =
-        Platform.environment['NDS_NATIVE_BUILD_HOME'] ??
+        requestedCache as String? ??
         Directory.fromUri(input.outputDirectoryShared.resolve('nds-native/'))
             .path;
     final prepared = await Process.run(

@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 import time
@@ -15,6 +16,40 @@ import tomllib
 
 PACKAGE = Path(__file__).resolve().parents[1]
 RDS_REPOSITORY = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-rds"
+
+
+def run_command(arguments, *, cwd=None, env=None, timeout=30, capture=False):
+    process = subprocess.Popen(
+        arguments, cwd=cwd, env=env, text=True,
+        stdout=subprocess.PIPE if capture else sys.stderr,
+        start_new_session=os.name != "nt",
+    )
+    try:
+        output, _ = process.communicate(timeout=timeout)
+    except (subprocess.TimeoutExpired, KeyboardInterrupt):
+        if os.name == "nt":
+            subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+        else:
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        try:
+            process.communicate(timeout=10)
+        except subprocess.TimeoutExpired:
+            if os.name == "nt":
+                process.kill()
+            else:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            process.communicate(timeout=10)
+        raise
+    if process.returncode:
+        raise subprocess.CalledProcessError(process.returncode, arguments, output)
+    return output or ""
 
 
 @contextmanager
@@ -65,8 +100,8 @@ def prepare(cache):
     cargo_home.mkdir(exist_ok=True)
     source_home = destination / "sdk-cargo-home"
     source_home.mkdir(exist_ok=True)
-    rust_bin = Path(subprocess.check_output(
-        ["rustup", "which", "--toolchain", channel, "cargo"], text=True, timeout=30,
+    rust_bin = Path(run_command(
+        ["rustup", "which", "--toolchain", channel, "cargo"], capture=True,
     ).strip()).parent
     environment = dict(os.environ, CARGO_HOME=str(source_home),
                        GIT_TERMINAL_PROMPT="0", RUSTUP_AUTO_INSTALL="0",
@@ -87,25 +122,25 @@ def prepare(cache):
         command = ["rustup", "run", channel, "cargo", "metadata", "--format-version", "1"]
         # Keep source discovery separate from the product's provider patches.
         # Actual product builds always use their checked --locked graph.
-        metadata = json.loads(subprocess.check_output(
-            command, cwd=probe, env=environment, text=True, timeout=180,
+        metadata = json.loads(run_command(
+            command, cwd=probe, env=environment, timeout=180, capture=True,
         ))
         packages = [p for p in metadata["packages"] if p["name"] == "nddev-device-sync-rds"]
         expected = f"git+{RDS_REPOSITORY}?rev={revision}#{revision}"
         if len(packages) != 1 or packages[0]["source"] != expected:
             raise ValueError("RDS preparation source was overridden")
         sdk = Path(packages[0]["manifest_path"]).parent
-        actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=sdk, text=True, timeout=30).strip()
-        dirty = subprocess.check_output(
-            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=sdk, text=True, timeout=30,
+        actual = run_command(["git", "rev-parse", "HEAD"], cwd=sdk, env=environment, capture=True).strip()
+        dirty = run_command(
+            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=sdk, env=environment, capture=True,
         ).strip()
         if actual != revision or dirty:
             raise ValueError("RDS preparation source has tracked changes")
-        subprocess.run(
+        run_command(
             [sys.executable, str(sdk / "scripts/prepare-library-provider.py"),
              "--destination", str(destination / "provider"),
              "--config", str(cargo_home / "config.toml")],
-            env=environment, check=True, timeout=240, stdout=sys.stderr,
+            env=environment, timeout=240,
         )
     return {"cargo_home": str(cargo_home), "source_home": str(source_home),
             "rust_bin": str(rust_bin), "cache": str(cache)}
