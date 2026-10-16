@@ -40,6 +40,12 @@ Manual synchronization owns one stop/retry/restart sequence; overlapping calls
 report busy. An authorized manual retry replaces its capacity policy, so late
 results from earlier work cannot block it again or restart an obsolete replica.
 Healthy inbox reads and lifecycle changes retain a real capacity refusal.
+After a completed inbox read observes newer retention, Core may request one
+immutable-original capacity check. Ordinary uploads stay blocked until its
+actual handled outcome (or proven empty inbox) is revalidated under the current
+Accounts lifetime and policy identity. Recovery replaces policy so late old
+publishers cannot reblock it. Repeated refusal at the same retention floor does
+not create a probe loop; uncertain transport retries preserve the original.
 
 Use Flutter/Dart from `toolchains.lock.json`, the compiler from
 `packages/nds_native/rust/rust-toolchain.toml` and flutter_rust_bridge_codegen 2.13.0.
@@ -109,8 +115,8 @@ before restarting the first page; its decision is made only from the genuine
 terminal traversal summary. Changed scope proof restarts the traversal while
 preserving saved observations. Conflicts remain visible until Applied receipts.
 Traversal selection/cursors are currently process-local; restart-safe automatic
-traversal/cadence, verified capacity recovery and Git materialization/autosync
-remain incomplete. End-to-end provider/client acceptance remains separate.
+traversal/cadence and Git materialization/autosync remain incomplete. End-to-end
+provider/client acceptance remains separate.
 
 Screen requests and viewing use the shared Rust owner, Accounts authorization
 and Core contracts. The current viewer backend is Linux X11; other targets

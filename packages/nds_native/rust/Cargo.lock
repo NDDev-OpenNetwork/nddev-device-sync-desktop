@@ -3927,7 +3927,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.24"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=07c0be29a6444ede8faeefa1b885209eef1ec5fd#07c0be29a6444ede8faeefa1b885209eef1ec5fd"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=c51457c6aa0ceae4d143d22847bcbdbae1187837#c51457c6aa0ceae4d143d22847bcbdbae1187837"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -3992,7 +3992,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.8"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=077fcdc3278a36a7163ed3da789123727648b1aa#077fcdc3278a36a7163ed3da789123727648b1aa"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=b68c9114978b949fd7dbfff75103b74375ff65ff#b68c9114978b949fd7dbfff75103b74375ff65ff"
 dependencies = [
  "base16ct",
  "nddev-device-sync-adapter-io",
@@ -4012,7 +4012,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-application"
 version = "0.0.1-alpha.21"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=b1076aa1be9ad1ba9ad7827e05eb2ee62ee9cee4#b1076aa1be9ad1ba9ad7827e05eb2ee62ee9cee4"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=cdd04c938fa836921337461f3322c26426f3fbb0#cdd04c938fa836921337461f3322c26426f3fbb0"
 dependencies = [
  "nddev-device-sync-domain",
 ]
@@ -4029,7 +4029,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-clipboard"
 version = "0.0.1-alpha.7"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=317755d303c5167677a79eba6e3a04d12bd7c26b#317755d303c5167677a79eba6e3a04d12bd7c26b"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=55799e19ae9d5dc27186f781c47af2d8aa30d42c#55799e19ae9d5dc27186f781c47af2d8aa30d42c"
 dependencies = [
  "arboard",
  "jni 0.21.1",
@@ -4048,7 +4048,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-domain"
 version = "0.0.12"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=b1076aa1be9ad1ba9ad7827e05eb2ee62ee9cee4#b1076aa1be9ad1ba9ad7827e05eb2ee62ee9cee4"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=cdd04c938fa836921337461f3322c26426f3fbb0#cdd04c938fa836921337461f3322c26426f3fbb0"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
@@ -4059,7 +4059,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-gds"
 version = "0.0.1-alpha.6"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=f52a206ba0a33650242ea252c6775c0969980cb3#f52a206ba0a33650242ea252c6775c0969980cb3"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=d8ce029d190bfbb5f06145f1a459ee43a328622d#d8ce029d190bfbb5f06145f1a459ee43a328622d"
 dependencies = [
  "gix",
  "gloo-timers 0.4.0",
@@ -4097,7 +4097,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-rds"
 version = "0.0.1-alpha.2"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-rds?rev=4b87ea6b20b5db9a8d67b73b9adb11572ffcf014#4b87ea6b20b5db9a8d67b73b9adb11572ffcf014"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-rds?rev=d2e39e3f55845bc0ea214e4ea412d5c27b1147a2#d2e39e3f55845bc0ea214e4ea412d5c27b1147a2"
 dependencies = [
  "anyhow",
  "iroh",
@@ -4166,7 +4166,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=c800015d448c872b03d720f3f10185f28f4be976#c800015d448c872b03d720f3f10185f28f4be976"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=104a93c1b347f14a435db95b304ea74b67c905d9#104a93c1b347f14a435db95b304ea74b67c905d9"
 dependencies = [
  "base16ct",
  "base64 0.23.1",

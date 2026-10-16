@@ -403,7 +403,7 @@
   "telemetryPersistenceUnavailable": "Durable browser log storage has not confirmed a successful write. Unstored events can be lost when this page closes.",
   "vaultStorageUnavailable": "Local encrypted storage is unavailable. Check this browser or device’s storage permissions and support.",
   "vaultDependencyUnavailable": "The vault could not access required local storage or server services.",
-  "serverCapacityExhausted": "Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.",
+  "serverCapacityExhausted": "Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sending is paused while NDS checks for a safe retry; you can also retry manually.",
   "catalogTitle": "GitHub repositories",
   "catalogHelp": "Choose a vault record containing a GitHub access token to update the saved catalog. Each request reads one page available to that credential.",
   "catalogCredential": "Vault credential",

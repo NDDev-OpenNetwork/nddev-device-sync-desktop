@@ -4,7 +4,8 @@ use nddev_device_sync_accounts::{
     IdentityClient,
     view::{ClientError, PasskeyView, View},
 };
-use nddev_device_sync_application::lifecycle::{BatchOutcome, ReplicaSchedule};
+use nddev_device_sync_application::lifecycle::{BatchOutcome, CapacityCheck, ReplicaSchedule};
+use nddev_device_sync_application::replica::CapacityProbeOutcome;
 use nddev_device_sync_telemetry::view::ClientLifecycle;
 use nddev_device_sync_vault::{
     VaultClient,
@@ -27,8 +28,8 @@ pub struct NdsClient {
     vault: tokio::sync::Mutex<Option<Arc<VaultClient>>>,
     replica: Mutex<Option<Replica>>,
     replica_control: tokio::sync::Mutex<()>,
-    pub(super) publication: Mutex<()>,
-    replica_schedule: Mutex<Arc<Mutex<ReplicaSchedule>>>,
+    pub(super) publication: Arc<Mutex<()>>,
+    replica_schedule: Arc<Mutex<Arc<Mutex<ReplicaSchedule>>>>,
     active: AtomicBool,
     pub(crate) screen: Mutex<Option<super::screen::ScreenSlot>>,
     // Raw lifecycle fact; admission and publication share this lifetime owner.
@@ -75,8 +76,8 @@ impl NdsClient {
             vault: tokio::sync::Mutex::new(None),
             replica: Mutex::default(),
             replica_control: tokio::sync::Mutex::default(),
-            publication: Mutex::default(),
-            replica_schedule: Mutex::default(),
+            publication: Arc::default(),
+            replica_schedule: Arc::default(),
             active: AtomicBool::new(true),
             screen: Mutex::default(),
             screen_lifecycle: Mutex::new(ClientLifecycle::Detached),
@@ -377,6 +378,8 @@ impl NdsClient {
         let (active, mut enabled) =
             tokio::sync::watch::channel(self.active.load(Ordering::Relaxed));
         let identity = self.inner.clone();
+        let publication = self.publication.clone();
+        let policy_slot = self.replica_schedule.clone();
         let mut slot = self.replica.lock().unwrap_or_else(|e| e.into_inner());
         if slot.as_ref().is_some_and(|replica| {
             replica
@@ -388,6 +391,7 @@ impl NdsClient {
         }
         slot.take();
         let task = runtime::spawn(async move {
+            let mut schedule = schedule;
             let mut delay = initial_delay;
             let mut published = false;
             loop {
@@ -402,34 +406,95 @@ impl NdsClient {
                     changed = enabled.changed() => { if changed.is_err() { break; } delay = Duration::ZERO; continue; }
                     _ = runtime::sleep(delay) => {}
                 }
-                let inbox_only = schedule
-                    .lock()
-                    .unwrap_or_else(|e| e.into_inner())
-                    .is_capacity_blocked();
+                let (capacity_check, probe) = {
+                    let policy = schedule.lock().unwrap_or_else(|e| e.into_inner());
+                    (policy.capacity_check(), policy.capacity_probe())
+                };
+                let inbox_only = capacity_check.is_some() && probe.is_none();
                 let mut inbox_at_head = None;
+                let mut inbox_empty = false;
+                let mut capacity_outcome = None;
+                let mut attempt_history = None;
+                let lifetime = identity.local_use_lifetime();
                 let Some(vault) = weak.upgrade() else {
                     break;
                 };
                 let result = tokio::select! {
                     changed = enabled.changed() => { if changed.is_err() { break; } delay = Duration::ZERO; continue; }
                     result = observe("sync.replica.batch", async {
+                        if probe.is_some() {
+                            let attempt = vault.probe_capacity_attempt().await?;
+                            attempt_history = attempt.history;
+                            capacity_outcome = attempt.result?;
+                            return vault.refresh_local().await;
+                        }
                         if inbox_only {
-                            let progress = vault.synchronize_inbox().await?;
+                            let attempt = vault.synchronize_attempt(true).await?;
+                            attempt_history = attempt.history;
+                            let progress = attempt.result?;
                             inbox_at_head = Some(progress.inbox_at_head);
+                            inbox_empty = progress.caught_up;
                             return Ok(progress.view);
                         }
-                        let view = vault.synchronize().await?;
+                        let attempt = vault.synchronize_attempt(false).await?;
+                        attempt_history = attempt.history;
+                        let progress = attempt.result?;
+                        inbox_at_head = Some(progress.inbox_at_head);
+                        let view = progress.view;
                         if !published && !view.catching_up && !schedule.lock().unwrap_or_else(|e| e.into_inner()).is_capacity_blocked() {
-                            let view = vault.publish_states(device_observations(&identity)?).await?;
+                            let attempt = vault.publish_states_attempt(device_observations(&identity)?).await?;
+                            attempt_history = attempt.history;
+                            let view = attempt.result?;
                             published = true;
                             return Ok(view);
                         }
                         Ok(view)
                     }) => result
                 };
+                {
+                    let mut policy = schedule.lock().unwrap_or_else(|e| e.into_inner());
+                    if let Some(history) = attempt_history {
+                        policy.observe_history(history);
+                        if inbox_only
+                            && result.is_ok()
+                            && inbox_at_head == Some(true)
+                            && let Some(check) = &capacity_check
+                        {
+                            policy.observe_capacity_inbox(check, history);
+                        }
+                    }
+                    if inbox_only && inbox_at_head == Some(true) && inbox_empty && result.is_ok() {
+                        capacity_outcome = Some(CapacityProbeOutcome::NoEligibleWork);
+                    }
+                }
+                if let (Some(check), Some(completed)) = (&capacity_check, capacity_outcome)
+                    && let Ok(fence) = identity.local_use_fence_from(&lifetime).await
+                {
+                    let replacement = {
+                        let _publication = publication.lock().unwrap_or_else(|e| e.into_inner());
+                        if identity.check_local_use_lifetime(&fence).is_ok() {
+                            recovered_policy(&policy_slot, &schedule, check, completed)
+                        } else {
+                            None
+                        }
+                    };
+                    if let Some(next) = replacement {
+                        schedule = next;
+                        tracing::info!(
+                            event.name = "sync.capacity.recovered",
+                            module = "vault",
+                            outcome = "ok"
+                        );
+                    }
+                }
                 let outcome = match (result.is_ok(), inbox_at_head) {
-                    (true, Some(true)) => BatchOutcome::InboxHead,
-                    (true, Some(false)) => BatchOutcome::InboxMore,
+                    (true, Some(true))
+                        if inbox_only
+                            || result.as_ref().is_ok_and(|v| !v.sync_error.is_empty()) =>
+                    {
+                        BatchOutcome::InboxHead
+                    }
+                    (true, Some(false)) if inbox_only => BatchOutcome::InboxMore,
                     _ => batch_outcome(&result),
                 };
                 let sample = if matches!(outcome, BatchOutcome::Retryable) {
@@ -500,11 +565,21 @@ impl NdsClient {
                 // publishers may finish, but can only update their old policy.
                 self.reset_replica_schedule()
             };
-            let result = async { self.vault().await?.synchronize().await }.await;
-            let next = schedule
-                .lock()
-                .unwrap_or_else(|e| e.into_inner())
-                .after(batch_outcome(&result));
+            let mut history = None;
+            let result = async {
+                let vault = self.vault().await?;
+                let attempt = vault.synchronize_attempt(false).await?;
+                history = attempt.history;
+                attempt.result.map(|progress| progress.view)
+            }
+            .await;
+            let next = {
+                let mut policy = schedule.lock().unwrap_or_else(|e| e.into_inner());
+                if let Some(history) = history {
+                    policy.observe_history(history);
+                }
+                policy.after(batch_outcome(&result))
+            };
             if let Some(delay) = next {
                 self.start_replica_for_schedule(delay, &fence, schedule)
                     .await
@@ -830,6 +905,8 @@ impl NdsClient {
     ) -> Result<VaultView, VaultError> {
         use nddev_device_sync_domain::state::Snapshot;
         let schedule = self.schedule();
+        let mut attempted = false;
+        let mut history = None;
         let result = observe("sync.states.publish", async {
             if schedule
                 .lock()
@@ -853,14 +930,18 @@ impl NdsClient {
             for module in modules {
                 values.push(capture(module.state()));
             }
-            vault.publish_states(values).await
+            attempted = true;
+            let attempt = vault.publish_states_attempt(values).await?;
+            history = attempt.history;
+            attempt.result
         })
         .await;
-        if matches!(&result, Err(VaultError::CapacityExhausted)) {
-            let _ = schedule
-                .lock()
-                .unwrap_or_else(|e| e.into_inner())
-                .after(BatchOutcome::CapacityExhausted);
+        if attempted && matches!(&result, Err(VaultError::CapacityExhausted)) {
+            let mut policy = schedule.lock().unwrap_or_else(|e| e.into_inner());
+            if let Some(history) = history {
+                policy.observe_history(history);
+            }
+            policy.after(BatchOutcome::CapacityExhausted);
         }
         result
     }
@@ -979,6 +1060,27 @@ fn replica_auth_error(error: ClientError) -> VaultError {
         ClientError::DeviceRevoked | ClientError::RevalidationRequired => VaultError::Locked,
         _ => VaultError::Unavailable,
     }
+}
+
+// Caller holds publication and has checked the original Accounts lifetime.
+#[frb(ignore)]
+fn recovered_policy(
+    slot: &Mutex<Arc<Mutex<ReplicaSchedule>>>,
+    expected: &Arc<Mutex<ReplicaSchedule>>,
+    check: &CapacityCheck,
+    outcome: CapacityProbeOutcome,
+) -> Option<Arc<Mutex<ReplicaSchedule>>> {
+    let mut current = slot.lock().unwrap_or_else(|e| e.into_inner());
+    if !Arc::ptr_eq(&current, expected) {
+        return None;
+    }
+    let replacement = expected
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .recovered_capacity(check, outcome)?;
+    let replacement = Arc::new(Mutex::new(replacement));
+    *current = replacement.clone();
+    Some(replacement)
 }
 
 fn batch_outcome(result: &Result<VaultView, VaultError>) -> BatchOutcome {
@@ -1201,6 +1303,89 @@ pub fn new_vault_record_id() -> String {
 ))]
 mod activity_tests {
     use super::*;
+
+    #[test]
+    fn blocked_state_preflight_does_not_create_a_new_server_refusal() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let client = NdsClient::new("https://example.invalid".into()).unwrap();
+                let policy = client.schedule();
+                policy
+                    .lock()
+                    .unwrap()
+                    .after(BatchOutcome::CapacityExhausted);
+                let check = policy.lock().unwrap().capacity_check().unwrap();
+                assert!(matches!(
+                    client.publish_device_state().await,
+                    Err(VaultError::CapacityExhausted)
+                ));
+                assert!(
+                    policy
+                        .lock()
+                        .unwrap()
+                        .recovered_capacity(&check, CapacityProbeOutcome::Receipt)
+                        .is_some()
+                );
+                assert!(client.vault.try_lock().unwrap().is_none());
+            });
+    }
+
+    #[test]
+    fn verified_capacity_completion_replaces_only_its_current_refusal() {
+        let client = NdsClient::new("https://example.invalid".into()).unwrap();
+        let old = client.schedule();
+        old.lock().unwrap().after(BatchOutcome::CapacityExhausted);
+        let check = old.lock().unwrap().capacity_check().unwrap();
+        let replacement = {
+            let _publication = client.publication.lock().unwrap();
+            recovered_policy(
+                &client.replica_schedule,
+                &old,
+                &check,
+                CapacityProbeOutcome::Receipt,
+            )
+            .unwrap()
+        };
+        assert!(Arc::ptr_eq(&replacement, &client.schedule()));
+        assert!(!client.capacity_blocked());
+        old.lock().unwrap().after(BatchOutcome::CapacityExhausted);
+        assert!(!client.capacity_blocked());
+        {
+            let _publication = client.publication.lock().unwrap();
+            assert!(
+                recovered_policy(
+                    &client.replica_schedule,
+                    &old,
+                    &check,
+                    CapacityProbeOutcome::Receipt
+                )
+                .is_none()
+            );
+        }
+        replacement
+            .lock()
+            .unwrap()
+            .after(BatchOutcome::CapacityExhausted);
+        let stale = replacement.lock().unwrap().capacity_check().unwrap();
+        replacement
+            .lock()
+            .unwrap()
+            .after(BatchOutcome::CapacityExhausted);
+        let _publication = client.publication.lock().unwrap();
+        assert!(
+            recovered_policy(
+                &client.replica_schedule,
+                &replacement,
+                &stale,
+                CapacityProbeOutcome::NoEligibleWork
+            )
+            .is_none()
+        );
+        assert!(client.capacity_blocked());
+    }
 
     #[test]
     fn late_capacity_result_cannot_reblock_an_explicit_retry() {

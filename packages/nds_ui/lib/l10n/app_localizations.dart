@@ -1551,7 +1551,7 @@ abstract class AppLocalizations {
   /// No description provided for @serverCapacityExhausted.
   ///
   /// In en, this message translates to:
-  /// **'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.'**
+  /// **'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sending is paused while NDS checks for a safe retry; you can also retry manually.'**
   String get serverCapacityExhausted;
 
   /// No description provided for @catalogTitle.

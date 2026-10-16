@@ -839,7 +839,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverCapacityExhausted =>
-      'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.';
+      'Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sending is paused while NDS checks for a safe retry; you can also retry manually.';
 
   @override
   String get catalogTitle => 'GitHub repositories';
