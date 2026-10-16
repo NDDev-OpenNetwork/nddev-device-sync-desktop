@@ -17,6 +17,9 @@ use std::{
     time::Duration,
 };
 use tokio_util::sync::CancellationToken;
+#[frb(ignore)]
+mod reconciliation;
+use reconciliation::{ResolutionBatch, ScopeResolution};
 
 #[frb(ignore)]
 pub(crate) struct CatalogState {
@@ -26,6 +29,8 @@ pub(crate) struct CatalogState {
     scan_id: Option<String>,
     traversal: Option<Traversal>,
     pending: Option<Arc<PendingPage>>,
+    scope_resolution: Option<Arc<ScopeResolution>>,
+    restart: bool,
     saved_cursor: Option<RepositoryCatalogCursor>,
     saved_fence: Option<Arc<LocalUseFence>>,
     lifetime: Arc<CancellationToken>,
@@ -41,6 +46,8 @@ impl Default for CatalogState {
             scan_id: None,
             traversal: None,
             pending: None,
+            scope_resolution: None,
+            restart: false,
             saved_cursor: None,
             saved_fence: None,
             lifetime: Arc::new(CancellationToken::new()),
@@ -60,12 +67,25 @@ impl CatalogState {
         self.scan_id = None;
         self.traversal = None;
         self.pending = None;
+        self.scope_resolution = None;
+        self.restart = false;
         self.saved_cursor = None;
         self.saved_fence = None;
         if clear_selection {
             self.selection = None;
         }
         // The admitted future retains the flight until it has actually ended.
+    }
+    fn request_next(&self, next: bool) -> bool {
+        next && !self.restart
+    }
+    fn rewind(&mut self) {
+        self.cursor = None;
+        self.fence = None;
+        self.scan_id = None;
+        self.traversal = None;
+        self.scope_resolution = None;
+        self.restart = true;
     }
 }
 struct Flight<'a> {
@@ -188,8 +208,20 @@ struct CatalogPort {
 }
 struct PendingPage {
     port: CatalogPort,
-    publication: Mutex<PagePublication>,
+    work: PageWork,
     requested_next: bool,
+}
+enum PageWork {
+    Publish(Box<Mutex<PagePublication>>),
+    Resolve(Box<ResolutionBatch>),
+}
+impl PendingPage {
+    fn publication(&self) -> Result<&Mutex<PagePublication>, GithubCatalogError> {
+        match &self.work {
+            PageWork::Publish(value) => Ok(value),
+            PageWork::Resolve(_) => Err(GithubCatalogError::InvalidInput),
+        }
+    }
 }
 impl Drop for PendingPage {
     fn drop(&mut self) {
@@ -391,6 +423,7 @@ impl NdsClient {
                 state.fence = None;
                 state.scan_id = None;
                 state.traversal = None;
+                state.scope_resolution = None;
                 (selection, None, None, uuid::Uuid::new_v4().to_string())
             }
         };
@@ -427,7 +460,7 @@ impl NdsClient {
             },
             read,
         };
-        let page = catalog::observations::observation_page(
+        let mut page = catalog::observations::observation_page(
             &port,
             selection.clone(),
             after.as_ref(),
@@ -436,9 +469,38 @@ impl NdsClient {
         )
         .await?;
         port.guard.validate().await?;
+        let scope_resolution = if !next_page {
+            reconciliation::capture_scope(&port, &page).await?
+        } else {
+            None
+        };
+        if scope_resolution.is_some() {
+            // Principal discovery precedes scope capture. Discard that probe:
+            // every counted page must be read after the scope proof was captured.
+            page = catalog::observations::observation_page(
+                &port,
+                selection.clone(),
+                after.as_ref(),
+                scan_id.clone(),
+                flight.cancellation.as_ref(),
+            )
+            .await?;
+            port.guard.validate().await?;
+        }
+        let work = match reconciliation::prepare_batch(
+            &port,
+            &page,
+            after.as_ref(),
+            flight.cancellation.as_ref(),
+        )
+        .await?
+        {
+            Some(batch) => PageWork::Resolve(Box::new(batch)),
+            None => PageWork::Publish(Box::new(Mutex::new(PagePublication::new(page)))),
+        };
         let pending = Arc::new(PendingPage {
             port,
-            publication: Mutex::new(PagePublication::new(page)),
+            work,
             requested_next: next_page,
         });
         let mut state = self.catalog.lock().unwrap_or_else(|e| e.into_inner());
@@ -450,12 +512,15 @@ impl NdsClient {
         }
         state.fence = Some(fence);
         state.scan_id = Some(scan_id);
+        if let Some(scope) = scope_resolution {
+            state.scope_resolution = Some(scope);
+        }
         state.pending = Some(pending.clone());
         Ok(pending)
     }
 
     #[frb(ignore)]
-    fn discard_catalog_page(&self, pending: &Arc<PendingPage>) {
+    fn discard_catalog_page(&self, pending: &Arc<PendingPage>, restart: bool) {
         let mut state = self.catalog.lock().unwrap_or_else(|e| e.into_inner());
         if state
             .pending
@@ -464,6 +529,14 @@ impl NdsClient {
         {
             pending.port.guard.cancellation.cancel();
             state.pending = None;
+            if restart {
+                state.rewind();
+                tracing::info!(
+                    event.name = "gds.catalog.traversal.restart",
+                    module = "gds",
+                    outcome = "stopped"
+                );
+            }
         }
     }
 
@@ -477,28 +550,57 @@ impl NdsClient {
         flight.check()?;
         let (context, at) = {
             let publication = pending
-                .publication
+                .publication()?
                 .lock()
                 .unwrap_or_else(|e| e.into_inner());
             (publication.context().clone(), publication.observed_at_ms())
         };
-        let result = pending
+        let key = candidate.observation().key();
+        let observation = candidate.observation().clone();
+        let mut result = pending
             .port
             .guard
             .vault
             .publish_repository_observation(&pending.port.read, candidate, Some(&context), at)
             .await?;
         flight.check()?;
+        let scope = matches!(&key, ObservationKey::Scope { .. });
+        if scope && matches!(result, RepositoryPublication::ReRead) {
+            let captured = self
+                .catalog
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .scope_resolution
+                .clone();
+            if let Some(captured) = captured.filter(|s| s.snapshot.current().key == key) {
+                result = match reconciliation::submit(
+                    &pending.port.guard.vault,
+                    &captured.snapshot,
+                    &observation,
+                    &context,
+                    at,
+                )
+                .await
+                {
+                    Ok(result) => result,
+                    Err(GithubCatalogError::Busy) => {
+                        self.discard_catalog_page(pending, true);
+                        return Err(GithubCatalogError::Busy);
+                    }
+                    Err(error) => return Err(error),
+                };
+            }
+        }
         match result {
             RepositoryPublication::Unchanged | RepositoryPublication::Queued { .. } => Ok(()),
             RepositoryPublication::ReRead => {
                 // Keep prior traversal/cursor unchanged; the next call captures
                 // new baselines and actually reads the same provider page again.
-                self.discard_catalog_page(pending);
+                self.discard_catalog_page(pending, scope);
                 Err(GithubCatalogError::Busy)
             }
             RepositoryPublication::SourceChanged => {
-                self.discard_catalog_page(pending);
+                self.discard_catalog_page(pending, false);
                 Err(GithubCatalogError::CredentialChanged)
             }
         }
@@ -510,11 +612,50 @@ impl NdsClient {
         pending: &Arc<PendingPage>,
         flight: &Flight<'_>,
     ) -> Result<GithubRepositoryPageView, GithubCatalogError> {
+        if let PageWork::Resolve(batch) = &pending.work {
+            let queue = &batch.choices;
+            loop {
+                flight.check()?;
+                let choice = queue
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .front()
+                    .cloned();
+                let Some(choice) = choice else {
+                    break;
+                };
+                let result = reconciliation::submit_choice(
+                    &pending.port.guard.vault,
+                    &choice,
+                    &batch.context,
+                )
+                .await;
+                flight.check()?;
+                match result {
+                    Ok(RepositoryPublication::Unchanged | RepositoryPublication::Queued { .. }) => {
+                        queue.lock().unwrap_or_else(|e| e.into_inner()).pop_front();
+                    }
+                    Ok(RepositoryPublication::ReRead) | Err(GithubCatalogError::Busy) => {
+                        self.discard_catalog_page(pending, false);
+                        return Err(GithubCatalogError::Busy);
+                    }
+                    Ok(RepositoryPublication::SourceChanged) => {
+                        self.discard_catalog_page(pending, false);
+                        return Err(GithubCatalogError::CredentialChanged);
+                    }
+                    Err(error) => return Err(error),
+                }
+            }
+            self.discard_catalog_page(pending, false);
+            // Resolution has its own fresh read. It never advances the normal
+            // traversal: queued choices must reach their real sync outcomes.
+            return Err(GithubCatalogError::Busy);
+        }
         loop {
             flight.check()?;
             let next = {
                 let publication = pending
-                    .publication
+                    .publication()?
                     .lock()
                     .unwrap_or_else(|e| e.into_inner());
                 publication.next_candidate().cloned()
@@ -526,14 +667,14 @@ impl NdsClient {
             self.queue_catalog_observation(pending, flight, candidate)
                 .await?;
             pending
-                .publication
+                .publication()?
                 .lock()
                 .unwrap_or_else(|e| e.into_inner())
                 .acknowledge(&key)?;
         }
         let (context, scope_key) = {
             let publication = pending
-                .publication
+                .publication()?
                 .lock()
                 .unwrap_or_else(|e| e.into_inner());
             (
@@ -561,7 +702,7 @@ impl NdsClient {
             None => None,
         };
         let (traversal, summary) = pending
-            .publication
+            .publication()?
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .finish(traversal, previous.as_ref())?;
@@ -571,7 +712,7 @@ impl NdsClient {
         }
         pending.port.guard.validate().await?;
         let page = pending
-            .publication
+            .publication()?
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .completed_page()
@@ -593,6 +734,10 @@ impl NdsClient {
         state.cursor = cursor;
         state.traversal = Some(traversal);
         state.pending = None;
+        state.restart = false;
+        if state.cursor.is_none() {
+            state.scope_resolution = None;
+        }
         Ok(view)
     }
 
@@ -660,8 +805,9 @@ impl NdsClient {
                 let flight = self.catalog_flight()?;
                 // Refuse an obsolete continuation before timers or protected I/O.
                 // Keep an unfinished first page if a caller asks for next early.
-                {
+                let next_page = {
                     let state = self.catalog.lock().unwrap_or_else(|e| e.into_inner());
+                    let next_page = state.request_next(next_page);
                     let resume = state
                         .pending
                         .as_ref()
@@ -676,7 +822,8 @@ impl NdsClient {
                     {
                         return Err(GithubCatalogError::InvalidInput);
                     }
-                }
+                    next_page
+                };
                 let result = runtime::timeout(Duration::from_secs(10), async {
                     tokio::select! { biased;
                         _ = flight.cancellation.cancelled() => Err(GithubCatalogError::Cancelled),
@@ -702,6 +849,36 @@ impl NdsClient {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn traversal_restart_preserves_selection_and_admission_but_cancel_revokes_it() {
+        let selected = CredentialSelection::new("record".into(), 7, None).unwrap();
+        let state = Mutex::new(CatalogState {
+            selection: Some(selected.clone()),
+            ..Default::default()
+        });
+        let flight = Flight::begin(&state).unwrap();
+        {
+            let mut current = state.lock().unwrap();
+            current.rewind();
+            assert_eq!(current.selection.as_ref(), Some(&selected));
+            assert!(!current.request_next(true));
+            assert!(!current.request_next(false));
+        }
+        assert_eq!(flight.check(), Ok(()));
+        assert!(matches!(
+            Flight::begin(&state),
+            Err(GithubCatalogError::Busy)
+        ));
+        state.lock().unwrap().invalidate(false);
+        assert_eq!(flight.check(), Err(GithubCatalogError::Cancelled));
+        assert!(state.lock().unwrap().request_next(true));
+        assert!(matches!(
+            Flight::begin(&state),
+            Err(GithubCatalogError::Busy)
+        ));
+        drop(flight);
+        assert_eq!(Flight::begin(&state).unwrap().check(), Ok(()));
+    }
     fn immediate<T>(future: impl std::future::Future<Output = T>) -> T {
         use std::task::{Context, Poll, Waker};
         let mut future = std::pin::pin!(future);

@@ -97,8 +97,16 @@ have a local receipt. Session or selection changes cancel the pending page.
 The saved-catalog view reads Vault without resolving a GitHub credential and
 shows observation dates, pending/conflict state and missing owner profiles.
 These are retained observations, not current access or an atomic provider snapshot.
+Known conflicts use a separate bounded pass: Vault captures the complete affected
+families before a real fresh provider read, and only matching returned facts may
+queue resolutions. That pass never advances traversal. An active queued or
+unknown operation waits for its actual outcome. A conflicted scope is captured
+before restarting the first page; its decision is made only from the genuine
+terminal traversal summary. Changed scope proof restarts the traversal while
+preserving saved observations. Conflicts remain visible until Applied receipts.
 Traversal selection/cursors are currently process-local; restart-safe automatic
-traversal, conflict settlement and Git materialization/autosync remain incomplete.
+traversal/cadence, verified capacity recovery and Git materialization/autosync
+remain incomplete. End-to-end provider/client acceptance remains separate.
 
 Screen requests and viewing use the shared Rust owner, Accounts authorization
 and Core contracts. The current viewer backend is Linux X11; other targets
