@@ -63,8 +63,12 @@ if fixture.get("status") != "running":
 source = Path(__file__).resolve().parents[1] / "packages/nds_ui/integration_test" / (
     "server_replica_flow_test.dart" if args.sync_role else "identity_flow_test.dart")
 target = app / "integration_test/identity_acceptance_generated_test.dart"
-if target.exists():
-    raise SystemExit("Refuse to overwrite existing generated test target")
+# flutter test forwards Dart test events, not the complete native stdout stream.
+# Keep the existing mobile and multi-replica runners; capture this ordinary Linux
+# identity flow through the same driver already used by module acceptance.
+driver = app / "integration_test/identity_acceptance_driver_generated.dart" if args.device == "linux" and not args.sync_role else None
+if target.exists() or (driver is not None and driver.exists()):
+    raise SystemExit("Refuse to overwrite existing generated test target or driver")
 target.parent.mkdir(exist_ok=True)
 ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]]
 log = args.fixture.with_name(args.fixture.stem + "-flutter-" + args.device + ".log")
@@ -76,11 +80,15 @@ try:
         gradle_path.write_bytes(temporary_gradle)
     runner.enter_context(integration_runner(app, development_http=True))
     shutil.copyfile(source, target)
+    if driver is not None:
+        shutil.copyfile(source.with_name("driver.dart"), driver)
     if android:
         for port in ports:
             subprocess.run(["adb", "-s", args.device, "reverse", "tcp:" + port, "tcp:" + port], check=True, timeout=10)
-    command = ["flutter", "test", "--verbose", str(target), "-d", args.device,
-        "--timeout=5m" if args.sync_role else "--timeout=3m", "--no-pub",
+    command = (["flutter", "drive", "--target=" + str(target), "--driver=" + str(driver)]
+        if driver is not None else ["flutter", "test", str(target),
+        "--timeout=5m" if args.sync_role else "--timeout=3m"])
+    command += ["-d", args.device, "--no-pub",
         "--dart-define=NDS_TEST_SERVER=" + fixture["base_url"],
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"],
@@ -111,7 +119,8 @@ try:
                     os.killpg(process.pid, signal.SIGKILL)
                     process.wait()
                 raise
-        if status == 0 and "All tests passed!" not in phase_log.read_text():
+        passed = "All tests passed." if driver is not None else "All tests passed!"
+        if status == 0 and passed not in phase_log.read_text():
             status = 1
             print("Flutter exited without a completed passing test receipt")
         print(f"Actual identity UI acceptance phase={phase} exit={status}; private log: {phase_log}")
@@ -127,6 +136,8 @@ try:
     raise SystemExit(status)
 finally:
     target.unlink(missing_ok=True)
+    if driver is not None:
+        driver.unlink(missing_ok=True)
     try:
         runner.close()
     finally:
