@@ -12,7 +12,7 @@ use nddev_device_sync_vault::{
 };
 use std::{
     sync::{
-        Arc, Mutex,
+        Arc, Mutex, Weak,
         atomic::{AtomicBool, Ordering},
     },
     time::Duration,
@@ -26,6 +26,7 @@ pub struct NdsClient {
     pub(crate) catalog: Mutex<super::catalog::CatalogState>,
     vault: tokio::sync::Mutex<Option<Arc<VaultClient>>>,
     replica: Mutex<Option<Replica>>,
+    replica_control: tokio::sync::Mutex<()>,
     pub(super) publication: Mutex<()>,
     replica_schedule: Mutex<Arc<Mutex<ReplicaSchedule>>>,
     active: AtomicBool,
@@ -73,6 +74,7 @@ impl NdsClient {
             catalog: Mutex::default(),
             vault: tokio::sync::Mutex::new(None),
             replica: Mutex::default(),
+            replica_control: tokio::sync::Mutex::default(),
             publication: Mutex::default(),
             replica_schedule: Mutex::default(),
             active: AtomicBool::new(true),
@@ -194,10 +196,10 @@ impl NdsClient {
         self.stop_replica().await;
         let view = self.inner.logout().await?;
         self.vault.lock().await.take();
-        *self
-            .replica_schedule
-            .lock()
-            .unwrap_or_else(|e| e.into_inner()) = Arc::default();
+        {
+            let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
+            self.reset_replica_schedule();
+        }
         Ok(view)
     }
     pub async fn refresh_devices(&self) -> Result<View, ClientError> {
@@ -295,10 +297,8 @@ impl NdsClient {
         self.stop_replica().await;
         self.vault.lock().await.take();
         // Detach the old session policy: a late result cannot block the new one.
-        *self
-            .replica_schedule
-            .lock()
-            .unwrap_or_else(|e| e.into_inner()) = Arc::default();
+        let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
+        self.reset_replica_schedule();
     }
     async fn clear_replica_fenced(&self, lifetime: &nddev_device_sync_accounts::LocalUseLifetime) {
         let task = {
@@ -338,17 +338,42 @@ impl NdsClient {
         initial_delay: Duration,
         fence: &nddev_device_sync_accounts::LocalUseFence,
     ) -> Result<(), ClientError> {
+        // A foreground tick must not replace a replica while manual sync owns
+        // its stop/retry/restart sequence. That caller restarts it on completion.
+        let Ok(_control) = self.replica_control.try_lock() else {
+            return Ok(());
+        };
+        self.start_replica_for_schedule(initial_delay, fence, self.schedule())
+            .await
+    }
+    #[frb(ignore)]
+    async fn start_replica_for_schedule(
+        &self,
+        initial_delay: Duration,
+        fence: &nddev_device_sync_accounts::LocalUseFence,
+        schedule: Arc<Mutex<ReplicaSchedule>>,
+    ) -> Result<(), ClientError> {
         let vault = self.vault().await.map_err(replica_start_error)?;
         self.inner.validate_local_use(fence).await?;
         // Protected I/O is complete before this brief cancellation/publication boundary.
         let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
         self.inner.check_local_use_lifetime(fence)?;
-        self.spawn_replica(initial_delay, vault);
-        self.ensure_delivery();
+        if self.spawn_replica(initial_delay, Arc::downgrade(&vault), schedule) {
+            self.ensure_delivery();
+        }
         Ok(())
     }
-    fn spawn_replica(&self, initial_delay: Duration, vault: Arc<VaultClient>) {
-        let weak = Arc::downgrade(&vault);
+    // Caller holds publication: policy replacement and task publication cannot
+    // interleave after this check. The task retains this exact policy identity.
+    fn spawn_replica(
+        &self,
+        initial_delay: Duration,
+        weak: Weak<VaultClient>,
+        schedule: Arc<Mutex<ReplicaSchedule>>,
+    ) -> bool {
+        if !Arc::ptr_eq(&schedule, &self.schedule()) {
+            return false;
+        }
         let (active, mut enabled) =
             tokio::sync::watch::channel(self.active.load(Ordering::Relaxed));
         let identity = self.inner.clone();
@@ -359,10 +384,9 @@ impl NdsClient {
                 .as_ref()
                 .is_some_and(|task| !task.is_finished())
         }) {
-            return;
+            return true;
         }
         slot.take();
-        let schedule = self.schedule();
         let task = runtime::spawn(async move {
             let mut delay = initial_delay;
             let mut published = false;
@@ -427,6 +451,7 @@ impl NdsClient {
             active,
             task: Some(task),
         });
+        true
     }
     #[frb(ignore)]
     pub(crate) async fn vault(&self) -> Result<Arc<VaultClient>, VaultError> {
@@ -456,26 +481,32 @@ impl NdsClient {
     pub async fn vault_sync(&self) -> Result<VaultView, VaultError> {
         let lifetime = self.inner.local_use_lifetime();
         observe("vault.sync", async {
-            let schedule = self.schedule();
+            let _control = self
+                .replica_control
+                .try_lock()
+                .map_err(|_| VaultError::Busy)?;
             self.stop_replica().await;
             let fence = self
                 .inner
                 .local_use_fence_from(&lifetime)
                 .await
                 .map_err(replica_auth_error)?;
-            schedule
-                .lock()
-                .unwrap_or_else(|e| e.into_inner())
-                .retry_capacity();
+            let schedule = {
+                let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
+                self.inner
+                    .check_local_use_lifetime(&fence)
+                    .map_err(replica_auth_error)?;
+                // An explicit retry owns fresh policy. Already running state
+                // publishers may finish, but can only update their old policy.
+                self.reset_replica_schedule()
+            };
             let result = async { self.vault().await?.synchronize().await }.await;
             let next = schedule
                 .lock()
                 .unwrap_or_else(|e| e.into_inner())
                 .after(batch_outcome(&result));
-            if let Some(delay) = next
-                && Arc::ptr_eq(&schedule, &self.schedule())
-            {
-                self.start_replica_fenced(delay, &fence)
+            if let Some(delay) = next {
+                self.start_replica_for_schedule(delay, &fence, schedule)
                     .await
                     .map_err(replica_auth_error)?;
             }
@@ -845,6 +876,15 @@ impl NdsClient {
             .unwrap_or_else(|e| e.into_inner())
             .clone()
     }
+    // Caller holds publication, including when replacing an identity session.
+    fn reset_replica_schedule(&self) -> Arc<Mutex<ReplicaSchedule>> {
+        let schedule = Arc::default();
+        *self
+            .replica_schedule
+            .lock()
+            .unwrap_or_else(|e| e.into_inner()) = Arc::clone(&schedule);
+        schedule
+    }
     #[frb(sync)]
     pub fn snapshot(&self) -> View {
         self.inner.view()
@@ -1161,6 +1201,102 @@ pub fn new_vault_record_id() -> String {
 ))]
 mod activity_tests {
     use super::*;
+
+    #[test]
+    fn late_capacity_result_cannot_reblock_an_explicit_retry() {
+        let client = NdsClient::new("https://example.invalid".into()).unwrap();
+        let old = client.schedule();
+        let _ = old.lock().unwrap().after(BatchOutcome::CapacityExhausted);
+        let retry = {
+            let _publication = client.publication.lock().unwrap();
+            client.reset_replica_schedule()
+        };
+        let _ = retry.lock().unwrap().after(BatchOutcome::CaughtUp);
+
+        // A state publication admitted before the retry completes afterwards.
+        let _ = old.lock().unwrap().after(BatchOutcome::CapacityExhausted);
+        assert!(old.lock().unwrap().is_capacity_blocked());
+        assert!(!client.capacity_blocked());
+        assert!(Arc::ptr_eq(&retry, &client.schedule()));
+
+        // A real refusal from the new attempt still blocks its own policy,
+        // and healthy inbox reads cannot remove it.
+        let _ = retry.lock().unwrap().after(BatchOutcome::CapacityExhausted);
+        let _ = retry.lock().unwrap().after(BatchOutcome::InboxHead);
+        assert!(client.capacity_blocked());
+    }
+
+    #[test]
+    fn obsolete_policy_cannot_publish_or_replace_a_replica() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let client = NdsClient::new("https://example.invalid".into()).unwrap();
+                let obsolete = client.schedule();
+                let mut active = {
+                    let _publication = client.publication.lock().unwrap();
+                    let current = client.reset_replica_schedule();
+                    assert!(!client.spawn_replica(Duration::ZERO, Weak::new(), obsolete.clone(),));
+                    assert!(client.replica.lock().unwrap().is_none());
+                    assert!(client.spawn_replica(Duration::from_secs(3600), Weak::new(), current,));
+                    client
+                        .replica
+                        .lock()
+                        .unwrap()
+                        .as_ref()
+                        .unwrap()
+                        .active
+                        .subscribe()
+                };
+                {
+                    let _publication = client.publication.lock().unwrap();
+                    assert!(!client.spawn_replica(Duration::ZERO, Weak::new(), obsolete));
+                }
+                client.set_lifecycle(ClientLifecycle::Hidden);
+                assert!(!*active.borrow_and_update());
+                client.set_lifecycle(ClientLifecycle::Resumed);
+                assert!(*active.borrow_and_update());
+                client.stop_replica().await;
+                assert!(active.has_changed().is_err());
+            });
+    }
+
+    #[test]
+    fn overlapping_manual_sync_does_not_stop_the_owned_replica() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let client = NdsClient::new("https://example.invalid".into()).unwrap();
+                let mut active = {
+                    let _publication = client.publication.lock().unwrap();
+                    assert!(client.spawn_replica(
+                        Duration::from_secs(3600),
+                        Weak::new(),
+                        client.schedule(),
+                    ));
+                    client
+                        .replica
+                        .lock()
+                        .unwrap()
+                        .as_ref()
+                        .unwrap()
+                        .active
+                        .subscribe()
+                };
+                let control = client.replica_control.lock().await;
+                assert!(matches!(client.vault_sync().await, Err(VaultError::Busy)));
+                assert!(client.replica.lock().unwrap().is_some());
+                client.set_lifecycle(ClientLifecycle::Hidden);
+                assert!(!*active.borrow_and_update());
+                drop(control);
+                assert!(client.replica_control.try_lock().is_ok());
+                client.stop_replica().await;
+            });
+    }
 
     #[test]
     fn capacity_blocks_uploads_and_late_old_results_stay_in_the_old_session() {

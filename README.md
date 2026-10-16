@@ -36,6 +36,10 @@ One Flutter lifecycle adapter feeds the core activity policy. Visible desktop
 and browser clients keep bounded synchronization and delivery when input focus
 moves elsewhere. Hidden clients pause and reconcile on resume; mobile activity
 restrictions follow the same core policy. Screens consume that shared decision.
+Manual synchronization owns one stop/retry/restart sequence; overlapping calls
+report busy. An authorized manual retry replaces its capacity policy, so late
+results from earlier work cannot block it again or restart an obsolete replica.
+Healthy inbox reads and lifecycle changes retain a real capacity refusal.
 
 Use Flutter/Dart from `toolchains.lock.json`, the compiler from
 `packages/nds_native/rust/rust-toolchain.toml` and flutter_rust_bridge_codegen 2.13.0.
