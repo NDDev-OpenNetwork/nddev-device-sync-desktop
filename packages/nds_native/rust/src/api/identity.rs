@@ -1143,10 +1143,10 @@ fn device_observations(
     Ok(values)
 }
 
-async fn observe<T>(
+fn observe<T>(
     event: &'static str,
     work: impl std::future::Future<Output = Result<T, VaultError>>,
-) -> Result<T, VaultError> {
+) -> impl std::future::Future<Output = Result<T, VaultError>> {
     observe_operation("vault", event, work, VaultError::Unavailable, |error| {
         (
             error.code(),
@@ -1160,34 +1160,41 @@ async fn observe<T>(
             ),
         )
     })
-    .await
 }
 
 // One terminal caller event and process span; transport owners retain their I/O spans.
 #[frb(ignore)]
-pub(crate) async fn observe_operation<T, E>(
+pub(crate) fn observe_operation<T, E>(
     module: &'static str,
     event: &'static str,
     work: impl std::future::Future<Output = Result<T, E>>,
     unavailable: E,
     classify: fn(&E) -> (String, &'static str, bool),
-) -> Result<T, E> {
-    let span =
-        nddev_device_sync_telemetry::operation_span(module, "process").map_err(|_| unavailable)?;
-    observe_in_span(module, event, work, span, classify).await
+) -> impl std::future::Future<Output = Result<T, E>> {
+    // Own the potentially large operation once. Keeping it inline in each
+    // observation wrapper exhausts mobile stacks when nested futures are polled.
+    let work = Box::pin(work);
+    async move {
+        let span = nddev_device_sync_telemetry::operation_span(module, "process")
+            .map_err(|_| unavailable)?;
+        observe_in_span(module, event, work, span, classify).await
+    }
 }
 
 // Once resources are owned, telemetry availability must not skip their teardown.
 #[frb(ignore)]
-pub(crate) async fn observe_cleanup<T, E>(
+pub(crate) fn observe_cleanup<T, E>(
     module: &'static str,
     event: &'static str,
     work: impl std::future::Future<Output = Result<T, E>>,
     classify: fn(&E) -> (String, &'static str, bool),
-) -> Result<T, E> {
-    let span = nddev_device_sync_telemetry::operation_span(module, "process")
-        .unwrap_or_else(|_| tracing::Span::none());
-    observe_in_span(module, event, work, span, classify).await
+) -> impl std::future::Future<Output = Result<T, E>> {
+    let work = Box::pin(work);
+    async move {
+        let span = nddev_device_sync_telemetry::operation_span(module, "process")
+            .unwrap_or_else(|_| tracing::Span::none());
+        observe_in_span(module, event, work, span, classify).await
+    }
 }
 
 async fn observe_in_span<T, E>(
@@ -1303,6 +1310,28 @@ pub fn new_vault_record_id() -> String {
 ))]
 mod activity_tests {
     use super::*;
+
+    #[test]
+    fn public_operation_futures_fit_the_mobile_stack_budget() {
+        let client = NdsClient::new("https://example.invalid".into()).unwrap();
+        let sizes = [
+            (
+                "device state",
+                std::mem::size_of_val(&client.publish_device_state()),
+            ),
+            (
+                "clipboard",
+                std::mem::size_of_val(&client.clipboard_publish_text(String::new())),
+            ),
+            ("manual sync", std::mem::size_of_val(&client.vault_sync())),
+        ];
+        for (operation, bytes) in sizes {
+            assert!(
+                bytes <= 16 * 1024,
+                "{operation} future requires {bytes} bytes"
+            );
+        }
+    }
 
     #[test]
     fn blocked_state_preflight_does_not_create_a_new_server_refusal() {
