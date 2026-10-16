@@ -5027,6 +5027,8 @@ const _: fn() = || {
     }
     {
         let StatePage = None::<nddev_device_sync_vault::view::StatePage>.unwrap();
+        let _: u64 = StatePage.observed_seq;
+        let _: u64 = StatePage.local_revision;
         let _: Vec<nddev_device_sync_vault::view::StateView> = StatePage.items;
         let _: String = StatePage.next_after;
         let _: bool = StatePage.has_more;
@@ -5046,6 +5048,7 @@ const _: fn() = || {
         let _: u64 = StateView.expires_at_ms;
         let _: String = StateView.error_class;
         let _: u64 = StateView.revision;
+        let _: Option<String> = StateView.pending_id;
         let _: bool = StateView.conflicted;
     }
     {
@@ -6576,11 +6579,15 @@ impl SseDecode for nddev_device_sync_rds::view::SessionState {
 impl SseDecode for nddev_device_sync_vault::view::StatePage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_observedSeq = <u64>::sse_decode(deserializer);
+        let mut var_localRevision = <u64>::sse_decode(deserializer);
         let mut var_items =
             <Vec<nddev_device_sync_vault::view::StateView>>::sse_decode(deserializer);
         let mut var_nextAfter = <String>::sse_decode(deserializer);
         let mut var_hasMore = <bool>::sse_decode(deserializer);
         return nddev_device_sync_vault::view::StatePage {
+            observed_seq: var_observedSeq,
+            local_revision: var_localRevision,
             items: var_items,
             next_after: var_nextAfter,
             has_more: var_hasMore,
@@ -6604,6 +6611,7 @@ impl SseDecode for nddev_device_sync_vault::view::StateView {
         let mut var_expiresAtMs = <u64>::sse_decode(deserializer);
         let mut var_errorClass = <String>::sse_decode(deserializer);
         let mut var_revision = <u64>::sse_decode(deserializer);
+        let mut var_pendingId = <Option<String>>::sse_decode(deserializer);
         let mut var_conflicted = <bool>::sse_decode(deserializer);
         return nddev_device_sync_vault::view::StateView {
             kind: var_kind,
@@ -6619,6 +6627,7 @@ impl SseDecode for nddev_device_sync_vault::view::StateView {
             expires_at_ms: var_expiresAtMs,
             error_class: var_errorClass,
             revision: var_revision,
+            pending_id: var_pendingId,
             conflicted: var_conflicted,
         };
     }
@@ -8573,6 +8582,8 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<nddev_device_sync_rds::view::S
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view::StatePage> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.0.observed_seq.into_into_dart().into_dart(),
+            self.0.local_revision.into_into_dart().into_dart(),
             self.0.items.into_into_dart().into_dart(),
             self.0.next_after.into_into_dart().into_dart(),
             self.0.has_more.into_into_dart().into_dart(),
@@ -8608,6 +8619,7 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_vault::view:
             self.0.expires_at_ms.into_into_dart().into_dart(),
             self.0.error_class.into_into_dart().into_dart(),
             self.0.revision.into_into_dart().into_dart(),
+            self.0.pending_id.into_into_dart().into_dart(),
             self.0.conflicted.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -9937,6 +9949,8 @@ impl SseEncode for nddev_device_sync_rds::view::SessionState {
 impl SseEncode for nddev_device_sync_vault::view::StatePage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u64>::sse_encode(self.observed_seq, serializer);
+        <u64>::sse_encode(self.local_revision, serializer);
         <Vec<nddev_device_sync_vault::view::StateView>>::sse_encode(self.items, serializer);
         <String>::sse_encode(self.next_after, serializer);
         <bool>::sse_encode(self.has_more, serializer);
@@ -9959,6 +9973,7 @@ impl SseEncode for nddev_device_sync_vault::view::StateView {
         <u64>::sse_encode(self.expires_at_ms, serializer);
         <String>::sse_encode(self.error_class, serializer);
         <u64>::sse_encode(self.revision, serializer);
+        <Option<String>>::sse_encode(self.pending_id, serializer);
         <bool>::sse_encode(self.conflicted, serializer);
     }
 }

@@ -10,7 +10,7 @@ crate-type = ["cdylib", "staticlib"]
 development-http = ["nddev-device-sync-accounts/development-http"]
 [dependencies]
 nddev-device-sync-application = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev = "889f0f4a9b6416e92eaaac111471a9d700ef8468" }
-nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault", rev = "ce378dbb13db64e3bd5312bc7b91b0aec748a393" }
+nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault", rev = "7522ad755dea57ae396056c100385b18c672063c" }
 tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 tokio-util = { version = "0.7", features = ["rt"] }

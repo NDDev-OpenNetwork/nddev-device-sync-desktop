@@ -84,8 +84,8 @@ class _StateScreenState extends State<StateScreen> {
       if (mounted) {
         setState(() {
           _page = page;
-          _cursor = view.cursor;
-          _localRevision = view.localRevision;
+          _cursor = page.observedSeq;
+          _localRevision = page.localRevision;
           _after = after;
         });
       }
@@ -173,6 +173,8 @@ class _StateScreenState extends State<StateScreen> {
                           if (item.expiresAtMs != BigInt.zero)
                             Text('${l.expires}: ${_date(item.expiresAtMs)}'),
                           Text(l.vaultRevision(item.revision.toString())),
+                          if (item.pendingId != null)
+                            Text(l.vaultRecordPending),
                           if (item.conflicted) Text(l.vaultConflict),
                         ],
                       ),

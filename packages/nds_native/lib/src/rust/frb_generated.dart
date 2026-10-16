@@ -4751,12 +4751,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   StatePage dco_decode_state_page(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return StatePage(
-      items: dco_decode_list_state_view(arr[0]),
-      nextAfter: dco_decode_String(arr[1]),
-      hasMore: dco_decode_bool(arr[2]),
+      observedSeq: dco_decode_u_64(arr[0]),
+      localRevision: dco_decode_u_64(arr[1]),
+      items: dco_decode_list_state_view(arr[2]),
+      nextAfter: dco_decode_String(arr[3]),
+      hasMore: dco_decode_bool(arr[4]),
     );
   }
 
@@ -4764,8 +4766,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   StateView dco_decode_state_view(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 14)
-      throw Exception('unexpected arr length: expect 14 but see ${arr.length}');
+    if (arr.length != 15)
+      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
     return StateView(
       kind: dco_decode_String(arr[0]),
       id: dco_decode_String(arr[1]),
@@ -4780,7 +4782,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       expiresAtMs: dco_decode_u_64(arr[10]),
       errorClass: dco_decode_String(arr[11]),
       revision: dco_decode_u_64(arr[12]),
-      conflicted: dco_decode_bool(arr[13]),
+      pendingId: dco_decode_opt_String(arr[13]),
+      conflicted: dco_decode_bool(arr[14]),
     );
   }
 
@@ -6352,10 +6355,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   StatePage sse_decode_state_page(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_observedSeq = sse_decode_u_64(deserializer);
+    var var_localRevision = sse_decode_u_64(deserializer);
     var var_items = sse_decode_list_state_view(deserializer);
     var var_nextAfter = sse_decode_String(deserializer);
     var var_hasMore = sse_decode_bool(deserializer);
     return StatePage(
+      observedSeq: var_observedSeq,
+      localRevision: var_localRevision,
       items: var_items,
       nextAfter: var_nextAfter,
       hasMore: var_hasMore,
@@ -6378,6 +6385,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_expiresAtMs = sse_decode_u_64(deserializer);
     var var_errorClass = sse_decode_String(deserializer);
     var var_revision = sse_decode_u_64(deserializer);
+    var var_pendingId = sse_decode_opt_String(deserializer);
     var var_conflicted = sse_decode_bool(deserializer);
     return StateView(
       kind: var_kind,
@@ -6393,6 +6401,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       expiresAtMs: var_expiresAtMs,
       errorClass: var_errorClass,
       revision: var_revision,
+      pendingId: var_pendingId,
       conflicted: var_conflicted,
     );
   }
@@ -7784,6 +7793,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_state_page(StatePage self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self.observedSeq, serializer);
+    sse_encode_u_64(self.localRevision, serializer);
     sse_encode_list_state_view(self.items, serializer);
     sse_encode_String(self.nextAfter, serializer);
     sse_encode_bool(self.hasMore, serializer);
@@ -7805,6 +7816,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_u_64(self.expiresAtMs, serializer);
     sse_encode_String(self.errorClass, serializer);
     sse_encode_u_64(self.revision, serializer);
+    sse_encode_opt_String(self.pendingId, serializer);
     sse_encode_bool(self.conflicted, serializer);
   }
 
