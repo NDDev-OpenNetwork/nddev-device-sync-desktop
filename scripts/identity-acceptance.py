@@ -67,7 +67,7 @@ if target.exists():
     raise SystemExit("Refuse to overwrite existing generated test target")
 target.parent.mkdir(exist_ok=True)
 ports = [str(urlparse(fixture[key]).port) for key in ["base_url", "mailpit_url"]]
-log = args.fixture.parent / ("flutter-" + args.device + ".log")
+log = args.fixture.with_name(args.fixture.stem + "-flutter-" + args.device + ".log")
 if args.sync_role:
     log = log.with_stem(log.stem + "-sync-" + args.sync_role)
 runner = ExitStack()
