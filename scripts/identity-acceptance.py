@@ -79,7 +79,7 @@ try:
     if android:
         for port in ports:
             subprocess.run(["adb", "-s", args.device, "reverse", "tcp:" + port, "tcp:" + port], check=True, timeout=10)
-    command = ["flutter", "test", str(target), "-d", args.device,
+    command = ["flutter", "test", "--verbose", str(target), "-d", args.device,
         "--timeout=5m" if args.sync_role else "--timeout=3m", "--no-pub",
         "--dart-define=NDS_TEST_SERVER=" + fixture["base_url"],
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
