@@ -88,6 +88,18 @@ runs actual Flutter interactions with installed providers, a fresh clipboard
 archive with capture disabled, and a temporary Git repository. It does not read
 or change the personal clipboard archive or execute cleanup/updates.
 
+The repository page captures local catalog baselines before its protected
+GitHub read and publishes observations through the encrypted Vault writer.
+Core retains a bounded page until each candidate is unchanged or durably queued;
+backpressure and caller timeouts preserve its remaining work. The provider
+continuation advances only after all page facts and any terminal scope summary
+have a local receipt. Session or selection changes cancel the pending page.
+The saved-catalog view reads Vault without resolving a GitHub credential and
+shows observation dates, pending/conflict state and missing owner profiles.
+These are retained observations, not current access or an atomic provider snapshot.
+Traversal selection/cursors are currently process-local; restart-safe automatic
+traversal, conflict settlement and Git materialization/autosync remain incomplete.
+
 Screen requests and viewing use the shared Rust owner, Accounts authorization
 and Core contracts. The current viewer backend is Linux X11; other targets
 report unsupported. Native subsystem qualification is separate from final

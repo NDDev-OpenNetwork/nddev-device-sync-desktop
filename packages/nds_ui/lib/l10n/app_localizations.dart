@@ -1563,7 +1563,7 @@ abstract class AppLocalizations {
   /// No description provided for @catalogHelp.
   ///
   /// In en, this message translates to:
-  /// **'Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.'**
+  /// **'Choose a vault record containing a GitHub access token to update the saved catalog. Each request reads one page available to that credential.'**
   String get catalogHelp;
 
   /// No description provided for @catalogCredential.
@@ -1623,7 +1623,7 @@ abstract class AppLocalizations {
   /// No description provided for @catalogInvalidResponse.
   ///
   /// In en, this message translates to:
-  /// **'GitHub returned a repository page that could not be verified.'**
+  /// **'Repository data could not be verified.'**
   String get catalogInvalidResponse;
 
   /// No description provided for @catalogProviderFailed.
@@ -1805,6 +1805,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop sharing'**
   String get screenStopSharing;
+
+  /// No description provided for @catalogSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved catalog'**
+  String get catalogSaved;
+
+  /// No description provided for @catalogProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Update from GitHub'**
+  String get catalogProvider;
+
+  /// No description provided for @catalogSavedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted observations retained in NDS. Dates show when data was observed, not current GitHub access or freshness.'**
+  String get catalogSavedHelp;
+
+  /// No description provided for @catalogReadSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh saved page'**
+  String get catalogReadSaved;
+
+  /// No description provided for @catalogSavedNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next saved page'**
+  String get catalogSavedNext;
+
+  /// No description provided for @catalogReadSavedAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh the saved catalog and try again.'**
+  String get catalogReadSavedAgain;
+
+  /// No description provided for @catalogMissingOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner {id}: details have not synchronized yet.'**
+  String catalogMissingOwner(String id);
+
+  /// No description provided for @catalogCapacityReached.
+  ///
+  /// In en, this message translates to:
+  /// **'The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available.'**
+  String get catalogCapacityReached;
 }
 
 class _AppLocalizationsDelegate

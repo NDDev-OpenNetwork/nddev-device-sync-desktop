@@ -106,6 +106,11 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> revokePasskey({required String id});
 
+  /// Saved facts use NDS local authorization; no GitHub credential is resolved.
+  Future<GithubSavedRepositoryPageView> savedGithubRepositoryPage({
+    required bool nextPage,
+  });
+
   Future<ScreenHost> screenAccept({required String id});
 
   void screenCancel();

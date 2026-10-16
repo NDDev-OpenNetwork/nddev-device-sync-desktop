@@ -852,7 +852,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalogHelp =>
-      'Выберите запись сейфа с токеном доступа GitHub. Запрос показывает одну страницу репозиториев, доступных этой записи.';
+      'Выберите запись vault с токеном GitHub, чтобы обновить сохранённый каталог. Каждый запрос читает одну страницу, доступную этим учётным данным.';
 
   @override
   String get catalogCredential => 'Учётные данные из сейфа';
@@ -886,7 +886,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalogInvalidResponse =>
-      'Не удалось проверить страницу репозиториев, полученную от GitHub.';
+      'Не удалось проверить данные репозиториев.';
 
   @override
   String get catalogProviderFailed =>
@@ -990,4 +990,33 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get screenStopSharing => 'Прекратить передачу';
+
+  @override
+  String get catalogSaved => 'Сохранённый каталог';
+
+  @override
+  String get catalogProvider => 'Обновление из GitHub';
+
+  @override
+  String get catalogSavedHelp =>
+      'Зашифрованные сведения, сохранённые в NDS. Даты показывают время наблюдения, а не текущую актуальность или доступ к GitHub.';
+
+  @override
+  String get catalogReadSaved => 'Обновить сохранённую страницу';
+
+  @override
+  String get catalogSavedNext => 'Следующая сохранённая страница';
+
+  @override
+  String get catalogReadSavedAgain =>
+      'Обновите сохранённый каталог и повторите попытку.';
+
+  @override
+  String catalogMissingOwner(String id) {
+    return 'Владелец $id: сведения ещё не синхронизированы.';
+  }
+
+  @override
+  String get catalogCapacityReached =>
+      'Каталог обновлён не полностью: достигнут лимит хранилища синхронизации. Сохранённые сведения остаются доступны.';
 }

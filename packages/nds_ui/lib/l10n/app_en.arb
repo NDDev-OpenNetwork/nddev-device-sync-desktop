@@ -405,7 +405,7 @@
   "vaultDependencyUnavailable": "The vault could not access required local storage or server services.",
   "serverCapacityExhausted": "Server storage capacity is exhausted. Your encrypted changes remain on this device. Automatic sync is paused; retry manually after server capacity becomes available.",
   "catalogTitle": "GitHub repositories",
-  "catalogHelp": "Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.",
+  "catalogHelp": "Choose a vault record containing a GitHub access token to update the saved catalog. Each request reads one page available to that credential.",
   "catalogCredential": "Vault credential",
   "catalogRefreshCredentials": "Refresh vault records",
   "catalogMoreCredentials": "Next vault records",
@@ -415,7 +415,7 @@
   "catalogChooseCredential": "Choose a current vault record.",
   "catalogSignIn": "Sign in and verify this device to read repositories.",
   "catalogCredentialChanged": "This vault record changed. Refresh records and select it again.",
-  "catalogInvalidResponse": "GitHub returned a repository page that could not be verified.",
+  "catalogInvalidResponse": "Repository data could not be verified.",
   "catalogProviderFailed": "GitHub could not return this page. Check the credential’s access and try again.",
   "catalogUnavailable": "Repository catalog is unavailable.",
   "catalogObservationUnknown": "Observation time is unavailable.",
@@ -459,5 +459,20 @@
   "screenConsent": "Allow this device to view your screen for the requested session?",
   "screenAllow": "Allow screen viewing",
   "screenAccessAllowed": "Screen access is allowed for this session.",
-  "screenStopSharing": "Stop sharing"
+  "screenStopSharing": "Stop sharing",
+  "catalogSaved": "Saved catalog",
+  "catalogProvider": "Update from GitHub",
+  "catalogSavedHelp": "Encrypted observations retained in NDS. Dates show when data was observed, not current GitHub access or freshness.",
+  "catalogReadSaved": "Refresh saved page",
+  "catalogSavedNext": "Next saved page",
+  "catalogReadSavedAgain": "Refresh the saved catalog and try again.",
+  "catalogMissingOwner": "Owner {id}: details have not synchronized yet.",
+  "@catalogMissingOwner": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogCapacityReached": "The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available."
 }

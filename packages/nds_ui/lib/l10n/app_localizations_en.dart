@@ -846,7 +846,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalogHelp =>
-      'Choose a vault record containing a GitHub access token. Read one page of repositories available to that credential.';
+      'Choose a vault record containing a GitHub access token to update the saved catalog. Each request reads one page available to that credential.';
 
   @override
   String get catalogCredential => 'Vault credential';
@@ -879,8 +879,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This vault record changed. Refresh records and select it again.';
 
   @override
-  String get catalogInvalidResponse =>
-      'GitHub returned a repository page that could not be verified.';
+  String get catalogInvalidResponse => 'Repository data could not be verified.';
 
   @override
   String get catalogProviderFailed =>
@@ -984,4 +983,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get screenStopSharing => 'Stop sharing';
+
+  @override
+  String get catalogSaved => 'Saved catalog';
+
+  @override
+  String get catalogProvider => 'Update from GitHub';
+
+  @override
+  String get catalogSavedHelp =>
+      'Encrypted observations retained in NDS. Dates show when data was observed, not current GitHub access or freshness.';
+
+  @override
+  String get catalogReadSaved => 'Refresh saved page';
+
+  @override
+  String get catalogSavedNext => 'Next saved page';
+
+  @override
+  String get catalogReadSavedAgain =>
+      'Refresh the saved catalog and try again.';
+
+  @override
+  String catalogMissingOwner(String id) {
+    return 'Owner $id: details have not synchronized yet.';
+  }
+
+  @override
+  String get catalogCapacityReached =>
+      'The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available.';
 }

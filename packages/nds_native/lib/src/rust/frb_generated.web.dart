@@ -217,6 +217,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GitStatus dco_decode_box_autoadd_git_status(dynamic raw);
 
   @protected
+  GithubSavedOwnerView dco_decode_box_autoadd_github_saved_owner_view(
+    dynamic raw,
+  );
+
+  @protected
   int dco_decode_box_autoadd_i_32(dynamic raw);
 
   @protected
@@ -311,6 +316,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  GithubObservationView dco_decode_github_observation_view(dynamic raw);
+
+  @protected
   GithubOwnerKindView dco_decode_github_owner_kind_view(dynamic raw);
 
   @protected
@@ -331,6 +339,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GithubRepositoryVisibilityView dco_decode_github_repository_visibility_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubSavedOwnerView dco_decode_github_saved_owner_view(dynamic raw);
+
+  @protected
+  GithubSavedRepositoryGroupView dco_decode_github_saved_repository_group_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubSavedRepositoryPageView dco_decode_github_saved_repository_page_view(
+    dynamic raw,
+  );
+
+  @protected
+  GithubSavedRepositoryView dco_decode_github_saved_repository_view(
     dynamic raw,
   );
 
@@ -388,6 +414,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   dco_decode_list_github_repository_summary_view(dynamic raw);
 
   @protected
+  List<GithubSavedRepositoryGroupView>
+  dco_decode_list_github_saved_repository_group_view(dynamic raw);
+
+  @protected
+  List<GithubSavedRepositoryView> dco_decode_list_github_saved_repository_view(
+    dynamic raw,
+  );
+
+  @protected
   List<IncidentView> dco_decode_list_incident_view(dynamic raw);
 
   @protected
@@ -440,6 +475,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GitStatus? dco_decode_opt_box_autoadd_git_status(dynamic raw);
+
+  @protected
+  GithubSavedOwnerView? dco_decode_opt_box_autoadd_github_saved_owner_view(
+    dynamic raw,
+  );
 
   @protected
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
@@ -687,6 +727,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GitStatus sse_decode_box_autoadd_git_status(SseDeserializer deserializer);
 
   @protected
+  GithubSavedOwnerView sse_decode_box_autoadd_github_saved_owner_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
 
   @protected
@@ -789,6 +834,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  GithubObservationView sse_decode_github_observation_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   GithubOwnerKindView sse_decode_github_owner_kind_view(
     SseDeserializer deserializer,
   );
@@ -813,6 +863,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GithubRepositoryVisibilityView sse_decode_github_repository_visibility_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubSavedOwnerView sse_decode_github_saved_owner_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubSavedRepositoryGroupView sse_decode_github_saved_repository_group_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubSavedRepositoryPageView sse_decode_github_saved_repository_page_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubSavedRepositoryView sse_decode_github_saved_repository_view(
     SseDeserializer deserializer,
   );
 
@@ -870,6 +940,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<GithubRepositorySummaryView>
   sse_decode_list_github_repository_summary_view(SseDeserializer deserializer);
+
+  @protected
+  List<GithubSavedRepositoryGroupView>
+  sse_decode_list_github_saved_repository_group_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<GithubSavedRepositoryView> sse_decode_list_github_saved_repository_view(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<IncidentView> sse_decode_list_incident_view(
@@ -934,6 +1015,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GitStatus? sse_decode_opt_box_autoadd_git_status(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  GithubSavedOwnerView? sse_decode_opt_box_autoadd_github_saved_owner_view(
     SseDeserializer deserializer,
   );
 
@@ -1215,6 +1301,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_github_saved_owner_view(
+    GithubSavedOwnerView self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
 
   @protected
@@ -1332,6 +1424,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_github_observation_view(
+    GithubObservationView self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_github_owner_kind_view(
     GithubOwnerKindView self,
     SseSerializer serializer,
@@ -1364,6 +1462,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_github_repository_visibility_view(
     GithubRepositoryVisibilityView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_saved_owner_view(
+    GithubSavedOwnerView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_saved_repository_group_view(
+    GithubSavedRepositoryGroupView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_saved_repository_page_view(
+    GithubSavedRepositoryPageView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_github_saved_repository_view(
+    GithubSavedRepositoryView self,
     SseSerializer serializer,
   );
 
@@ -1428,6 +1550,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_github_repository_summary_view(
     List<GithubRepositorySummaryView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_github_saved_repository_group_view(
+    List<GithubSavedRepositoryGroupView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_github_saved_repository_view(
+    List<GithubSavedRepositoryView> self,
     SseSerializer serializer,
   );
 
@@ -1518,6 +1652,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_git_status(
     GitStatus? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_github_saved_owner_view(
+    GithubSavedOwnerView? self,
     SseSerializer serializer,
   );
 
