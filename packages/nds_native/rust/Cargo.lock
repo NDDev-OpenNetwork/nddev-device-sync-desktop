@@ -3927,7 +3927,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.24"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=ac193b9853b1be69c61e9e9c44955e3883f9bdef#ac193b9853b1be69c61e9e9c44955e3883f9bdef"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=a644d56eadaee582ddc654439c948907d7135074#a644d56eadaee582ddc654439c948907d7135074"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -3992,7 +3992,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.8"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=e5a9eebe9b0ece60520b8e2a0bf64d5637c69be8#e5a9eebe9b0ece60520b8e2a0bf64d5637c69be8"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=22f6e9d92dd83a63d01031f9affc6e727516ddca#22f6e9d92dd83a63d01031f9affc6e727516ddca"
 dependencies = [
  "base16ct",
  "nddev-device-sync-adapter-io",
@@ -4029,7 +4029,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-clipboard"
 version = "0.0.1-alpha.7"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=fdc28a15b737c1058f66019674a5366d005a2845#fdc28a15b737c1058f66019674a5366d005a2845"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=829c2af9cde810b6d02f8a91fa96e81ffca853fa#829c2af9cde810b6d02f8a91fa96e81ffca853fa"
 dependencies = [
  "arboard",
  "jni 0.21.1",
@@ -4166,7 +4166,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=d5702a0308c9fd17eb604afa4d0c8c80ad7d4737#d5702a0308c9fd17eb604afa4d0c8c80ad7d4737"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=7dbbdaba41c5d5c5e5c2c69a2daffebb6356352a#7dbbdaba41c5d5c5e5c2c69a2daffebb6356352a"
 dependencies = [
  "base16ct",
  "base64 0.23.1",
