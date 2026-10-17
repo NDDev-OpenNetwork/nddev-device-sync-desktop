@@ -26,6 +26,7 @@ class _CompanyState extends State<CompanyScreen> {
   bool _busy = false;
   String? _error;
   bool _completed = false;
+  int _emailEpoch = 0;
   late final String _scope;
   Timer? _watch;
   bool get _paused => !ApplicationActivityScope.read(context).value;
@@ -97,22 +98,26 @@ class _CompanyState extends State<CompanyScreen> {
   }
 
   Future<void> _load() async {
-    setState(() {
-      _company = null;
-      _members = null;
-      _invitations = null;
-    });
     final company = await widget.client.company();
     if (!mounted || _currentScope != _scope) return;
-    setState(() => _company = company);
-    if (company.member.role == native.OrganizationRoleView.admin) {
-      final members = await widget.client.companyMembers();
-      if (!mounted || _currentScope != _scope) return;
-      setState(() => _members = members);
-      final invitations = await widget.client.companyInvitations();
-      if (!mounted || _currentScope != _scope) return;
-      setState(() => _invitations = invitations);
+    if (company.member.role != native.OrganizationRoleView.admin) {
+      setState(() {
+        _company = company;
+        _members = null;
+        _invitations = null;
+      });
+      return;
     }
+    final members = await widget.client.companyMembers();
+    final invitations = await widget.client.companyInvitations();
+    if (!mounted || _currentScope != _scope) return;
+    // Replace the completed read together. Collapsing the list between requests
+    // resets a mobile viewport; denied access is cleared by the error boundary.
+    setState(() {
+      _company = company;
+      _members = members;
+      _invitations = invitations;
+    });
   }
 
   Future<void> _execute() async {
@@ -122,7 +127,10 @@ class _CompanyState extends State<CompanyScreen> {
     command.dispose();
     _command = null;
     if (!mounted || _currentScope != _scope) return;
-    setState(() => _completed = true);
+    setState(() {
+      _completed = true;
+      _emailEpoch++;
+    });
     _email.clear();
     // A failed refresh must not turn a committed result into an uncertain one.
     await _load();
@@ -299,13 +307,16 @@ class _CompanyState extends State<CompanyScreen> {
               l.companyInvite,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            TextField(
-              key: const Key('company-email'),
-              controller: _email,
-              enabled: enabled,
-              keyboardType: TextInputType.emailAddress,
-              autocorrect: false,
-              decoration: InputDecoration(labelText: l.email),
+            KeyedSubtree(
+              key: ValueKey(_emailEpoch),
+              child: TextField(
+                key: const Key('company-email'),
+                controller: _email,
+                enabled: enabled,
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                decoration: InputDecoration(labelText: l.email),
+              ),
             ),
             DropdownButton<native.OrganizationRoleView>(
               value: _role,
