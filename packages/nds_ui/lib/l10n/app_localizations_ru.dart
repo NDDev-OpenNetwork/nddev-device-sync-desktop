@@ -1145,4 +1145,8 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get invitationSignOut =>
       'Получено приглашение. Сначала выйдите из текущего аккаунта, затем подтвердите email получателя.';
+
+  @override
+  String get passkeyAccountHint =>
+      'Для входа с ключом доступа укажите email вашего аккаунта NDS. Если участников несколько, необходимо выбрать аккаунт.';
 }

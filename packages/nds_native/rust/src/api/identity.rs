@@ -150,10 +150,11 @@ impl NdsClient {
     pub async fn start_passkey(
         &self,
         registration: bool,
+        email: Option<String>,
         locale: String,
     ) -> Result<View, ClientError> {
         self.invalidate_catalog();
-        self.inner.start_passkey(registration, &locale).await
+        self.inner.start_passkey(registration, email, &locale).await
     }
     pub async fn passkeys(&self) -> Result<Vec<PasskeyView>, ClientError> {
         self.inner.passkeys().await

@@ -1139,4 +1139,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invitationSignOut =>
       'An invitation is waiting. Sign out first to verify the invited email address.';
+
+  @override
+  String get passkeyAccountHint =>
+      'For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected.';
 }

@@ -3586,6 +3586,7 @@ fn wire__crate__api__identity__NdsClient_start_passkey_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
             >>::sse_decode(&mut deserializer);
             let api_registration = <bool>::sse_decode(&mut deserializer);
+            let api_email = <Option<String>>::sse_decode(&mut deserializer);
             let api_locale = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
@@ -3611,6 +3612,7 @@ fn wire__crate__api__identity__NdsClient_start_passkey_impl(
                         let output_ok = crate::api::identity::NdsClient::start_passkey(
                             &*api_that_guard,
                             api_registration,
+                            api_email,
                             api_locale,
                         )
                         .await?;

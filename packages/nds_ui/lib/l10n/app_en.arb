@@ -519,5 +519,6 @@
       }
     }
   },
-  "invitationSignOut": "An invitation is waiting. Sign out first to verify the invited email address."
+  "invitationSignOut": "An invitation is waiting. Sign out first to verify the invited email address.",
+  "passkeyAccountHint": "For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected."
 }

@@ -450,7 +450,13 @@ class _IdentityScreenState extends State<_IdentityScreen> {
     _browserOpened = false;
     _poll?.cancel();
     return _run(
-      () => _client!.startPasskey(registration: registration, locale: _locale),
+      () => _client!.startPasskey(
+        registration: registration,
+        email: registration || _email.text.trim().isEmpty
+            ? null
+            : _email.text.trim(),
+        locale: _locale,
+      ),
     );
   }
 
@@ -882,13 +888,16 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                     TextField(
                       key: const Key('email'),
                       controller: _email,
-                      enabled: !_busy && v.emailAvailable,
+                      enabled:
+                          !_busy && (v.emailAvailable || v.passkeyAvailable),
                       keyboardType: TextInputType.emailAddress,
                       autocorrect: false,
                       autofillHints: const [AutofillHints.email],
                       decoration: InputDecoration(labelText: l.email),
                     ),
                     const SizedBox(height: OpenNetworkSpacing.four),
+                    if (v.passkeyAvailable && !v.invitationPending)
+                      Text(l.passkeyAccountHint),
                     if (v.flow == 'email') ...[
                       Text(l.emailHint),
                       const SizedBox(height: OpenNetworkSpacing.four),

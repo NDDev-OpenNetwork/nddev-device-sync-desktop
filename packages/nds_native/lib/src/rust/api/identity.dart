@@ -164,6 +164,7 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<View> startPasskey({
     required bool registration,
+    String? email,
     required String locale,
   });
 

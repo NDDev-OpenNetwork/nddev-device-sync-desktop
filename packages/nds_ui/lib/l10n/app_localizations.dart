@@ -2081,6 +2081,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An invitation is waiting. Sign out first to verify the invited email address.'**
   String get invitationSignOut;
+
+  /// No description provided for @passkeyAccountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected.'**
+  String get passkeyAccountHint;
 }
 
 class _AppLocalizationsDelegate

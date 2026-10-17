@@ -361,6 +361,7 @@ abstract class RustLibApi extends BaseApi {
   Future<View> crateApiIdentityNdsClientStartPasskey({
     required NdsClient that,
     required bool registration,
+    String? email,
     required String locale,
   });
 
@@ -2790,6 +2791,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Future<View> crateApiIdentityNdsClientStartPasskey({
     required NdsClient that,
     required bool registration,
+    String? email,
     required String locale,
   }) {
     return handler.executeNormal(
@@ -2801,6 +2803,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_bool(registration, serializer);
+          sse_encode_opt_String(email, serializer);
           sse_encode_String(locale, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
@@ -2815,7 +2818,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError,
         ),
         constMeta: kCrateApiIdentityNdsClientStartPasskeyConstMeta,
-        argValues: [that, registration, locale],
+        argValues: [that, registration, email, locale],
         apiImpl: this,
       ),
     );
@@ -2824,7 +2827,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiIdentityNdsClientStartPasskeyConstMeta =>
       const TaskConstMeta(
         debugName: "NdsClient_start_passkey",
-        argNames: ["that", "registration", "locale"],
+        argNames: ["that", "registration", "email", "locale"],
       );
 
   @override
@@ -9684,10 +9687,12 @@ class NdsClientImpl extends RustOpaque implements NdsClient {
 
   Future<View> startPasskey({
     required bool registration,
+    String? email,
     required String locale,
   }) => RustLib.instance.api.crateApiIdentityNdsClientStartPasskey(
     that: this,
     registration: registration,
+    email: email,
     locale: locale,
   );
 
