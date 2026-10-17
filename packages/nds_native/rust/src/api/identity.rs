@@ -1324,6 +1324,34 @@ mod activity_tests {
                 std::mem::size_of_val(&client.clipboard_publish_text(String::new())),
             ),
             ("manual sync", std::mem::size_of_val(&client.vault_sync())),
+            ("company overview", std::mem::size_of_val(&client.company())),
+            (
+                "company members",
+                std::mem::size_of_val(&client.company_members(None)),
+            ),
+            (
+                "company invitations",
+                std::mem::size_of_val(&client.company_invitations(None)),
+            ),
+            (
+                "company invite",
+                std::mem::size_of_val(&client.company_invite(
+                    String::new(),
+                    nddev_device_sync_organizations::view::OrganizationRoleView::User,
+                )),
+            ),
+            (
+                "company revoke",
+                std::mem::size_of_val(&client.company_revoke(String::new())),
+            ),
+            (
+                "company role",
+                std::mem::size_of_val(&client.company_change_member(String::new(), 1, None)),
+            ),
+            (
+                "invitation import",
+                std::mem::size_of_val(&client.import_invitation(String::new())),
+            ),
         ];
         for (operation, bytes) in sizes {
             assert!(

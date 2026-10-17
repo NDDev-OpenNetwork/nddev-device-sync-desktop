@@ -4098,7 +4098,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-organizations"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-organizations?rev=a099ca1569314890e32c2258d13d3dc7dc3a633f#a099ca1569314890e32c2258d13d3dc7dc3a633f"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-organizations?rev=f4b02f9f472eec746315777fe77736717aa1700d#f4b02f9f472eec746315777fe77736717aa1700d"
 dependencies = [
  "nddev-device-sync-accounts",
  "nddev-device-sync-domain",

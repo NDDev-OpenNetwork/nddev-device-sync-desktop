@@ -216,7 +216,7 @@ class _CompanyState extends State<CompanyScreen> {
                 'device_revoked' ||
                 'credential_revalidation_required' => l.authError,
                 _ => l.genericError,
-              }),
+              }, key: const Key('company-error')),
             ),
           if (_command != null) ...[
             Text(l.companyPending),

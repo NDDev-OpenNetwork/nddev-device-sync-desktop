@@ -124,7 +124,10 @@ void main() {
         );
         await tester.ensureVisible(revoke);
         await tester.tap(revoke);
-        await waitFor(tester, find.textContaining('· Revoked'));
+        await waitFor(
+          tester,
+          find.descendant(of: card, matching: find.textContaining('· Revoked')),
+        );
         expect(tester.takeException(), isNull);
         await tester.pageBack();
         await tester.pumpAndSettle();
@@ -350,6 +353,7 @@ Future<void> waitFor(WidgetTester tester, Finder finder) async {
               const Key('state-error'),
               const Key('utility-error'),
               const Key('module-error'),
+              const Key('company-error'),
             }.contains(widget.key),
       );
       final message = error.evaluate().isEmpty

@@ -2,6 +2,8 @@
 from contextlib import contextmanager
 from pathlib import Path
 import json
+import os
+import sys
 import re
 import signal
 import subprocess
@@ -43,6 +45,14 @@ def integration_runner(app: Path, *, development_http=False):
     source += '\nhooks:\n  user_defines:\n    nds_native:\n'
     if development_http:
         source += '      development_http: true\n'
+    # The same explicit, receipt-checked cache contract as scripts/build.py.
+    # Hooks still verify the selected RDS source, config and build receipt.
+    cache = os.environ.get('NDS_NATIVE_BUILD_HOME')
+    if cache is not None:
+        if not Path(cache).is_absolute():
+            raise RuntimeError('Prepared native cache must be an absolute path')
+        source += '      native_build_cache: ' + json.dumps(cache) + '\n'
+        source += '      native_build_python: ' + json.dumps(sys.executable) + '\n'
     def interrupted(_signal, _frame):
         raise KeyboardInterrupt
     handlers = {sig: signal.signal(sig, interrupted) for sig in [signal.SIGTERM, signal.SIGINT]}
