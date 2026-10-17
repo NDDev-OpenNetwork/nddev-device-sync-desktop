@@ -70,6 +70,10 @@ direct hook preparation requires the owning preparer's normal GitHub CLI access.
 Standalone worker packaging retains its own locked graph without the shared
 client's native provider overrides.
 
+Linux credentials use native libsecret through the Rust Accounts adapter. Builds
+require `libsecret-1-dev`; runtime requires libsecret 0.21 or newer and an encrypted
+Secret Service session. Existing credential attributes and binary values are preserved.
+
 The Linux alpha uses Flutter's supported Skia GPU backend. Requalify Impeller
 after an engine update passes native interaction acceptance under low VRAM;
 this selection does not enable software rendering.

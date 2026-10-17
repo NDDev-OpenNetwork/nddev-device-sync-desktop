@@ -40,3 +40,9 @@ allow = ["Unlicense"]
 name = "ws_stream_wasm"
 version = "=0.7.5"
 allow = ["Unlicense"]
+
+# Native libsecret build-time target detection; reviewed permissive exception.
+[[licenses.exceptions]]
+name = "target-lexicon"
+version = "=0.13.5"
+allow = ["Apache-2.0 WITH LLVM-exception"]
