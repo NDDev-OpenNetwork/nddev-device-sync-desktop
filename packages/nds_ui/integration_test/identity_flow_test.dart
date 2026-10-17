@@ -132,6 +132,10 @@ void main() {
               )
               .first,
         );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(revoke);
+        await tester.pumpAndSettle();
+        expect(revoke.hitTestable(), findsOneWidget);
         await tester.tap(revoke);
         await waitFor(
           tester,
