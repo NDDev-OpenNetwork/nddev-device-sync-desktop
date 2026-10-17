@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
+import 'package:flutter/semantics.dart';
 import 'package:nddev_opennetwork_design_system/opennetwork_design_system.dart';
 import 'package:nds_native/nds_native.dart' as native;
 import 'package:url_launcher/url_launcher.dart';
@@ -56,6 +57,7 @@ class NdsApp extends StatefulWidget {
 
 class _NdsAppState extends State<NdsApp> with WidgetsBindingObserver {
   final _identityKey = GlobalKey<_IdentityScreenState>();
+  SemanticsHandle? _webSemantics;
   Locale? _locale;
   int _page = 0;
   native.NdsClient? _client;
@@ -63,6 +65,9 @@ class _NdsAppState extends State<NdsApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    // Expose ordinary controls to assistive tools and browser agents without
+    // requiring Flutter's off-screen activation button. The app owns the handle.
+    if (kIsWeb) _webSemantics = SemanticsBinding.instance.ensureSemantics();
     WidgetsBinding.instance.addObserver(this);
     _activity = ApplicationActivity(
       nativeReady: widget.nativeReady,
@@ -78,6 +83,7 @@ class _NdsAppState extends State<NdsApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _webSemantics?.dispose();
     _activity.dispose();
     widget.diagnostics?.dispose();
     super.dispose();
