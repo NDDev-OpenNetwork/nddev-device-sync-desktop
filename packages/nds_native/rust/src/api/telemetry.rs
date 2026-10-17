@@ -1,4 +1,5 @@
 //! Process configuration and FFI only; event policy and diagnostics belong to SDK.
+#[cfg(feature = "flutter")]
 use flutter_rust_bridge::frb;
 use nddev_device_sync_telemetry::{
     Config, DebugWindow, Logger,
@@ -22,7 +23,7 @@ fn logger() -> Option<MutexGuard<'static, ProcessTelemetry>> {
         .map(|logger| logger.lock().unwrap_or_else(|e| e.into_inner()))
 }
 
-#[frb(init)]
+#[cfg_attr(feature = "flutter", frb(init))]
 pub fn init_app() -> Result<(), DiagnosticsError> {
     #[cfg(target_arch = "wasm32")]
     nddev_device_sync_accounts::invitation::capture_browser_invitation()
@@ -75,14 +76,14 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
     Ok(())
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn client_diagnostics() -> LocalDiagnostics {
     logger().map_or_else(LocalDiagnostics::unavailable, |logger| {
         logger.logger.control.diagnostics()
     })
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn configure_debug(scope: DebugScope, seconds: u16) -> Result<(), DiagnosticsError> {
     if seconds > 300 || (seconds > 0 && !matches!(scope, DebugScope::Http | DebugScope::Io)) {
         return Err(DiagnosticsError::InvalidInput);
@@ -100,7 +101,7 @@ pub fn configure_debug(scope: DebugScope, seconds: u16) -> Result<(), Diagnostic
 }
 
 /// True means the SDK accepted the call, not that an external collector received it.
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn record_client_failure(kind: FailureKind) -> bool {
     let Some(logger) = logger() else {
         return false;
@@ -112,7 +113,7 @@ pub fn record_client_failure(kind: FailureKind) -> bool {
     true
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn record_client_lifecycle(state: ClientLifecycle) -> bool {
     let Some(logger) = logger() else {
         return false;

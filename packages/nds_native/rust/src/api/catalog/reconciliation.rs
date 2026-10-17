@@ -8,7 +8,7 @@ use nddev_device_sync_domain::repositories::catalog::observations::{
 use nddev_device_sync_vault::RepositoryResolution;
 use std::collections::{BTreeMap, VecDeque};
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) struct ScopeResolution {
     pub snapshot: RepositoryResolution,
     cancellation: CancellationToken,
@@ -19,13 +19,13 @@ impl Drop for ScopeResolution {
     }
 }
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) struct ResolutionChoice {
     snapshot: RepositoryResolution,
     observation: RepositoryObservation,
     observed_at_ms: u64,
 }
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) struct ResolutionBatch {
     pub context: ObservationContext,
     pub choices: Mutex<VecDeque<Arc<ResolutionChoice>>>,
@@ -47,7 +47,7 @@ async fn capture(
     Ok(snapshot)
 }
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) async fn capture_scope(
     port: &CatalogPort,
     page: &PreparedPage,
@@ -83,7 +83,7 @@ pub(super) async fn capture_scope(
     })))
 }
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) async fn prepare_batch(
     port: &CatalogPort,
     page: &PreparedPage,
@@ -131,7 +131,7 @@ pub(super) async fn prepare_batch(
     }))
 }
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) async fn submit(
     vault: &VaultClient,
     snapshot: &RepositoryResolution,
@@ -161,7 +161,7 @@ pub(super) async fn submit(
     Ok(result)
 }
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(super) async fn submit_choice(
     vault: &VaultClient,
     choice: &ResolutionChoice,

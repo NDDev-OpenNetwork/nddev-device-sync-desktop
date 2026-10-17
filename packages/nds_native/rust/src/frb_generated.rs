@@ -6425,6 +6425,8 @@ impl SseDecode for nddev_device_sync_telemetry::view::FailureKind {
             0 => nddev_device_sync_telemetry::view::FailureKind::FlutterFramework,
             1 => nddev_device_sync_telemetry::view::FailureKind::DartUnhandled,
             2 => nddev_device_sync_telemetry::view::FailureKind::NativeBridge,
+            3 => nddev_device_sync_telemetry::view::FailureKind::ReactRender,
+            4 => nddev_device_sync_telemetry::view::FailureKind::BrowserUnhandled,
             _ => unreachable!("Invalid variant for FailureKind: {}", inner),
         };
     }
@@ -8999,6 +9001,8 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_telemetry::v
             nddev_device_sync_telemetry::view::FailureKind::FlutterFramework => 0.into_dart(),
             nddev_device_sync_telemetry::view::FailureKind::DartUnhandled => 1.into_dart(),
             nddev_device_sync_telemetry::view::FailureKind::NativeBridge => 2.into_dart(),
+            nddev_device_sync_telemetry::view::FailureKind::ReactRender => 3.into_dart(),
+            nddev_device_sync_telemetry::view::FailureKind::BrowserUnhandled => 4.into_dart(),
             _ => unreachable!(),
         }
     }
@@ -10820,6 +10824,8 @@ impl SseEncode for nddev_device_sync_telemetry::view::FailureKind {
                 nddev_device_sync_telemetry::view::FailureKind::FlutterFramework => 0,
                 nddev_device_sync_telemetry::view::FailureKind::DartUnhandled => 1,
                 nddev_device_sync_telemetry::view::FailureKind::NativeBridge => 2,
+                nddev_device_sync_telemetry::view::FailureKind::ReactRender => 3,
+                nddev_device_sync_telemetry::view::FailureKind::BrowserUnhandled => 4,
                 _ => {
                     unimplemented!("");
                 }

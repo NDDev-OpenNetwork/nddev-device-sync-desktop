@@ -2,6 +2,7 @@
 //! Core owns page progress; Vault owns encrypted state. No LocalAgent dependency.
 use super::{catalog_types::*, identity::NdsClient};
 use catalog::observations::{PagePublication, ReadObservationBaselines, Traversal};
+#[cfg(feature = "flutter")]
 use flutter_rust_bridge::frb;
 use nddev_device_sync_accounts::{IdentityClient, LocalUseFence, runtime};
 use nddev_device_sync_application::repositories::catalog::{self, ReadGithubCatalogPage};
@@ -17,11 +18,11 @@ use std::{
     time::Duration,
 };
 use tokio_util::sync::CancellationToken;
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 mod reconciliation;
 use reconciliation::{ResolutionBatch, ScopeResolution};
 
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(crate) struct CatalogState {
     selection: Option<CredentialSelection>,
     cursor: Option<CatalogCursor>,
@@ -37,7 +38,7 @@ pub(crate) struct CatalogState {
     flight: Option<Arc<CancellationToken>>,
 }
 impl Default for CatalogState {
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     fn default() -> Self {
         Self {
             selection: None,
@@ -315,21 +316,21 @@ impl NdsClient {
         }
         Flight::begin(&self.catalog)
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) fn invalidate_catalog(&self) {
         self.catalog
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .invalidate(true);
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn cancel_github_catalog(&self) {
         self.catalog
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .invalidate(false);
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn select_github_credential(
         &self,
         record_ref: String,
@@ -377,7 +378,7 @@ impl NdsClient {
         result
         }, GithubCatalogError::Unavailable, caller_error).await
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     async fn pending_catalog_page(
         &self,
         flight: &Flight<'_>,
@@ -519,7 +520,7 @@ impl NdsClient {
         Ok(pending)
     }
 
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     fn discard_catalog_page(&self, pending: &Arc<PendingPage>, restart: bool) {
         let mut state = self.catalog.lock().unwrap_or_else(|e| e.into_inner());
         if state
@@ -540,7 +541,7 @@ impl NdsClient {
         }
     }
 
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     async fn queue_catalog_observation(
         &self,
         pending: &Arc<PendingPage>,
@@ -606,7 +607,7 @@ impl NdsClient {
         }
     }
 
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     async fn publish_catalog_page(
         &self,
         pending: &Arc<PendingPage>,

@@ -1,5 +1,6 @@
 //! Private caller proposal: one existing NdsClient slot, no Dart authority data.
 use super::identity::NdsClient;
+#[cfg(feature = "flutter")]
 use flutter_rust_bridge::frb;
 use std::sync::{Arc, Mutex};
 use tokio_util::sync::CancellationToken;
@@ -27,7 +28,7 @@ impl std::fmt::Display for ScreenFailure {
 }
 impl std::error::Error for ScreenFailure {}
 impl ScreenFailure {
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub fn code(&self) -> &'static str {
         match self {
             Self::Unsupported => "screen_unsupported",
@@ -54,7 +55,7 @@ fn classify_close(error: &ScreenFailure) -> (String, &'static str, bool) {
     }
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn screen_supported() -> bool {
     cfg!(target_os = "linux")
 }
@@ -64,13 +65,13 @@ pub struct ScreenLayout {
     pub height: u32,
     pub stride: u32,
 }
-#[frb(opaque)]
+#[cfg_attr(feature = "flutter", frb(opaque))]
 pub struct ScreenFrame {
     #[cfg(target_os = "linux")]
     frame: Mutex<nddev_device_sync_rds::owned::runtime::FrameTicket>,
 }
 impl ScreenFrame {
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn layout(&self) -> Result<ScreenLayout, ScreenFailure> {
         #[cfg(target_os = "linux")]
         {
@@ -91,7 +92,7 @@ impl ScreenFrame {
             Err(ScreenFailure::Unsupported)
         }
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn check_live(&self) -> Result<(), ScreenFailure> {
         #[cfg(target_os = "linux")]
         {
@@ -106,7 +107,7 @@ impl ScreenFrame {
             Err(ScreenFailure::Unsupported)
         }
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn read_once(&self) -> Result<Vec<u8>, ScreenFailure> {
         #[cfg(target_os = "linux")]
         {
@@ -219,7 +220,7 @@ impl Drop for ScreenSlot {
     }
 }
 
-#[frb(opaque)]
+#[cfg_attr(feature = "flutter", frb(opaque))]
 pub struct ScreenView {
     #[cfg(target_os = "linux")]
     state: Arc<State>,
@@ -250,7 +251,7 @@ impl ScreenView {
             Err(ScreenFailure::Unsupported)
         }
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn cancel(&self) {
         self.life.stop.cancel();
     }
@@ -269,14 +270,14 @@ impl ScreenView {
         }
     }
 }
-#[frb(opaque)]
+#[cfg_attr(feature = "flutter", frb(opaque))]
 pub struct ScreenHost {
     #[cfg(target_os = "linux")]
     state: Arc<State>,
     life: Arc<RoleLife>,
 }
 impl ScreenHost {
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn cancel(&self) {
         self.life.stop.cancel();
     }
@@ -348,7 +349,7 @@ impl NdsClient {
             .collect())
     }
 
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) fn cancel_screen(&self) {
         if let Some(slot) = self
             .screen
@@ -359,7 +360,7 @@ impl NdsClient {
             slot.0.stop.cancel();
         }
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn screen_cancel(&self) {
         let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
         if let Some(slot) = self
@@ -433,7 +434,7 @@ impl NdsClient {
         }
         Ok(())
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) async fn reconcile_screen(&self) {
         #[cfg(target_os = "linux")]
         {
@@ -595,7 +596,7 @@ impl NdsClient {
             Err(ScreenFailure::Unsupported)
         }
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     #[cfg(target_os = "linux")]
     fn screen_publication<'a>(
         &'a self,
@@ -634,7 +635,7 @@ impl NdsClient {
         }
         Ok(publication)
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     #[cfg(target_os = "linux")]
     async fn screen_device(
         &self,

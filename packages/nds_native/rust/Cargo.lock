@@ -813,7 +813,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c54e03a951783e8b327515db3f2a2fd0e3bed362a96b066f341ce66ed49b4ead"
 dependencies = [
  "data-encoding",
- "syn 2.0.119",
+ "syn 3.0.9",
 ]
 
 [[package]]
@@ -1129,7 +1129,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -1577,7 +1577,7 @@ dependencies = [
  "gobject-sys",
  "libc",
  "system-deps 9.0.0",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -3780,7 +3780,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.24"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=1d4255eb1c37ab8ed40456ef28a1f32cdfa05d81#1d4255eb1c37ab8ed40456ef28a1f32cdfa05d81"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=101365418cf5a7fa0dd680af1ed72c357070a9ed#101365418cf5a7fa0dd680af1ed72c357070a9ed"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -3817,6 +3817,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
+ "tsify",
  "url",
  "uuid",
  "wasm-bindgen",
@@ -3849,7 +3850,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.8"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=50401751878d4ed4092c93bfb200124ca50ae070#50401751878d4ed4092c93bfb200124ca50ae070"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=fea3fd906cf308fe12d19c5d893314aa6384b330#fea3fd906cf308fe12d19c5d893314aa6384b330"
 dependencies = [
  "base16ct",
  "nddev-device-sync-adapter-io",
@@ -3886,7 +3887,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-clipboard"
 version = "0.0.1-alpha.7"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=c1fb01633f4efa3f3b947bed862d223c2d49887d#c1fb01633f4efa3f3b947bed862d223c2d49887d"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=2f5ed7c67290808a737559e151a951b0fbb35c23#2f5ed7c67290808a737559e151a951b0fbb35c23"
 dependencies = [
  "arboard",
  "jni 0.21.1",
@@ -3916,7 +3917,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-gds"
 version = "0.0.1-alpha.6"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=2f16356b87867c054b418e7e3bfd59a9f1045f3a#2f16356b87867c054b418e7e3bfd59a9f1045f3a"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=7d73158d3236a59c20055ecd522ba8a18fda93da#7d73158d3236a59c20055ecd522ba8a18fda93da"
 dependencies = [
  "gix",
  "gloo-timers 0.4.0",
@@ -3954,7 +3955,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-organizations"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-organizations?rev=7b70915fb7b624f858f44a8fcd874dd62e1a7309#7b70915fb7b624f858f44a8fcd874dd62e1a7309"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-organizations?rev=ef3050e0ac633120f08781ebba07e7daf61cf81d#ef3050e0ac633120f08781ebba07e7daf61cf81d"
 dependencies = [
  "nddev-device-sync-accounts",
  "nddev-device-sync-domain",
@@ -3963,7 +3964,9 @@ dependencies = [
  "serde_json",
  "time",
  "tracing",
+ "tsify",
  "uuid",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -4002,7 +4005,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-telemetry"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability?rev=6cf8b2ee69fd6a64bd218b47db55378191f66907#6cf8b2ee69fd6a64bd218b47db55378191f66907"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability?rev=1327eb1fc1a31bd767582d1fa204d2ae204b89df#1327eb1fc1a31bd767582d1fa204d2ae204b89df"
 dependencies = [
  "android_log-sys",
  "chrono",
@@ -4020,6 +4023,7 @@ dependencies = [
  "tracing",
  "tracing-opentelemetry",
  "tracing-subscriber",
+ "tsify",
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",
@@ -4038,7 +4042,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=b5cd5d48590c9cb9bceb09c2caf6529c50fa9ec2#b5cd5d48590c9cb9bceb09c2caf6529c50fa9ec2"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=d9d863daa50d810475518fb19a9f3daa5f5a59ca#d9d863daa50d810475518fb19a9f3daa5f5a59ca"
 dependencies = [
  "base16ct",
  "base64 0.23.1",
@@ -4060,6 +4064,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
+ "tsify",
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",
@@ -4102,6 +4107,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
+ "tsify",
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",
@@ -4376,7 +4382,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4716,7 +4722,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.45.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5516,7 +5522,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5574,7 +5580,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5733,6 +5739,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde-wasm-bindgen"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8302e169f0eddcc139c70f139d19d6467353af16f9fce27e8c30158036a1e16b"
+dependencies = [
+ "js-sys",
+ "serde",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "serde_bytes"
 version = "0.11.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5760,6 +5777,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.9",
+]
+
+[[package]]
+name = "serde_derive_internals"
+version = "0.29.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "18d26a20a969b9e3fdf2fc2d9f21eda6c40e2de84c9408bb5d3b05d499aae711"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
 ]
 
 [[package]]
@@ -5925,7 +5953,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d1e2c7f27f8d4cb10542a02c49005dbd6e93095799d6f3be745fae9f8fedd4"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6124,10 +6152,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.3",
  "once_cell",
  "rustix",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6518,6 +6546,30 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
+name = "tsify"
+version = "0.5.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ea3af6b48c5c5624f7eb3c2f578d1335fadac433321980cae0063e8eb0acaa44"
+dependencies = [
+ "serde",
+ "serde-wasm-bindgen",
+ "tsify-macros",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "tsify-macros"
+version = "0.5.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef1e2e93369379d0a527c7d6632b58c55d52db7a106d8afbde3b354f3a57a9f1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "serde_derive_internals",
+ "syn 2.0.119",
+]
+
+[[package]]
 name = "typenum"
 version = "1.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6897,7 +6949,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

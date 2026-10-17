@@ -24,6 +24,12 @@ generate:
 generated-check:
     python3 scripts/generate.py --check
 
+browser-check:
+    python3 packages/nds_native/tool/prepare_native.py -- just _browser-check
+
+_browser-check:
+    cd packages/nds_native/rust && cargo clippy --locked --target wasm32-unknown-unknown --no-default-features --features browser-bindings -- -D warnings
+
 build-linux:
     CARGO_BUILD_JOBS=4 flutter build linux --debug
 

@@ -1,3 +1,4 @@
+#[cfg(feature = "flutter")]
 use flutter_rust_bridge::frb;
 use nddev_device_sync_accounts::runtime::{self, Instant};
 use nddev_device_sync_accounts::{
@@ -21,7 +22,7 @@ use std::{
 use tracing::Instrument;
 use zeroize::Zeroizing;
 
-#[frb(opaque)]
+#[cfg_attr(feature = "flutter", frb(opaque))]
 pub struct NdsClient {
     inner: Arc<IdentityClient>,
     pub(crate) catalog: Mutex<super::catalog::CatalogState>,
@@ -61,11 +62,11 @@ impl Drop for Replica {
 }
 
 impl NdsClient {
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) fn shared_identity(&self) -> &Arc<IdentityClient> {
         &self.inner
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) fn catalog_active(&self) -> bool {
         self.active.load(Ordering::Relaxed)
     }
@@ -252,7 +253,7 @@ impl NdsClient {
         }
         Ok(view)
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn set_lifecycle(&self, state: ClientLifecycle) {
         let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());
         *self
@@ -348,7 +349,7 @@ impl NdsClient {
         self.start_replica_for_schedule(initial_delay, fence, self.schedule())
             .await
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     async fn start_replica_for_schedule(
         &self,
         initial_delay: Duration,
@@ -519,7 +520,7 @@ impl NdsClient {
         });
         true
     }
-    #[frb(ignore)]
+    #[cfg_attr(feature = "flutter", frb(ignore))]
     pub(crate) async fn vault(&self) -> Result<Arc<VaultClient>, VaultError> {
         let mut slot = self.vault.lock().await;
         if let Some(vault) = &*slot {
@@ -755,7 +756,7 @@ impl NdsClient {
         }
     }
     /// Called synchronously in the explicit user gesture, before async decryption.
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn reserve_clipboard_copy(&self) -> Result<Option<String>, VaultError> {
         #[cfg(target_arch = "wasm32")]
         {
@@ -967,11 +968,11 @@ impl NdsClient {
             .unwrap_or_else(|e| e.into_inner()) = Arc::clone(&schedule);
         schedule
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn snapshot(&self) -> View {
         self.inner.view()
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn delivery_snapshot(&self) -> super::telemetry::DeliveryView {
         self.delivery
             .lock()
@@ -979,7 +980,7 @@ impl NdsClient {
             .as_ref()
             .map_or_else(Default::default, |delivery| delivery.snapshot())
     }
-    #[frb(sync)]
+    #[cfg_attr(feature = "flutter", frb(sync))]
     pub fn cancel(&self) {
         self.cancel_work(true);
     }
@@ -1009,9 +1010,9 @@ impl NdsClient {
     }
 }
 
-/// Flutter reports raw lifecycle once. The shared application policy decides
+/// Presentation reports raw lifecycle once. The shared application policy decides
 /// whether this target may perform bounded replica and delivery work.
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn client_work_permitted(state: ClientLifecycle) -> bool {
     use nddev_device_sync_application::lifecycle::ClientLifecycle as Activity;
     use nddev_device_sync_domain::Platform;
@@ -1064,7 +1065,7 @@ fn replica_auth_error(error: ClientError) -> VaultError {
 }
 
 // Caller holds publication and has checked the original Accounts lifetime.
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 fn recovered_policy(
     slot: &Mutex<Arc<Mutex<ReplicaSchedule>>>,
     expected: &Arc<Mutex<ReplicaSchedule>>,
@@ -1164,7 +1165,7 @@ fn observe<T>(
 }
 
 // One terminal caller event and process span; transport owners retain their I/O spans.
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(crate) fn observe_operation<T, E>(
     module: &'static str,
     event: &'static str,
@@ -1183,7 +1184,7 @@ pub(crate) fn observe_operation<T, E>(
 }
 
 // Once resources are owned, telemetry availability must not skip their teardown.
-#[frb(ignore)]
+#[cfg_attr(feature = "flutter", frb(ignore))]
 pub(crate) fn observe_cleanup<T, E>(
     module: &'static str,
     event: &'static str,
@@ -1278,12 +1279,12 @@ fn incident_view(
 
 /// Native read preserves Android's sensitivity/URI refusal contract. Browser
 /// copy support does not imply a native clipboard read adapter exists.
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn supports_native_clipboard_read() -> bool {
     cfg!(target_os = "android")
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn supports_native_clipboard() -> bool {
     #[cfg(target_arch = "wasm32")]
     {
@@ -1300,7 +1301,7 @@ pub fn supports_native_clipboard() -> bool {
     }
 }
 
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn new_vault_record_id() -> String {
     uuid::Uuid::new_v4().to_string()
 }

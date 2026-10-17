@@ -1,10 +1,11 @@
 //! Composition and generated presentation boundary only.
 use super::identity::NdsClient;
+#[cfg(feature = "flutter")]
 use flutter_rust_bridge::frb;
 use nddev_device_sync_accounts::{ClientError, View};
 use nddev_device_sync_organizations::{OrganizationsClient, PreparedCommand, view::*};
 
-#[frb(opaque)]
+#[cfg_attr(feature = "flutter", frb(opaque))]
 pub struct CompanyCommand {
     client: OrganizationsClient,
     prepared: PreparedCommand,
@@ -81,7 +82,7 @@ impl NdsClient {
 }
 
 /// Browser route I/O only. No URL or invitation token is returned to presentation.
-#[frb(sync)]
+#[cfg_attr(feature = "flutter", frb(sync))]
 pub fn capture_invitation_link(route: String) -> Result<(), ClientError> {
     #[cfg(target_arch = "wasm32")]
     nddev_device_sync_accounts::invitation::capture_browser_invitation_route(route)?;

@@ -110,6 +110,8 @@ jobs:
       - run: cargo install --locked --version 0.20.2 cargo-deny
       - run: just generated-check
       - run: just check
+      - run: rustup target add --toolchain 1.99.1 wasm32-unknown-unknown
+      - run: just browser-check
       - id: design
         shell: bash
         run: |

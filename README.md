@@ -4,6 +4,9 @@ Desktop client and shared Flutter presentation for
 [NDDev OpenNetwork](https://nddev.ai), AGPL-3.0-only. `packages/nds_ui` owns the
 en/ru interface used by desktop, mobile and web; `packages/nds_native` generates
 a thin bridge to shared Rust modules. NDS tokens and unwrapped keys never enter Dart.
+Flutter web remains the migration baseline under ADR 0010. The React browser
+assembly reuses this Rust composition through the optional `browser-bindings`
+feature; desktop and mobile retain the default Flutter bridge.
 
 Module presentation uses FRB's compile-checked mirrors of the three required
 core types. The bridge exports their fields and enums; domain helper methods
@@ -163,9 +166,20 @@ clipboard. Production UI confirmation uses the same native completion receipt.
 The browser assembly uses the same UI and a stable, single-threaded Rust/WASM
 bundle. `initializeNdsBridge` supplies the preloaded ES module to FRB without
 dynamic JavaScript evaluation; its default native loader remains unchanged.
-The composition root exports only the vault worker's four journal entrypoints.
+The Flutter build also exports the vault worker's four journal entrypoints.
 Browser storage, HTTP, credentials and clipboard are owned by their adapters;
 native tools are not exposed as browser capabilities.
+
+With default features disabled, `browser-bindings` exposes identity, company
+administration, Vault and clipboard operations over the same Rust owners without
+linking the Flutter bridge. Public metadata types come from their owning Rust
+views; 64-bit values remain `bigint`, inputs reject coercion and company commands
+retain their immutable Rust handles. Secrets are copied by the Rust clipboard
+adapter, never returned as presentation values. Fixed React/browser failure
+classes use the shared telemetry SDK without exception text or stacks.
+Install `wasm32-unknown-unknown` for the pinned compiler and run `just browser-check`.
+This boundary does not establish React workflow or offline-upgrade acceptance;
+the browser replacement remains in progress.
 
 The UI distinguishes cached offline authorization, local pending operation IDs,
 committed revisions and complete sync time. Foreground reconciliation observes
