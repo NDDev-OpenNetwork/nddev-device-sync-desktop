@@ -122,7 +122,16 @@ void main() {
           of: card,
           matching: find.widgetWithText(TextButton, 'Revoke invitation'),
         );
-        await tester.ensureVisible(revoke);
+        await tester.scrollUntilVisible(
+          revoke,
+          300,
+          scrollable: find
+              .descendant(
+                of: find.byType(ListView).first,
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
         await tester.tap(revoke);
         await waitFor(
           tester,
