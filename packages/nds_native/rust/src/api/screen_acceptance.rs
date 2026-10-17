@@ -75,7 +75,6 @@ fn actual_company_screen_revalidation_closes_native_stream() {
         prepare(&client).await;
         publish(root,&format!("{role}-device.json"),json!({"device":device}));
         if role=="host" {
-            assert!(std::process::Command::new("xsetroot").args(["-solid","#ee2222"]).status().unwrap().success());
             let request = tokio::time::timeout(Duration::from_secs(90),async {
                 loop {
                     if let Ok(Some(request)) = client.screen_incoming().await { break request; }
@@ -83,6 +82,11 @@ fn actual_company_screen_revalidation_closes_native_stream() {
                 }
             }).await.expect("actual viewer request did not arrive");
             let host = client.screen_accept(request.id).await.expect("actual host consent failed");
+            // Xvfb resets its root when its last client leaves. Paint only after
+            // the production capturer owns a live connection, then observe the change.
+            wait_file(&root.join("viewer-capture.json")).await;
+            assert!(std::process::Command::new("xsetroot").args(["-solid","#ee2222"]).status().unwrap().success());
+            publish(root,"host-painted.json",json!({"painted":true}));
             wait_file(&root.join("viewer-frame.json")).await;
             publish(root,"host-streaming.json",json!({"streaming":true}));
             wait_file(&root.join("demoted.json")).await;
@@ -93,13 +97,27 @@ fn actual_company_screen_revalidation_closes_native_stream() {
         } else {
             let host = wait_file(&root.join("host-device.json")).await;
             let viewer = client.screen_open(host["device"].as_str().unwrap().into()).await.expect("actual native viewer failed");
-            let frame = viewer.frame().await.expect("actual frame did not arrive");
-            let layout = frame.layout().unwrap();
-            let bytes = frame.read_once().unwrap();
-            assert!(layout.width>0 && layout.height>0 && bytes.len()==(layout.stride*layout.height) as usize);
-            let red = bytes.as_chunks::<4>().0.iter().filter(|p| p[2]>150 && p[1]<90 && p[0]<90).count();
-            assert!(red>bytes.len()/8,"actual owned red X11 source was not visible");
-            publish(root,"viewer-frame.json",json!({"width":layout.width,"height":layout.height,"red_pixels":red}));
+            publish(root,"viewer-stage.json",json!({"stage":"connected"}));
+            let first = viewer.frame().await.expect("initial actual frame did not arrive");
+            first.check_live().unwrap();
+            drop(first);
+            publish(root,"viewer-capture.json",json!({"capturing":true}));
+            wait_file(&root.join("host-painted.json")).await;
+            let frame = tokio::time::timeout(Duration::from_secs(5),async {
+                loop {
+                    let frame=viewer.frame().await.expect("changed actual frame did not arrive");
+                    let layout=frame.layout().unwrap();
+                    let bytes=frame.read_once().unwrap();
+                    assert!(layout.width>0 && layout.height>0 && bytes.len()==(layout.stride*layout.height) as usize);
+                    let red=bytes.as_chunks::<4>().0.iter().filter(|p| p[2]>150 && p[1]<90 && p[0]<90).count();
+                    let facts=json!({"width":layout.width,"height":layout.height,"red_pixels":red});
+                    publish(root,"viewer-last-frame.json",facts.clone());
+                    if red>bytes.len()/8 {
+                        publish(root,"viewer-frame.json",facts);
+                        break frame;
+                    }
+                }
+            }).await.expect("actual owned X11 color change was not visible");
             wait_file(&root.join("demoted.json")).await;
             let at=std::time::Instant::now();
             tokio::time::timeout(Duration::from_secs(10),viewer.closed()).await.expect("viewer retained permission after demotion");
