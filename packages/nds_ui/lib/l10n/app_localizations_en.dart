@@ -968,7 +968,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get screenRequestsHelp =>
-      'Refresh requests from your devices. Sharing starts only after you allow this request.';
+      'Refresh requests from devices allowed by your current company policy. Sharing starts only after you allow this request.';
 
   @override
   String get screenConsent =>
@@ -1143,4 +1143,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get passkeyAccountHint =>
       'For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected.';
+
+  @override
+  String get screenTargets => 'Devices for screen viewing';
+
+  @override
+  String get screenTargetsEmpty => 'No active devices.';
+
+  @override
+  String get screenNotRegistered => 'Open screen sharing on this device first.';
+
+  @override
+  String get screenTargetsFailed =>
+      'Could not load devices. Refresh to check access and connection.';
 }

@@ -1779,7 +1779,7 @@ abstract class AppLocalizations {
   /// No description provided for @screenRequestsHelp.
   ///
   /// In en, this message translates to:
-  /// **'Refresh requests from your devices. Sharing starts only after you allow this request.'**
+  /// **'Refresh requests from devices allowed by your current company policy. Sharing starts only after you allow this request.'**
   String get screenRequestsHelp;
 
   /// No description provided for @screenConsent.
@@ -2087,6 +2087,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected.'**
   String get passkeyAccountHint;
+
+  /// No description provided for @screenTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices for screen viewing'**
+  String get screenTargets;
+
+  /// No description provided for @screenTargetsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No active devices.'**
+  String get screenTargetsEmpty;
+
+  /// No description provided for @screenNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Open screen sharing on this device first.'**
+  String get screenNotRegistered;
+
+  /// No description provided for @screenTargetsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load devices. Refresh to check access and connection.'**
+  String get screenTargetsFailed;
 }
 
 class _AppLocalizationsDelegate

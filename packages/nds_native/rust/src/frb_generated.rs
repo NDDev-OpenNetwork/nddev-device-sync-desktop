@@ -45,7 +45,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1702551271;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -463722554;
 
 // Section: executor
 
@@ -3340,6 +3340,66 @@ fn wire__crate__api__identity__NdsClient_screen_stop_impl(
                         let api_that_guard = api_that_guard.unwrap();
                         let output_ok =
                             crate::api::identity::NdsClient::screen_stop(&*api_that_guard).await?;
+                        std::result::Result::Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__identity__NdsClient_screen_targets_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "NdsClient_screen_targets",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<NdsClient>,
+            >>::sse_decode(&mut deserializer);
+            let api_user = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ClientError>(
+                    (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
+                        let output_ok = crate::api::identity::NdsClient::screen_targets(
+                            &*api_that_guard,
+                            api_user,
+                        )
+                        .await?;
                         std::result::Result::Ok(output_ok)
                     })()
                     .await,
@@ -6991,6 +7051,20 @@ impl SseDecode for Vec<nddev_device_sync_rds::view::RemoteSession> {
     }
 }
 
+impl SseDecode for Vec<crate::api::screen::ScreenTargetView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::screen::ScreenTargetView>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<nddev_device_sync_vault::view::StateView> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -7582,6 +7656,24 @@ impl SseDecode for crate::api::screen::ScreenRequest {
     }
 }
 
+impl SseDecode for crate::api::screen::ScreenTargetView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_deviceId = <String>::sse_decode(deserializer);
+        let mut var_displayName = <String>::sse_decode(deserializer);
+        let mut var_platform = <String>::sse_decode(deserializer);
+        let mut var_registered = <bool>::sse_decode(deserializer);
+        let mut var_isCurrent = <bool>::sse_decode(deserializer);
+        return crate::api::screen::ScreenTargetView {
+            device_id: var_deviceId,
+            display_name: var_displayName,
+            platform: var_platform,
+            registered: var_registered,
+            is_current: var_isCurrent,
+        };
+    }
+}
+
 impl SseDecode for nddev_device_sync_rds::view::SessionState {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -8133,78 +8225,84 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        62 => wire__crate__api__identity__NdsClient_start_github_impl(
+        59 => wire__crate__api__identity__NdsClient_screen_targets_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => wire__crate__api__identity__NdsClient_start_passkey_impl(
+        63 => wire__crate__api__identity__NdsClient_start_github_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        64 => wire__crate__api__identity__NdsClient_sync_states_impl(
+        64 => wire__crate__api__identity__NdsClient_start_passkey_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        65 => wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
+        65 => wire__crate__api__identity__NdsClient_sync_states_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        66 => wire__crate__api__identity__NdsClient_vault_delete_impl(
+        66 => wire__crate__api__identity__NdsClient_vault_copy_secret_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        67 => wire__crate__api__identity__NdsClient_vault_records_impl(
+        67 => wire__crate__api__identity__NdsClient_vault_delete_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        68 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
+        68 => wire__crate__api__identity__NdsClient_vault_records_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        69 => wire__crate__api__identity__NdsClient_vault_resolve_impl(
+        69 => wire__crate__api__identity__NdsClient_vault_refresh_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        70 => {
+        70 => wire__crate__api__identity__NdsClient_vault_resolve_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        71 => {
             wire__crate__api__identity__NdsClient_vault_save_impl(port, ptr, rust_vec_len, data_len)
         }
-        71 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
+        72 => wire__crate__api__identity__NdsClient_vault_snapshot_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => {
+        73 => {
             wire__crate__api__identity__NdsClient_vault_sync_impl(port, ptr, rust_vec_len, data_len)
         }
-        73 => wire__crate__api__identity__NdsClient_verify_email_impl(
+        74 => wire__crate__api__identity__NdsClient_verify_email_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        78 => wire__crate__api__screen__ScreenHost_close_impl(port, ptr, rust_vec_len, data_len),
-        79 => wire__crate__api__screen__ScreenHost_closed_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire__crate__api__screen__ScreenView_close_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire__crate__api__screen__ScreenView_closed_impl(port, ptr, rust_vec_len, data_len),
-        83 => wire__crate__api__screen__ScreenView_frame_impl(port, ptr, rust_vec_len, data_len),
-        96 => {
+        79 => wire__crate__api__screen__ScreenHost_close_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire__crate__api__screen__ScreenHost_closed_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire__crate__api__screen__ScreenView_close_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire__crate__api__screen__ScreenView_closed_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire__crate__api__screen__ScreenView_frame_impl(port, ptr, rust_vec_len, data_len),
+        97 => {
             wire__crate__api__telemetry__shutdown_telemetry_impl(port, ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -8244,68 +8342,68 @@ fn pde_ffi_dispatcher_sync_impl(
             data_len,
         ),
         53 => wire__crate__api__identity__NdsClient_screen_cancel_impl(ptr, rust_vec_len, data_len),
-        59 => wire__crate__api__identity__NdsClient_select_github_credential_impl(
+        60 => wire__crate__api__identity__NdsClient_select_github_credential_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        60 => wire__crate__api__identity__NdsClient_set_lifecycle_impl(ptr, rust_vec_len, data_len),
-        61 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
-        74 => wire__crate__api__screen__ScreenFrame_check_live_impl(ptr, rust_vec_len, data_len),
-        75 => wire__crate__api__screen__ScreenFrame_layout_impl(ptr, rust_vec_len, data_len),
-        76 => wire__crate__api__screen__ScreenFrame_read_once_impl(ptr, rust_vec_len, data_len),
-        77 => wire__crate__api__screen__ScreenHost_cancel_impl(ptr, rust_vec_len, data_len),
-        80 => wire__crate__api__screen__ScreenView_cancel_impl(ptr, rust_vec_len, data_len),
-        84 => wire__crate__api__organizations__capture_invitation_link_impl(
+        61 => wire__crate__api__identity__NdsClient_set_lifecycle_impl(ptr, rust_vec_len, data_len),
+        62 => wire__crate__api__identity__NdsClient_snapshot_impl(ptr, rust_vec_len, data_len),
+        75 => wire__crate__api__screen__ScreenFrame_check_live_impl(ptr, rust_vec_len, data_len),
+        76 => wire__crate__api__screen__ScreenFrame_layout_impl(ptr, rust_vec_len, data_len),
+        77 => wire__crate__api__screen__ScreenFrame_read_once_impl(ptr, rust_vec_len, data_len),
+        78 => wire__crate__api__screen__ScreenHost_cancel_impl(ptr, rust_vec_len, data_len),
+        81 => wire__crate__api__screen__ScreenView_cancel_impl(ptr, rust_vec_len, data_len),
+        85 => wire__crate__api__organizations__capture_invitation_link_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        85 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
-        86 => wire__crate__api__identity__client_work_permitted_impl(ptr, rust_vec_len, data_len),
-        87 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
+        86 => wire__crate__api__telemetry__client_diagnostics_impl(ptr, rust_vec_len, data_len),
+        87 => wire__crate__api__identity__client_work_permitted_impl(ptr, rust_vec_len, data_len),
+        88 => wire__nddev_device_sync_vault__view__clipboard_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        88 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
-        89 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
+        89 => wire__crate__api__telemetry__configure_debug_impl(ptr, rust_vec_len, data_len),
+        90 => wire__nddev_device_sync_accounts__view__delivery_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        90 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
+        91 => wire__nddev_device_sync_accounts__view__export_policy_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        91 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
-        92 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
-        93 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
-        94 => {
+        92 => wire__crate__api__telemetry__init_app_impl(ptr, rust_vec_len, data_len),
+        93 => wire__crate__api__identity__new_vault_record_id_impl(ptr, rust_vec_len, data_len),
+        94 => wire__crate__api__telemetry__record_client_failure_impl(ptr, rust_vec_len, data_len),
+        95 => {
             wire__crate__api__telemetry__record_client_lifecycle_impl(ptr, rust_vec_len, data_len)
         }
-        95 => wire__crate__api__screen__screen_supported_impl(ptr, rust_vec_len, data_len),
-        97 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
-        98 => {
+        96 => wire__crate__api__screen__screen_supported_impl(ptr, rust_vec_len, data_len),
+        98 => wire__crate__api__modules__supports_local_agent_impl(ptr, rust_vec_len, data_len),
+        99 => {
             wire__crate__api__identity__supports_native_clipboard_impl(ptr, rust_vec_len, data_len)
         }
-        99 => wire__crate__api__identity__supports_native_clipboard_read_impl(
+        100 => wire__crate__api__identity__supports_native_clipboard_read_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        100 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
-        101 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
-        102 => {
+        101 => wire__crate__api__modules__update_action_kind_impl(ptr, rust_vec_len, data_len),
+        102 => wire__crate__api__modules__update_action_platform_impl(ptr, rust_vec_len, data_len),
+        103 => {
             wire__nddev_device_sync_vault__view__vault_error_code_impl(ptr, rust_vec_len, data_len)
         }
-        103 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
+        104 => wire__nddev_device_sync_vault__view__vault_view_default_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        104 => {
+        105 => {
             wire__nddev_device_sync_accounts__view__view_default_impl(ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -10013,6 +10111,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::screen::ScreenRequest>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::screen::ScreenTargetView {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.device_id.into_into_dart().into_dart(),
+            self.display_name.into_into_dart().into_dart(),
+            self.platform.into_into_dart().into_dart(),
+            self.registered.into_into_dart().into_dart(),
+            self.is_current.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::screen::ScreenTargetView
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::screen::ScreenTargetView>
+    for crate::api::screen::ScreenTargetView
+{
+    fn into_into_dart(self) -> crate::api::screen::ScreenTargetView {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<nddev_device_sync_rds::view::SessionState> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self.0 {
@@ -11188,6 +11310,16 @@ impl SseEncode for Vec<nddev_device_sync_rds::view::RemoteSession> {
     }
 }
 
+impl SseEncode for Vec<crate::api::screen::ScreenTargetView> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::screen::ScreenTargetView>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<nddev_device_sync_vault::view::StateView> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -11648,6 +11780,17 @@ impl SseEncode for crate::api::screen::ScreenRequest {
         <u32>::sse_encode(self.max_fps, serializer);
         <u32>::sse_encode(self.output_height, serializer);
         <u64>::sse_encode(self.expires_at_ms, serializer);
+    }
+}
+
+impl SseEncode for crate::api::screen::ScreenTargetView {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.device_id, serializer);
+        <String>::sse_encode(self.display_name, serializer);
+        <String>::sse_encode(self.platform, serializer);
+        <bool>::sse_encode(self.registered, serializer);
+        <bool>::sse_encode(self.is_current, serializer);
     }
 }
 

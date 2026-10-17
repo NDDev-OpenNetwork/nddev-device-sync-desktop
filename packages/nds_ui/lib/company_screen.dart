@@ -6,6 +6,7 @@ import 'package:nds_native/nds_native.dart' as native;
 
 import 'activity.dart';
 import 'l10n/app_localizations.dart';
+import 'screen_targets.dart';
 
 /// Presentation only. Rust retains immutable commands; the server authorizes
 /// every page and mutation, including a retry after an uncertain response.
@@ -43,13 +44,15 @@ class _CompanyState extends State<CompanyScreen> {
     _scope = _currentScope;
     _watch = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _currentScope != _scope) {
-        _watch?.cancel();
         setState(() {
           _company = null;
           _members = null;
           _invitations = null;
         });
-        Navigator.of(context).pop();
+        if (ModalRoute.of(context)?.isCurrent == true) {
+          _watch?.cancel();
+          Navigator.of(context).pop();
+        }
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -118,6 +121,16 @@ class _CompanyState extends State<CompanyScreen> {
       _members = members;
       _invitations = invitations;
     });
+  }
+
+  Future<void> _screens(native.OrganizationMemberView member) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            ScreenTargets(client: widget.client, userId: member.userId),
+      ),
+    );
+    if (mounted) await _run(_load);
   }
 
   Future<void> _execute() async {
@@ -264,13 +277,25 @@ class _CompanyState extends State<CompanyScreen> {
                   trailing: member.active
                       ? PopupMenuButton<String>(
                           enabled: enabled,
-                          onSelected: (action) =>
+                          onSelected: (action) {
+                            if (action == 'screens') {
+                              unawaited(_screens(member));
+                              return;
+                            }
+                            unawaited(
                               _change(member, switch (action) {
                                 'admin' => native.OrganizationRoleView.admin,
                                 'user' => native.OrganizationRoleView.user,
                                 _ => null,
                               }),
+                            );
+                          },
                           itemBuilder: (_) => [
+                            if (native.screenSupported())
+                              PopupMenuItem(
+                                value: 'screens',
+                                child: Text(l.screenView),
+                              ),
                             PopupMenuItem(
                               value: 'admin',
                               child: Text(l.companyAdmin),

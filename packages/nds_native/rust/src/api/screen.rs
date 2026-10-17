@@ -304,7 +304,50 @@ pub struct ScreenRequest {
     pub output_height: u32,
     pub expires_at_ms: u64,
 }
+pub struct ScreenTargetView {
+    pub device_id: String,
+    pub display_name: String,
+    pub platform: String,
+    pub registered: bool,
+    pub is_current: bool,
+}
+
 impl NdsClient {
+    /// Metadata read only. Opening a view still rechecks current server authority
+    /// and the target endpoint; registration is never capture consent or presence.
+    pub async fn screen_targets(
+        &self,
+        user: String,
+    ) -> Result<Vec<ScreenTargetView>, nddev_device_sync_accounts::ClientError> {
+        use nddev_device_sync_accounts::ClientError;
+        use nddev_device_sync_domain::{UserId, devices::DevicePlatform};
+        let user = UserId::new(user).map_err(|_| ClientError::InvalidInput)?;
+        let identity = self.shared_identity();
+        let lifetime = identity.local_use_lifetime();
+        let fence = identity.local_use_fence_from(&lifetime).await?;
+        let targets = identity.screen_targets(&fence, &user).await?;
+        identity.validate_local_use(&fence).await?;
+        let device = identity.view().current_device_id;
+        Ok(targets
+            .into_iter()
+            .map(|target| ScreenTargetView {
+                is_current: target.device.as_str() == device,
+                device_id: target.device.into(),
+                display_name: target.name.as_str().into(),
+                registered: target.registered,
+                platform: match target.platform {
+                    DevicePlatform::Android => "android",
+                    DevicePlatform::Ios => "ios",
+                    DevicePlatform::Linux => "linux",
+                    DevicePlatform::Macos => "macos",
+                    DevicePlatform::Web => "web",
+                    DevicePlatform::Windows => "windows",
+                }
+                .into(),
+            })
+            .collect())
+    }
+
     #[frb(ignore)]
     pub(crate) fn cancel_screen(&self) {
         if let Some(slot) = self

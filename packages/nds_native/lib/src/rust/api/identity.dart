@@ -150,6 +150,10 @@ abstract class NdsClient implements RustOpaqueInterface {
 
   Future<void> screenStop();
 
+  /// Metadata read only. Opening a view still rechecks current server authority
+  /// and the target endpoint; registration is never capture consent or presence.
+  Future<List<ScreenTargetView>> screenTargets({required String user});
+
   void selectGithubCredential({
     required String recordRef,
     required String revision,

@@ -94,6 +94,15 @@ try:
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"],
         "--dart-define=NDS_DEVICE_NAME=" + ("Sync " + args.sync_role if args.sync_role else "Acceptance device")]
+    if fixture.get("screen_peer_email") is not None:
+        handoff = Path(fixture["screen_handoff"])
+        if (args.device != "linux" or not fixture["screen_peer_email"].endswith("@example.invalid")
+                or not handoff.is_absolute() or not handoff.is_dir()
+                or not handoff.name.startswith("nds-native-screen-")
+                or os.environ.get("NDS_OWNED_XVFB") != "1"):
+            raise SystemExit("Screen UI acceptance requires an owned Linux display and native-pair handoff")
+        command += ["--dart-define=NDS_TEST_SCREEN_PEER=" + fixture["screen_peer_email"],
+                    "--dart-define=NDS_TEST_SCREEN_HANDOFF=" + str(handoff)]
     if args.company:
         command.append("--dart-define=NDS_TEST_COMPANY=true")
     if args.vault:

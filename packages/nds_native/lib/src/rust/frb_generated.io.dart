@@ -478,6 +478,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<RemoteSession> dco_decode_list_remote_session(dynamic raw);
 
   @protected
+  List<ScreenTargetView> dco_decode_list_screen_target_view(dynamic raw);
+
+  @protected
   List<StateView> dco_decode_list_state_view(dynamic raw);
 
   @protected
@@ -601,6 +604,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScreenRequest dco_decode_screen_request(dynamic raw);
+
+  @protected
+  ScreenTargetView dco_decode_screen_target_view(dynamic raw);
 
   @protected
   SessionState dco_decode_session_state(dynamic raw);
@@ -1083,6 +1089,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<ScreenTargetView> sse_decode_list_screen_target_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<StateView> sse_decode_list_state_view(SseDeserializer deserializer);
 
   @protected
@@ -1224,6 +1235,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScreenRequest sse_decode_screen_request(SseDeserializer deserializer);
+
+  @protected
+  ScreenTargetView sse_decode_screen_target_view(SseDeserializer deserializer);
 
   @protected
   SessionState sse_decode_session_state(SseDeserializer deserializer);
@@ -1791,6 +1805,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_screen_target_view(
+    List<ScreenTargetView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_state_view(
     List<StateView> self,
     SseSerializer serializer,
@@ -1960,6 +1980,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_screen_request(ScreenRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_screen_target_view(
+    ScreenTargetView self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_session_state(SessionState self, SseSerializer serializer);

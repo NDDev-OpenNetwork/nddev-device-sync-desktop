@@ -976,7 +976,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get screenRequestsHelp =>
-      'Обновите запросы от ваших устройств. Передача экрана начинается после разрешения этого запроса.';
+      'Обновите запросы от устройств, которым разрешён доступ по правилам компании. Передача экрана начнётся только после вашего разрешения.';
 
   @override
   String get screenConsent =>
@@ -1149,4 +1149,18 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get passkeyAccountHint =>
       'Для входа с ключом доступа укажите email вашего аккаунта NDS. Если участников несколько, необходимо выбрать аккаунт.';
+
+  @override
+  String get screenTargets => 'Устройства для просмотра экрана';
+
+  @override
+  String get screenTargetsEmpty => 'Нет активных устройств.';
+
+  @override
+  String get screenNotRegistered =>
+      'Сначала откройте общий доступ к экрану на этом устройстве.';
+
+  @override
+  String get screenTargetsFailed =>
+      'Не удалось загрузить устройства. Обновите список, чтобы проверить доступ и соединение.';
 }

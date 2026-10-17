@@ -455,7 +455,7 @@
   "screenUnavailable": "The screen is unavailable.",
   "screenStop": "Stop viewing",
   "screenRequests": "Screen requests",
-  "screenRequestsHelp": "Refresh requests from your devices. Sharing starts only after you allow this request.",
+  "screenRequestsHelp": "Refresh requests from devices allowed by your current company policy. Sharing starts only after you allow this request.",
   "screenConsent": "Allow this device to view your screen for the requested session?",
   "screenAllow": "Allow screen viewing",
   "screenAccessAllowed": "Screen access is allowed for this session.",
@@ -520,5 +520,9 @@
     }
   },
   "invitationSignOut": "An invitation is waiting. Sign out first to verify the invited email address.",
-  "passkeyAccountHint": "For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected."
+  "passkeyAccountHint": "For passkey sign-in, enter the email address linked to your NDS account. With multiple members, an account must be selected.",
+  "screenTargets": "Devices for screen viewing",
+  "screenTargetsEmpty": "No active devices.",
+  "screenNotRegistered": "Open screen sharing on this device first.",
+  "screenTargetsFailed": "Could not load devices. Refresh to check access and connection."
 }

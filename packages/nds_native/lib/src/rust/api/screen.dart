@@ -119,3 +119,38 @@ class ScreenRequest {
           outputHeight == other.outputHeight &&
           expiresAtMs == other.expiresAtMs;
 }
+
+class ScreenTargetView {
+  final String deviceId;
+  final String displayName;
+  final String platform;
+  final bool registered;
+  final bool isCurrent;
+
+  const ScreenTargetView({
+    required this.deviceId,
+    required this.displayName,
+    required this.platform,
+    required this.registered,
+    required this.isCurrent,
+  });
+
+  @override
+  int get hashCode =>
+      deviceId.hashCode ^
+      displayName.hashCode ^
+      platform.hashCode ^
+      registered.hashCode ^
+      isCurrent.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ScreenTargetView &&
+          runtimeType == other.runtimeType &&
+          deviceId == other.deviceId &&
+          displayName == other.displayName &&
+          platform == other.platform &&
+          registered == other.registered &&
+          isCurrent == other.isCurrent;
+}
