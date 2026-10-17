@@ -9,8 +9,8 @@ import '../third_party/nddev_device_sync_accounts/view.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Browser route I/O only. No URL or invitation token is returned to presentation.
-void captureInvitationLink() =>
-    RustLib.instance.api.crateApiOrganizationsCaptureInvitationLink();
+void captureInvitationLink({required String route}) => RustLib.instance.api
+    .crateApiOrganizationsCaptureInvitationLink(route: route);
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<CompanyCommand>>
 abstract class CompanyCommand implements RustOpaqueInterface {

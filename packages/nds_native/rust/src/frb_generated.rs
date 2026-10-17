@@ -4773,9 +4773,10 @@ fn wire__crate__api__organizations__capture_invitation_link_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_route = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             transform_result_sse::<_, ClientError>((move || {
-                let output_ok = crate::api::organizations::capture_invitation_link()?;
+                let output_ok = crate::api::organizations::capture_invitation_link(api_route)?;
                 std::result::Result::Ok(output_ok)
             })())
         },

@@ -100,7 +100,7 @@ class _NdsAppState extends State<NdsApp> with WidgetsBindingObserver {
             uri.path.startsWith('invite/'))) {
       return false;
     }
-    await _identityKey.currentState?._receiveInvitation();
+    await _identityKey.currentState?._receiveInvitation(uri.toString());
     return true;
   }
 
@@ -384,9 +384,9 @@ class _IdentityScreenState extends State<_IdentityScreen> {
     });
   }
 
-  Future<void> _receiveInvitation() async {
+  Future<void> _receiveInvitation(String route) async {
     try {
-      native.captureInvitationLink();
+      native.captureInvitationLink(route: route);
     } catch (error) {
       if (error is native.ClientError) error.dispose();
       if (mounted) setState(() => _error = 'invalid_input');

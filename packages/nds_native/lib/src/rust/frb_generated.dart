@@ -443,7 +443,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<ScreenFrame> crateApiScreenScreenViewFrame({required ScreenView that});
 
-  void crateApiOrganizationsCaptureInvitationLink();
+  void crateApiOrganizationsCaptureInvitationLink({required String route});
 
   LocalDiagnostics crateApiTelemetryClientDiagnostics();
 
@@ -3551,11 +3551,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "ScreenView_frame", argNames: ["that"]);
 
   @override
-  void crateApiOrganizationsCaptureInvitationLink() {
+  void crateApiOrganizationsCaptureInvitationLink({required String route}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(route, serializer);
           return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 84)!;
         },
         codec: SseCodec(
@@ -3564,14 +3565,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError,
         ),
         constMeta: kCrateApiOrganizationsCaptureInvitationLinkConstMeta,
-        argValues: [],
+        argValues: [route],
         apiImpl: this,
       ),
     );
   }
 
   TaskConstMeta get kCrateApiOrganizationsCaptureInvitationLinkConstMeta =>
-      const TaskConstMeta(debugName: "capture_invitation_link", argNames: []);
+      const TaskConstMeta(
+        debugName: "capture_invitation_link",
+        argNames: ["route"],
+      );
 
   @override
   LocalDiagnostics crateApiTelemetryClientDiagnostics() {

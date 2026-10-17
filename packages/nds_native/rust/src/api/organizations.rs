@@ -82,8 +82,10 @@ impl NdsClient {
 
 /// Browser route I/O only. No URL or invitation token is returned to presentation.
 #[frb(sync)]
-pub fn capture_invitation_link() -> Result<(), ClientError> {
+pub fn capture_invitation_link(route: String) -> Result<(), ClientError> {
     #[cfg(target_arch = "wasm32")]
-    nddev_device_sync_accounts::invitation::capture_browser_invitation()?;
+    nddev_device_sync_accounts::invitation::capture_browser_invitation_route(route)?;
+    #[cfg(not(target_arch = "wasm32"))]
+    drop(route);
     Ok(())
 }
