@@ -15,8 +15,6 @@ nddev-device-sync-vault = { git = "https://github.com/NDDev-Technocracy-OpenNetw
 tokio = { version = "1.53", features = ["sync", "rt", "time"] }
 zeroize = "1.8"
 tokio-util = { version = "0.7", features = ["rt"] }
-# ponytail (native bridge): keep the compatible libc 0.2.189 lock until a released
-# fix for rust-lang/libc#5601 passes iOS CI; 0.2.190 removes required dyld bindings.
 flutter_rust_bridge = { version="=2.13.0",default-features=false,features=["anyhow","dart-opaque","portable-atomic","rust-async","thread-pool"] }
 nddev-device-sync-accounts = { git = "https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts", rev = "519d0e1a80f7e3e6bafd7e5c59e7a91bf6b84377" }
 nddev-device-sync-domain = {git="https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git", rev="0135c86b2887c7cea96c0f1082d70560bde00cc6"}
