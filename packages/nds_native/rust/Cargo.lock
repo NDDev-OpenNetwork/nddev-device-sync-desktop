@@ -441,7 +441,7 @@ dependencies = [
  "bitflags 2.13.2",
  "cexpr",
  "clang-sys",
- "itertools 0.13.0",
+ "itertools",
  "proc-macro2",
  "quote",
  "regex",
@@ -995,7 +995,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c54e03a951783e8b327515db3f2a2fd0e3bed362a96b066f341ce66ed49b4ead"
 dependencies = [
  "data-encoding",
- "syn 2.0.119",
+ "syn 3.0.9",
 ]
 
 [[package]]
@@ -1338,7 +1338,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -3314,15 +3314,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "itertools"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
-dependencies = [
- "either",
-]
-
-[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3927,7 +3918,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-accounts"
 version = "0.0.1-alpha.24"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=a644d56eadaee582ddc654439c948907d7135074#a644d56eadaee582ddc654439c948907d7135074"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-accounts?rev=9fcf7f9f7c6873d7767a04a2caf239807be4909a#9fcf7f9f7c6873d7767a04a2caf239807be4909a"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -3964,6 +3955,7 @@ dependencies = [
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-futures",
+ "web-sys",
  "web-time",
  "windows-native-keyring-store",
  "zbus-secret-service-keyring-store",
@@ -3992,7 +3984,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-agent"
 version = "0.0.1-alpha.8"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=22f6e9d92dd83a63d01031f9affc6e727516ddca#22f6e9d92dd83a63d01031f9affc6e727516ddca"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-agent?rev=4276c2c47064441fd1cd45300a6f39a5eee45903#4276c2c47064441fd1cd45300a6f39a5eee45903"
 dependencies = [
  "base16ct",
  "nddev-device-sync-adapter-io",
@@ -4012,7 +4004,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-application"
 version = "0.0.1-alpha.21"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=cdd04c938fa836921337461f3322c26426f3fbb0#cdd04c938fa836921337461f3322c26426f3fbb0"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=8304a251f903b89b7169c8fb2d12a8ffd7666124#8304a251f903b89b7169c8fb2d12a8ffd7666124"
 dependencies = [
  "nddev-device-sync-domain",
 ]
@@ -4029,7 +4021,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-clipboard"
 version = "0.0.1-alpha.7"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=829c2af9cde810b6d02f8a91fa96e81ffca853fa#829c2af9cde810b6d02f8a91fa96e81ffca853fa"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-clipboard?rev=1f66b2ffd5dc19973284a79185723f0caa8af26c#1f66b2ffd5dc19973284a79185723f0caa8af26c"
 dependencies = [
  "arboard",
  "jni 0.21.1",
@@ -4048,7 +4040,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-domain"
 version = "0.0.12"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=cdd04c938fa836921337461f3322c26426f3fbb0#cdd04c938fa836921337461f3322c26426f3fbb0"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-core.git?rev=8304a251f903b89b7169c8fb2d12a8ffd7666124#8304a251f903b89b7169c8fb2d12a8ffd7666124"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
@@ -4059,7 +4051,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-gds"
 version = "0.0.1-alpha.6"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=d8ce029d190bfbb5f06145f1a459ee43a328622d#d8ce029d190bfbb5f06145f1a459ee43a328622d"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-gds?rev=5b61097dd7046131c97aea1a3c280c896fc0010a#5b61097dd7046131c97aea1a3c280c896fc0010a"
 dependencies = [
  "gix",
  "gloo-timers 0.4.0",
@@ -4095,9 +4087,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "nddev-device-sync-organizations"
+version = "0.0.1-alpha.1"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-organizations?rev=a099ca1569314890e32c2258d13d3dc7dc3a633f#a099ca1569314890e32c2258d13d3dc7dc3a633f"
+dependencies = [
+ "nddev-device-sync-accounts",
+ "nddev-device-sync-domain",
+ "nddev-device-sync-telemetry",
+ "serde",
+ "serde_json",
+ "time",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "nddev-device-sync-rds"
 version = "0.0.1-alpha.2"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-rds?rev=d2e39e3f55845bc0ea214e4ea412d5c27b1147a2#d2e39e3f55845bc0ea214e4ea412d5c27b1147a2"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-rds?rev=2bff192ab006496ef04da7459156f893a3da5585#2bff192ab006496ef04da7459156f893a3da5585"
 dependencies = [
  "anyhow",
  "iroh",
@@ -4130,7 +4137,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-telemetry"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability?rev=40f1f799a395f67e7a565e9c0c9f4b5ba7fdbe67#40f1f799a395f67e7a565e9c0c9f4b5ba7fdbe67"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-observability?rev=c63a39da62b7b1b083149f2da5c9205f125e2190#c63a39da62b7b1b083149f2da5c9205f125e2190"
 dependencies = [
  "android_log-sys",
  "chrono",
@@ -4157,7 +4164,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-updater"
 version = "0.0.1-alpha.1"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-updater?rev=e8865e7f18f2e703154cff105d6a3da28e3f9d80#e8865e7f18f2e703154cff105d6a3da28e3f9d80"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-updater?rev=1fd65d33ed999a736cd0227e9616cf9600b529a9#1fd65d33ed999a736cd0227e9616cf9600b529a9"
 dependencies = [
  "nddev-device-sync-adapter-io",
  "serde",
@@ -4166,7 +4173,7 @@ dependencies = [
 [[package]]
 name = "nddev-device-sync-vault"
 version = "0.0.1-alpha.11"
-source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=7dbbdaba41c5d5c5e5c2c69a2daffebb6356352a#7dbbdaba41c5d5c5e5c2c69a2daffebb6356352a"
+source = "git+https://github.com/NDDev-Technocracy-OpenNetwork-NDS/nddev-device-sync-vault?rev=0a20e6120361ea19e5ff068839856a550278a1a0#0a20e6120361ea19e5ff068839856a550278a1a0"
 dependencies = [
  "base16ct",
  "base64 0.23.1",
@@ -4215,6 +4222,7 @@ dependencies = [
  "nddev-device-sync-clipboard",
  "nddev-device-sync-domain",
  "nddev-device-sync-gds",
+ "nddev-device-sync-organizations",
  "nddev-device-sync-rds",
  "nddev-device-sync-sysinfo",
  "nddev-device-sync-telemetry",
@@ -4503,7 +4511,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4853,7 +4861,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.45.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5239,7 +5247,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b570b25f7617e43d59005d0990ccb79e950a423952cea19671b7a876da390adf"
 dependencies = [
  "anyhow",
- "itertools 0.14.0",
+ "itertools",
  "proc-macro2",
  "quote",
  "syn 2.0.119",
@@ -5678,7 +5686,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5736,7 +5744,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6108,7 +6116,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d1e2c7f27f8d4cb10542a02c49005dbd6e93095799d6f3be745fae9f8fedd4"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6275,10 +6283,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.3",
  "once_cell",
  "rustix",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6661,7 +6669,7 @@ checksum = "f2f6fb2847f6742cd76af783a2a2c49e9375d0a111c7bef6f71cd9e738c72d6e"
 dependencies = [
  "memoffset",
  "tempfile",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -7033,7 +7041,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

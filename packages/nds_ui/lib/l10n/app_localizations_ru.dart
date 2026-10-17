@@ -1019,4 +1019,130 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get catalogCapacityReached =>
       'Каталог обновлён не полностью: достигнут лимит хранилища синхронизации. Сохранённые сведения остаются доступны.';
+
+  @override
+  String get companyTitle => 'Компания';
+
+  @override
+  String get companyPrivacy =>
+      'Управление компанией доступно онлайн. Личный Vault, секреты и репозитории доступны только владельцу.';
+
+  @override
+  String get companyAdmin => 'Администратор';
+
+  @override
+  String get companyUser => 'Пользователь';
+
+  @override
+  String get companyCompleted =>
+      'Сервер подтвердил изменение. Обновите данные, чтобы увидеть текущее состояние.';
+
+  @override
+  String get companyLastAdmin =>
+      'Нельзя удалить последнего активного администратора или понизить его роль.';
+
+  @override
+  String get companyConflict =>
+      'Данные участника изменились после загрузки. Проверьте текущее состояние.';
+
+  @override
+  String get companyExpired =>
+      'Срок команды истёк. Проверьте текущее состояние перед новым действием.';
+
+  @override
+  String get companyInvitationUnavailable =>
+      'Это приглашение или получатель больше недоступны для действия.';
+
+  @override
+  String get companyDenied => 'Ваша текущая роль не разрешает это действие.';
+
+  @override
+  String get companyInvalid => 'Проверьте email и выбранное действие.';
+
+  @override
+  String get companyPending =>
+      'Исходная команда сохранена для повтора. При сбое связи сервер мог её выполнить. Проверьте состояние перед новой командой. Закрытие экрана не повторяет отправку.';
+
+  @override
+  String get companyRetry => 'Повторить исходную команду';
+
+  @override
+  String get companyReview => 'Проверить состояние и завершить эту команду';
+
+  @override
+  String get companyMembers => 'Участники';
+
+  @override
+  String get companyActive => 'Активен';
+
+  @override
+  String get companyRemoved => 'Удалён';
+
+  @override
+  String get companyRemove => 'Удалить участника';
+
+  @override
+  String get companyChangeRole => 'Изменить роль';
+
+  @override
+  String companyChangeHelp(String member) {
+    return 'Применить изменение к $member? Удаление участника завершает его активные сессии; личные данные сохраняются.';
+  }
+
+  @override
+  String get companyConfirm => 'Подтвердить';
+
+  @override
+  String get companyNextMembers => 'Следующие участники';
+
+  @override
+  String get companyInvite => 'Пригласить по email';
+
+  @override
+  String get companyDeliveryHelp =>
+      'Создание приглашения, принятие почтовым сервисом и вступление в компанию — отдельные шаги. Ссылка действует семь дней.';
+
+  @override
+  String get companyInvitePending => 'Ожидает принятия';
+
+  @override
+  String get companyJoined => 'Вступил';
+
+  @override
+  String get companyInviteExpired => 'Истекло';
+
+  @override
+  String get companyInviteRevoked => 'Отозвано';
+
+  @override
+  String get companyDeliveryPending => 'Письмо: ожидается результат отправки';
+
+  @override
+  String get companyDeliveryAccepted => 'Письмо: принято почтовым сервисом';
+
+  @override
+  String get companyDeliveryFailed => 'Письмо: не отправлено';
+
+  @override
+  String get companyDeliveryUnknown => 'Письмо: результат отправки неизвестен';
+
+  @override
+  String get companyRevoke => 'Отозвать приглашение';
+
+  @override
+  String get companyNextInvitations => 'Следующие приглашения';
+
+  @override
+  String get invitationImport => 'Открыть приглашение';
+
+  @override
+  String get invitationLink => 'Ссылка-приглашение';
+
+  @override
+  String get invitationVerify =>
+      'Приглашение загружено. Укажите email получателя и подтвердите код из письма. Сама ссылка не выполняет вход.';
+
+  @override
+  String get invitationSignOut =>
+      'Получено приглашение. Сначала выйдите из текущего аккаунта, затем подтвердите email получателя.';
 }

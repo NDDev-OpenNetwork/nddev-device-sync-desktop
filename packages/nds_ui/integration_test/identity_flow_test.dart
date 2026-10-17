@@ -13,6 +13,7 @@ void main() {
   const mailbox = String.fromEnvironment('NDS_TEST_MAILPIT');
   const owner = String.fromEnvironment('NDS_TEST_OWNER');
   const vault = bool.fromEnvironment('NDS_TEST_VAULT');
+  const company = bool.fromEnvironment('NDS_TEST_COMPANY');
   const phase = String.fromEnvironment(
     'NDS_TEST_PHASE',
     defaultValue: 'complete',
@@ -69,10 +70,11 @@ void main() {
       }
       await waitFor(tester, find.byKey(const Key('email')));
       await tester.enterText(find.byKey(const Key('email')), owner);
+      final priorMessages = await localMessageIds(mailbox);
       await tester.tap(find.byKey(const Key('send-code')));
       await waitFor(tester, find.byKey(const Key('otp')));
 
-      final code = await readLocalCode(mailbox);
+      final code = await readLocalCode(mailbox, owner, priorMessages);
       await tester.enterText(find.byKey(const Key('otp')), code);
       await tester.tap(find.byKey(const Key('verify')));
       await waitFor(tester, find.byKey(const Key('logout')));
@@ -91,6 +93,42 @@ void main() {
         findsOneWidget,
       );
       expect(find.byKey(const Key('enroll-device')), findsNothing);
+      if (company) {
+        await tester.ensureVisible(find.byKey(const Key('company')));
+        await tester.tap(find.byKey(const Key('company')));
+        await waitFor(tester, find.byKey(const Key('company-email')));
+        final recipient =
+            'ui-${DateTime.now().microsecondsSinceEpoch}@example.invalid';
+        await tester.enterText(
+          find.byKey(const Key('company-email')),
+          recipient,
+        );
+        FocusManager.instance.primaryFocus?.unfocus();
+        await tester.ensureVisible(find.byKey(const Key('company-invite')));
+        await tester.tap(find.byKey(const Key('company-invite')));
+        await waitFor(tester, find.text(recipient));
+        expect(
+          tester
+              .widget<TextField>(find.byKey(const Key('company-email')))
+              .controller!
+              .text,
+          isEmpty,
+        );
+        final card = find.ancestor(
+          of: find.text(recipient),
+          matching: find.byType(Card),
+        );
+        final revoke = find.descendant(
+          of: card,
+          matching: find.widgetWithText(TextButton, 'Revoke invitation'),
+        );
+        await tester.ensureVisible(revoke);
+        await tester.tap(revoke);
+        await waitFor(tester, find.textContaining('· Revoked'));
+        expect(tester.takeException(), isNull);
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+      }
       if (vault) {
         await tester.ensureVisible(find.byKey(const Key('open-vault')));
         await tester.tap(find.byKey(const Key('open-vault')));
@@ -327,7 +365,11 @@ Future<void> waitFor(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
-Future<String> readLocalCode(String mailbox) async {
+Future<String> readLocalCode(
+  String mailbox,
+  String recipient,
+  Set<String> prior,
+) async {
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
   Future<Map<String, dynamic>> get(String path) async {
     final request = await client.getUrl(Uri.parse('$mailbox$path'));
@@ -343,9 +385,15 @@ Future<String> readLocalCode(String mailbox) async {
     return await (() async {
       while (true) {
         final messages = (await get('/api/v1/messages'))['messages'] as List;
-        if (messages.isNotEmpty) {
-          final id = (messages.first as Map)['ID'] as String;
+        for (final row in messages) {
+          final id = (row as Map)['ID'] as String;
+          if (prior.contains(id)) continue;
           final message = await get('/api/v1/message/$id');
+          if (!(message['To'] as List).any(
+            (to) => (to as Map)['Address'] == recipient,
+          )) {
+            continue;
+          }
           final match = RegExp(r'(?:code|код входа): (\d{8})')
               .firstMatch(message['Text'] as String);
           if (match != null) return match.group(1)!;
@@ -353,6 +401,23 @@ Future<String> readLocalCode(String mailbox) async {
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
     })().timeout(const Duration(seconds: 10));
+  } finally {
+    client.close(force: true);
+  }
+}
+
+Future<Set<String>> localMessageIds(String mailbox) async {
+  final client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
+  try {
+    final request = await client.getUrl(Uri.parse('$mailbox/api/v1/messages'));
+    final response = await request.close().timeout(const Duration(seconds: 5));
+    if (response.statusCode != 200) {
+      throw StateError('Owned mailbox unavailable');
+    }
+    final body = jsonDecode(await utf8.decoder.bind(response).join()) as Map;
+    return (body['messages'] as List)
+        .map((row) => (row as Map)['ID'] as String)
+        .toSet();
   } finally {
     client.close(force: true);
   }

@@ -417,7 +417,7 @@ impl NdsClient {
                     .unwrap_or_else(|e| e.into_inner())
                     .clone();
                 if let Some(fence) = fence {
-                    match self.catalog_identity().validate_local_use(&fence).await {
+                    match self.shared_identity().validate_local_use(&fence).await {
                         Ok(()) | Err(nddev_device_sync_accounts::ClientError::Busy) => {}
                         Err(_) => state.stop.cancel(),
                     }
@@ -564,7 +564,7 @@ impl NdsClient {
             .unwrap_or_else(|e| e.into_inner())
             .clone()
             .ok_or(ScreenFailure::Closed)?;
-        self.catalog_identity()
+        self.shared_identity()
             .check_local_use_lifetime(&fence)
             .map_err(native::account)?;
         if state.stop.is_cancelled()
@@ -595,7 +595,7 @@ impl NdsClient {
         &self,
         reserve_role: bool,
     ) -> Result<(Arc<State>, Option<Arc<RoleLife>>), ScreenFailure> {
-        let identity = self.catalog_identity().clone();
+        let identity = self.shared_identity().clone();
         let lifetime = identity.local_use_lifetime();
         let (state, opening, role) = {
             let _publication = self.publication.lock().unwrap_or_else(|e| e.into_inner());

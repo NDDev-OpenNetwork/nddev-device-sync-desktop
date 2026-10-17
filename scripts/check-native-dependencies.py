@@ -16,6 +16,7 @@ for name in (
     'nddev-device-sync-application',
     'nddev-device-sync-domain',
     'nddev-device-sync-accounts',
+    'nddev-device-sync-organizations',
     'nddev-device-sync-telemetry',
     'nddev-device-sync-vault',
     'nddev-device-sync-clipboard',

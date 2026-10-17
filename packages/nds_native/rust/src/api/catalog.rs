@@ -359,10 +359,10 @@ impl NdsClient {
                 _ = flight.cancellation.cancelled() => Err(GithubCatalogError::Cancelled),
                 _ = flight.lifetime.cancelled() => Err(GithubCatalogError::Cancelled),
                 result = async {
-                    let fence = self.catalog_identity().local_use_fence().await?;
+                    let fence = self.shared_identity().local_use_fence().await?;
                     flight.check()?;
                     let page = self.vault().await?.records(after).await?;
-                    self.catalog_identity().validate_local_use(&fence).await?;
+                    self.shared_identity().validate_local_use(&fence).await?;
                     flight.check()?;
                     Ok(GithubCredentialReferencePage {
                         items: page.items.into_iter().filter(|r| !r.deleted && !r.conflicted).map(|r| GithubCredentialReference {
@@ -429,7 +429,7 @@ impl NdsClient {
         };
         let fence = match prior_fence {
             Some(fence) => fence,
-            None => Arc::new(self.catalog_identity().local_use_fence().await?),
+            None => Arc::new(self.shared_identity().local_use_fence().await?),
         };
         flight.check()?;
         let vault = self.vault().await?;
@@ -451,7 +451,7 @@ impl NdsClient {
         }
         let port = CatalogPort {
             guard: CatalogUseGuard {
-                identity: self.catalog_identity().clone(),
+                identity: self.shared_identity().clone(),
                 vault,
                 selection: selection.clone(),
                 fence: fence.clone(),
@@ -766,16 +766,16 @@ impl NdsClient {
                     result = async {
                         let fence = match prior_fence {
                             Some(fence) => fence,
-                            None => Arc::new(self.catalog_identity().local_use_fence().await?),
+                            None => Arc::new(self.shared_identity().local_use_fence().await?),
                         };
-                        self.catalog_identity().validate_local_use(&fence).await?;
+                        self.shared_identity().validate_local_use(&fence).await?;
                         flight.check()?;
                         let page = self.vault().await?.repository_catalog_page(
                             after.as_ref(), flight.cancellation.as_ref().clone(),
                         ).await?;
                         let groups = nddev_device_sync_domain::repositories::catalog::observations::projection::saved_page(page.observations)
                             .map_err(|_| GithubCatalogError::InvalidResponse)?;
-                        self.catalog_identity().validate_local_use(&fence).await?;
+                        self.shared_identity().validate_local_use(&fence).await?;
                         flight.check()?;
                         let view = project_saved_page(groups, page.observed_seq, page.local_revision, page.next.is_some());
                         let mut state = self.catalog.lock().unwrap_or_else(|e| e.into_inner());

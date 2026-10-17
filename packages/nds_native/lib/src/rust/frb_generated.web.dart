@@ -10,6 +10,7 @@ import 'api/catalog_types.dart';
 import 'api/identity.dart';
 import 'api/module_types.dart';
 import 'api/modules.dart';
+import 'api/organizations.dart';
 import 'api/screen.dart';
 import 'api/telemetry.dart';
 
@@ -24,6 +25,7 @@ import 'third_party/nddev_device_sync_accounts/view.dart';
 import 'third_party/nddev_device_sync_cleaner/view.dart';
 import 'third_party/nddev_device_sync_clipboard/view.dart';
 import 'third_party/nddev_device_sync_gds/view.dart';
+import 'third_party/nddev_device_sync_organizations/view.dart';
 import 'third_party/nddev_device_sync_rds/view.dart';
 import 'third_party/nddev_device_sync_sysinfo/view.dart';
 import 'third_party/nddev_device_sync_telemetry/view.dart';
@@ -39,12 +41,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   CrossPlatformFinalizerArg
-  get rust_arc_decrement_strong_count_ActionPtr => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction;
-
-  CrossPlatformFinalizerArg
   get rust_arc_decrement_strong_count_ClientErrorPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_CompanyCommandPtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand;
 
   CrossPlatformFinalizerArg
   get rust_arc_decrement_strong_count_LocalAgentPtr => wire
@@ -66,15 +68,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   get rust_arc_decrement_strong_count_ScreenViewPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView;
 
-  @protected
-  Action
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    dynamic raw,
-  );
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_SystemUpdateActionPtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction;
 
   @protected
   ClientError
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    dynamic raw,
+  );
+
+  @protected
+  CompanyCommand
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     dynamic raw,
   );
 
@@ -109,14 +115,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  Action
-  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  SystemUpdateAction
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     dynamic raw,
   );
 
   @protected
   ClientError
   dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    dynamic raw,
+  );
+
+  @protected
+  CompanyCommand
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     dynamic raw,
   );
 
@@ -151,14 +163,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  Action
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  SystemUpdateAction
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     dynamic raw,
   );
 
   @protected
   ClientError
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    dynamic raw,
+  );
+
+  @protected
+  CompanyCommand
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     dynamic raw,
   );
 
@@ -189,6 +207,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ScreenView
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    dynamic raw,
+  );
+
+  @protected
+  SystemUpdateAction
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     dynamic raw,
   );
 
@@ -226,6 +250,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ModuleError dco_decode_box_autoadd_module_error(dynamic raw);
+
+  @protected
+  OrganizationRoleView dco_decode_box_autoadd_organization_role_view(
+    dynamic raw,
+  );
 
   @protected
   ScreenRequest dco_decode_box_autoadd_screen_request(dynamic raw);
@@ -376,8 +405,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   IncidentView dco_decode_incident_view(dynamic raw);
 
   @protected
-  List<Action>
-  dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  List<SystemUpdateAction>
+  dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     dynamic raw,
   );
 
@@ -427,6 +456,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ModuleObservation> dco_decode_list_module_observation(dynamic raw);
+
+  @protected
+  List<OrganizationInvitationView> dco_decode_list_organization_invitation_view(
+    dynamic raw,
+  );
+
+  @protected
+  List<OrganizationMemberView> dco_decode_list_organization_member_view(
+    dynamic raw,
+  );
 
   @protected
   List<PasskeyView> dco_decode_list_passkey_view(dynamic raw);
@@ -488,6 +527,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ModuleError? dco_decode_opt_box_autoadd_module_error(dynamic raw);
 
   @protected
+  OrganizationRoleView? dco_decode_opt_box_autoadd_organization_role_view(
+    dynamic raw,
+  );
+
+  @protected
   ScreenRequest? dco_decode_opt_box_autoadd_screen_request(dynamic raw);
 
   @protected
@@ -495,6 +539,37 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
+
+  @protected
+  OrganizationDeliveryView dco_decode_organization_delivery_view(dynamic raw);
+
+  @protected
+  OrganizationInvitationPageView dco_decode_organization_invitation_page_view(
+    dynamic raw,
+  );
+
+  @protected
+  OrganizationInvitationStatusView
+  dco_decode_organization_invitation_status_view(dynamic raw);
+
+  @protected
+  OrganizationInvitationView dco_decode_organization_invitation_view(
+    dynamic raw,
+  );
+
+  @protected
+  OrganizationMemberPageView dco_decode_organization_member_page_view(
+    dynamic raw,
+  );
+
+  @protected
+  OrganizationMemberView dco_decode_organization_member_view(dynamic raw);
+
+  @protected
+  OrganizationOverviewView dco_decode_organization_overview_view(dynamic raw);
+
+  @protected
+  OrganizationRoleView dco_decode_organization_role_view(dynamic raw);
 
   @protected
   Page dco_decode_page(dynamic raw);
@@ -575,14 +650,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   View dco_decode_view(dynamic raw);
 
   @protected
-  Action
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  ClientError
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
     SseDeserializer deserializer,
   );
 
   @protected
-  ClientError
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+  CompanyCommand
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     SseDeserializer deserializer,
   );
 
@@ -617,14 +692,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  Action
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  SystemUpdateAction
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     SseDeserializer deserializer,
   );
 
   @protected
   ClientError
   sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  CompanyCommand
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     SseDeserializer deserializer,
   );
 
@@ -659,14 +740,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  Action
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  SystemUpdateAction
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     SseDeserializer deserializer,
   );
 
   @protected
   ClientError
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  CompanyCommand
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     SseDeserializer deserializer,
   );
 
@@ -697,6 +784,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ScreenView
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  SystemUpdateAction
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     SseDeserializer deserializer,
   );
 
@@ -736,6 +829,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ModuleError sse_decode_box_autoadd_module_error(SseDeserializer deserializer);
+
+  @protected
+  OrganizationRoleView sse_decode_box_autoadd_organization_role_view(
+    SseDeserializer deserializer,
+  );
 
   @protected
   ScreenRequest sse_decode_box_autoadd_screen_request(
@@ -902,8 +1000,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   IncidentView sse_decode_incident_view(SseDeserializer deserializer);
 
   @protected
-  List<Action>
-  sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
+  List<SystemUpdateAction>
+  sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     SseDeserializer deserializer,
   );
 
@@ -959,6 +1057,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ModuleObservation> sse_decode_list_module_observation(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<OrganizationInvitationView> sse_decode_list_organization_invitation_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<OrganizationMemberView> sse_decode_list_organization_member_view(
     SseDeserializer deserializer,
   );
 
@@ -1032,6 +1140,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  OrganizationRoleView? sse_decode_opt_box_autoadd_organization_role_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   ScreenRequest? sse_decode_opt_box_autoadd_screen_request(
     SseDeserializer deserializer,
   );
@@ -1041,6 +1154,45 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
+
+  @protected
+  OrganizationDeliveryView sse_decode_organization_delivery_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationInvitationPageView sse_decode_organization_invitation_page_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationInvitationStatusView
+  sse_decode_organization_invitation_status_view(SseDeserializer deserializer);
+
+  @protected
+  OrganizationInvitationView sse_decode_organization_invitation_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationMemberPageView sse_decode_organization_member_page_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationMemberView sse_decode_organization_member_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationOverviewView sse_decode_organization_overview_view(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  OrganizationRoleView sse_decode_organization_role_view(
+    SseDeserializer deserializer,
+  );
 
   @protected
   Page sse_decode_page(SseDeserializer deserializer);
@@ -1122,15 +1274,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    Action self,
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    ClientError self,
     SseSerializer serializer,
   );
 
   @protected
   void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
-    ClientError self,
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    CompanyCommand self,
     SseSerializer serializer,
   );
 
@@ -1171,8 +1323,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    Action self,
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    SystemUpdateAction self,
     SseSerializer serializer,
   );
 
@@ -1180,6 +1332,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
     ClientError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    CompanyCommand self,
     SseSerializer serializer,
   );
 
@@ -1220,8 +1379,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    Action self,
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    SystemUpdateAction self,
     SseSerializer serializer,
   );
 
@@ -1229,6 +1388,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
     ClientError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    CompanyCommand self,
     SseSerializer serializer,
   );
 
@@ -1264,6 +1430,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
     ScreenView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    SystemUpdateAction self,
     SseSerializer serializer,
   );
 
@@ -1312,6 +1485,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_module_error(
     ModuleError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_organization_role_view(
+    OrganizationRoleView self,
     SseSerializer serializer,
   );
 
@@ -1506,8 +1685,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    List<Action> self,
+  sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    List<SystemUpdateAction> self,
     SseSerializer serializer,
   );
 
@@ -1574,6 +1753,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_module_observation(
     List<ModuleObservation> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_organization_invitation_view(
+    List<OrganizationInvitationView> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_organization_member_view(
+    List<OrganizationMemberView> self,
     SseSerializer serializer,
   );
 
@@ -1671,6 +1862,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_organization_role_view(
+    OrganizationRoleView? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_screen_request(
     ScreenRequest? self,
     SseSerializer serializer,
@@ -1681,6 +1878,54 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_organization_delivery_view(
+    OrganizationDeliveryView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_invitation_page_view(
+    OrganizationInvitationPageView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_invitation_status_view(
+    OrganizationInvitationStatusView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_invitation_view(
+    OrganizationInvitationView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_member_page_view(
+    OrganizationMemberPageView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_member_view(
+    OrganizationMemberView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_overview_view(
+    OrganizationOverviewView self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_organization_role_view(
+    OrganizationRoleView self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_page(Page self, SseSerializer serializer);
@@ -1776,22 +2021,6 @@ class RustLibWire implements BaseWire {
   RustLibWire.fromExternalLibrary(ExternalLibrary lib);
 
   void
-  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    int ptr,
-  ) => wasmModule
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-        ptr,
-      );
-
-  void
-  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    int ptr,
-  ) => wasmModule
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-        ptr,
-      );
-
-  void
   rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
     int ptr,
   ) => wasmModule
@@ -1804,6 +2033,22 @@ class RustLibWire implements BaseWire {
     int ptr,
   ) => wasmModule
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+        ptr,
+      );
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
         ptr,
       );
 
@@ -1886,6 +2131,22 @@ class RustLibWire implements BaseWire {
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
         ptr,
       );
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+        ptr,
+      );
 }
 
 @JS('wasm_bindgen')
@@ -1895,22 +2156,22 @@ external RustLibWasmModule get wasmModule;
 @anonymous
 extension type RustLibWasmModule._(JSObject _) implements JSObject {
   external void
-  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    int ptr,
-  );
-
-  external void
-  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAction(
-    int ptr,
-  );
-
-  external void
   rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
     int ptr,
   );
 
   external void
   rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerClientError(
+    int ptr,
+  );
+
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCompanyCommand(
     int ptr,
   );
 
@@ -1961,6 +2222,16 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void
   rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerScreenView(
+    int ptr,
+  );
+
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSystemUpdateAction(
     int ptr,
   );
 }

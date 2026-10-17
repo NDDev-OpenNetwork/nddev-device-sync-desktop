@@ -62,7 +62,7 @@ impl Drop for Replica {
 
 impl NdsClient {
     #[frb(ignore)]
-    pub(crate) fn catalog_identity(&self) -> &Arc<IdentityClient> {
+    pub(crate) fn shared_identity(&self) -> &Arc<IdentityClient> {
         &self.inner
     }
     #[frb(ignore)]

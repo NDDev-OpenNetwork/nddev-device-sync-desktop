@@ -474,5 +474,50 @@
       }
     }
   },
-  "catalogCapacityReached": "The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available."
+  "catalogCapacityReached": "The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available.",
+  "companyTitle": "Company",
+  "companyPrivacy": "Company administration is online. Personal Vault, secrets and repositories remain private to their owner.",
+  "companyAdmin": "Administrator",
+  "companyUser": "User",
+  "companyCompleted": "The server confirmed the change. Refresh to see the current state.",
+  "companyLastAdmin": "The last active administrator cannot be removed or demoted.",
+  "companyConflict": "The member changed since this page was loaded. Review the current state.",
+  "companyExpired": "The command has expired. Review the current state before a new action.",
+  "companyInvitationUnavailable": "This invitation or recipient is no longer available for this action.",
+  "companyDenied": "Your current membership does not allow this action.",
+  "companyInvalid": "Check the email address and selected action.",
+  "companyPending": "The original command is retained for retry. If the connection failed, the server may have applied it. Review the current state before creating another command. Closing this screen does not resend it.",
+  "companyRetry": "Retry the same command",
+  "companyReview": "Review state and finish this command",
+  "companyMembers": "Members",
+  "companyActive": "Active",
+  "companyRemoved": "Removed",
+  "companyRemove": "Remove member",
+  "companyChangeRole": "Change role",
+  "companyChangeHelp": "Apply this membership change to {member}? Removing a member ends their active sessions; their personal data is retained.",
+  "companyConfirm": "Confirm",
+  "companyNextMembers": "Next members",
+  "companyInvite": "Invite by email",
+  "companyDeliveryHelp": "Sending an invitation, acceptance by the mail service and joining the company are separate steps. Links expire after seven days.",
+  "companyInvitePending": "Awaiting acceptance",
+  "companyJoined": "Joined",
+  "companyInviteExpired": "Expired",
+  "companyInviteRevoked": "Revoked",
+  "companyDeliveryPending": "Mail: awaiting delivery result",
+  "companyDeliveryAccepted": "Mail: accepted by the mail service",
+  "companyDeliveryFailed": "Mail: not sent",
+  "companyDeliveryUnknown": "Mail: delivery result unknown",
+  "companyRevoke": "Revoke invitation",
+  "companyNextInvitations": "Next invitations",
+  "invitationImport": "Open invitation",
+  "invitationLink": "Invitation link",
+  "invitationVerify": "Invitation loaded. Enter the invited email address and verify the code sent to it. The link alone does not sign you in.",
+  "@companyChangeHelp": {
+    "placeholders": {
+      "member": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationSignOut": "An invitation is waiting. Sign out first to verify the invited email address."
 }

@@ -16,10 +16,12 @@ import 'diagnostics.dart';
 import 'vault_screen.dart';
 import 'utilities_screen.dart';
 import 'passkeys_screen.dart';
+import 'company_screen.dart';
 import 'repositories_screen.dart';
 
 Future<void> runNdsApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final invitationReceived = kIsWeb && Uri.base.fragment.startsWith('invite/');
   final diagnostics = ApplicationDiagnostics();
   var nativeReady = false;
   try {
@@ -29,18 +31,31 @@ Future<void> runNdsApp() async {
   } catch (_) {
     diagnostics.reportFailure(native.FailureKind.nativeBridge);
   }
-  runApp(NdsApp(diagnostics: diagnostics, nativeReady: nativeReady));
+  runApp(
+    NdsApp(
+      diagnostics: diagnostics,
+      nativeReady: nativeReady,
+      invitationReceived: invitationReceived,
+    ),
+  );
 }
 
 class NdsApp extends StatefulWidget {
-  const NdsApp({super.key, this.diagnostics, this.nativeReady = true});
+  const NdsApp({
+    super.key,
+    this.diagnostics,
+    this.nativeReady = true,
+    this.invitationReceived = false,
+  });
   final ApplicationDiagnostics? diagnostics;
   final bool nativeReady;
+  final bool invitationReceived;
   @override
   State<NdsApp> createState() => _NdsAppState();
 }
 
-class _NdsAppState extends State<NdsApp> {
+class _NdsAppState extends State<NdsApp> with WidgetsBindingObserver {
+  final _identityKey = GlobalKey<_IdentityScreenState>();
   Locale? _locale;
   int _page = 0;
   native.NdsClient? _client;
@@ -48,6 +63,7 @@ class _NdsAppState extends State<NdsApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _activity = ApplicationActivity(
       nativeReady: widget.nativeReady,
       onLifecycle: widget.diagnostics?.lifecycle,
@@ -61,9 +77,25 @@ class _NdsAppState extends State<NdsApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _activity.dispose();
     widget.diagnostics?.dispose();
     super.dispose();
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(
+    RouteInformation routeInformation,
+  ) async {
+    final uri = routeInformation.uri;
+    if (!kIsWeb ||
+        !(uri.fragment.startsWith('invite/') ||
+            uri.path.startsWith('/invite/') ||
+            uri.path.startsWith('invite/'))) {
+      return false;
+    }
+    await _identityKey.currentState?._receiveInvitation();
+    return true;
   }
 
   @override
@@ -72,6 +104,7 @@ class _NdsAppState extends State<NdsApp> {
     child: LayoutBuilder(
       builder: (context, constraints) => MaterialApp(
         title: 'NDDev OpenNetwork',
+        initialRoute: '/',
         debugShowCheckedModeBanner: false,
         theme: OpenNetworkTheme.dark(width: constraints.maxWidth),
         locale: _locale,
@@ -97,6 +130,8 @@ class _NdsAppState extends State<NdsApp> {
               );
             }
             final identity = _IdentityScreen(
+              key: _identityKey,
+              invitationReceived: widget.invitationReceived,
               onLocale: (locale) => setState(() => _locale = locale),
               diagnostics: widget.diagnostics,
               onClient: (client) {
@@ -142,10 +177,13 @@ class _NdsAppState extends State<NdsApp> {
 
 class _IdentityScreen extends StatefulWidget {
   const _IdentityScreen({
+    super.key,
+    this.invitationReceived = false,
     required this.onLocale,
     this.diagnostics,
     this.onClient,
   });
+  final bool invitationReceived;
   final ValueChanged<Locale> onLocale;
   final ApplicationDiagnostics? diagnostics;
   final ValueChanged<native.NdsClient?>? onClient;
@@ -167,6 +205,7 @@ class _IdentityScreenState extends State<_IdentityScreen> {
   int _actionEpoch = 0;
   bool get _paused => !ApplicationActivityScope.read(context).value;
   bool _browserOpened = false;
+  bool _invitationNoticeHandled = false;
   String? _error;
   Timer? _poll;
   Timer? _clock;
@@ -210,6 +249,11 @@ class _IdentityScreenState extends State<_IdentityScreen> {
   Future<void> _reconcileInner(native.NdsClient client) async {
     try {
       await client.reconcile();
+      if (kIsWeb &&
+          !client.snapshot().authenticated &&
+          client.snapshot().flow.isEmpty) {
+        await client.importBrowserInvitation();
+      }
     } catch (error) {
       if (error is native.ClientError) {
         error.dispose();
@@ -303,7 +347,15 @@ class _IdentityScreenState extends State<_IdentityScreen> {
     }
     ApplicationActivityScope.read(context).attach(client);
     _client = client;
-    return client.refresh();
+    await client.refresh();
+    final view = await client.importBrowserInvitation();
+    if (widget.invitationReceived &&
+        !_invitationNoticeHandled &&
+        view.authenticated) {
+      _invitationNoticeHandled = true;
+      _error = 'invitation_requires_sign_out';
+    }
+    return view;
   }, prepare: true);
 
   void _schedulePoll() {
@@ -324,6 +376,62 @@ class _IdentityScreenState extends State<_IdentityScreen> {
         );
       }
     });
+  }
+
+  Future<void> _receiveInvitation() async {
+    try {
+      native.captureInvitationLink();
+    } catch (error) {
+      if (error is native.ClientError) error.dispose();
+      if (mounted) setState(() => _error = 'invalid_input');
+      return;
+    }
+    if (_client?.snapshot().authenticated == true) {
+      if (mounted) setState(() => _error = 'invitation_requires_sign_out');
+      return;
+    }
+    if (_client != null && !_busy) {
+      await _run(() => _client!.importBrowserInvitation());
+    }
+  }
+
+  Future<void> _importInvitation() async {
+    final l = AppLocalizations.of(context)!;
+    final input = TextEditingController();
+    try {
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l.invitationImport),
+          content: TextField(
+            controller: input,
+            obscureText: true,
+            autocorrect: false,
+            enableSuggestions: false,
+            maxLength: 2048,
+            decoration: InputDecoration(labelText: l.invitationLink),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l.invitationImport),
+            ),
+          ],
+        ),
+      );
+      if (accepted == true && mounted) {
+        final link = input.text;
+        input.clear();
+        await _run(() => _client!.importInvitation(link: link));
+      }
+    } finally {
+      input.clear();
+      input.dispose();
+    }
   }
 
   Future<void> _startGithub() {
@@ -391,6 +499,7 @@ class _IdentityScreenState extends State<_IdentityScreen> {
   }
 
   String _message(AppLocalizations l, String code) => switch (code) {
+    'invitation_requires_sign_out' => l.invitationSignOut,
     'invalid_endpoint' => l.endpointError,
     'recent_authentication_required' => l.recentAuthenticationRequired,
     'invalid_input' => l.inputError,
@@ -689,6 +798,20 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                       child: Text(l.catalogTitle),
                     ),
                     OutlinedButton(
+                      key: const Key('company'),
+                      onPressed:
+                          _busy ||
+                              !v.sessionVerified ||
+                              v.currentDeviceId.isEmpty
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => CompanyScreen(client: _client!),
+                              ),
+                            ),
+                      child: Text(l.companyTitle),
+                    ),
+                    OutlinedButton(
                       key: const Key('manage-passkeys'),
                       onPressed: _busy || !v.sessionVerified
                           ? null
@@ -744,6 +867,12 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                     if (_browserOpened) Text(l.awaitApproval),
                     TextButton(onPressed: _cancel, child: Text(l.cancel)),
                   ] else ...[
+                    if (v.invitationPending) Text(l.invitationVerify),
+                    if (!v.invitationPending && v.flow.isEmpty)
+                      TextButton(
+                        onPressed: _busy ? null : _importInvitation,
+                        child: Text(l.invitationImport),
+                      ),
                     TextField(
                       key: const Key('email'),
                       controller: _email,
@@ -805,7 +934,8 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                     const SizedBox(height: OpenNetworkSpacing.four),
                     OutlinedButton(
                       key: const Key('github'),
-                      onPressed: _busy || !v.githubAvailable
+                      onPressed:
+                          _busy || v.invitationPending || !v.githubAvailable
                           ? null
                           : _startGithub,
                       child: Text(l.github),
@@ -813,12 +943,13 @@ class _IdentityScreenState extends State<_IdentityScreen> {
                     if (!v.githubAvailable) Text(l.unavailable),
                     OutlinedButton(
                       key: const Key('passkey'),
-                      onPressed: _busy || !v.passkeyAvailable
+                      onPressed:
+                          _busy || v.invitationPending || !v.passkeyAvailable
                           ? null
                           : () => _startPasskey(false),
                       child: Text(l.passkey),
                     ),
-                    if (v.flow.isNotEmpty)
+                    if (v.flow.isNotEmpty || v.invitationPending)
                       TextButton(onPressed: _cancel, child: Text(l.cancel)),
                   ],
                   if (_busy) ...[

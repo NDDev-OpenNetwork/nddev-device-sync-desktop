@@ -169,3 +169,16 @@ shared logout decisions and retries a pending remote logout. Storage persistence
 reports the browser's actual grant; it does not prevent explicit site-data
 removal. Browser clipboard requests reserve user activation before asynchronous
 secret access. Qualify the full browser assembly separately from native gates.
+
+Company management uses the standalone Organizations Rust client, the existing
+Accounts session/signing owner and Core policies. Shared presentation supports
+company metadata, bounded member/invitation pages, invite/revoke, role changes
+and membership removal. An uncertain command retains its original opaque Rust
+handle for retry; there is no offline administrative queue or automatic resend.
+
+Signed-out native clients can import an invitation link into Rust and complete
+the existing email verification. Browser entry captures and removes invitation
+fragments before presentation routing; incoming links do not switch an active
+account. HTTPS app/universal-link association is deployment-specific and is not
+claimed by manual native import. The existing browser assembly remains the
+Flutter migration baseline; its React replacement is a separate ADR 0010 task.

@@ -21,6 +21,7 @@ parser.add_argument("--cold-restart", action="store_true",
                     help="Verify encrypted persistence across two Android app processes")
 parser.add_argument("--isolated-android", action="store_true",
                     help="Use a unique test applicationId on an explicitly selected Android device")
+parser.add_argument("--company", action="store_true", help="Exercise company invitation and revocation through the real UI")
 parser.add_argument("--vault", action="store_true", help="Exercise real native vault creation and encrypted sync")
 parser.add_argument("--sync-role", choices=["owner", "recipient"])
 parser.add_argument("--resume", action="store_true", help="Verify a retained desktop session after another device changed the server")
@@ -93,6 +94,8 @@ try:
         "--dart-define=NDS_TEST_MAILPIT=" + fixture["mailpit_url"],
         "--dart-define=NDS_TEST_OWNER=" + fixture["owner_email"],
         "--dart-define=NDS_DEVICE_NAME=" + ("Sync " + args.sync_role if args.sync_role else "Acceptance device")]
+    if args.company:
+        command.append("--dart-define=NDS_TEST_COMPANY=true")
     if args.vault:
         command.append("--dart-define=NDS_TEST_VAULT=true")
     if args.sync_role:

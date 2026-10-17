@@ -25,6 +25,9 @@ fn logger() -> Option<MutexGuard<'static, ProcessTelemetry>> {
 #[frb(init)]
 pub fn init_app() -> Result<(), DiagnosticsError> {
     #[cfg(target_arch = "wasm32")]
+    nddev_device_sync_accounts::invitation::capture_browser_invitation()
+        .map_err(|_| DiagnosticsError::Unavailable)?;
+    #[cfg(target_arch = "wasm32")]
     crate::browser::configure().map_err(|_| DiagnosticsError::Unavailable)?;
     LOGGER.get_or_init(|| {
         let config = Config {
@@ -44,6 +47,7 @@ pub fn init_app() -> Result<(), DiagnosticsError> {
             .into(),
             target_prefixes: vec![
                 "nds_accounts".into(),
+                "nddev_device_sync_organizations".into(),
                 "nds_native".into(),
                 "nddev_device_sync_vault".into(),
                 "nddev_device_sync_agent".into(),

@@ -1012,4 +1012,131 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get catalogCapacityReached =>
       'The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available.';
+
+  @override
+  String get companyTitle => 'Company';
+
+  @override
+  String get companyPrivacy =>
+      'Company administration is online. Personal Vault, secrets and repositories remain private to their owner.';
+
+  @override
+  String get companyAdmin => 'Administrator';
+
+  @override
+  String get companyUser => 'User';
+
+  @override
+  String get companyCompleted =>
+      'The server confirmed the change. Refresh to see the current state.';
+
+  @override
+  String get companyLastAdmin =>
+      'The last active administrator cannot be removed or demoted.';
+
+  @override
+  String get companyConflict =>
+      'The member changed since this page was loaded. Review the current state.';
+
+  @override
+  String get companyExpired =>
+      'The command has expired. Review the current state before a new action.';
+
+  @override
+  String get companyInvitationUnavailable =>
+      'This invitation or recipient is no longer available for this action.';
+
+  @override
+  String get companyDenied =>
+      'Your current membership does not allow this action.';
+
+  @override
+  String get companyInvalid => 'Check the email address and selected action.';
+
+  @override
+  String get companyPending =>
+      'The original command is retained for retry. If the connection failed, the server may have applied it. Review the current state before creating another command. Closing this screen does not resend it.';
+
+  @override
+  String get companyRetry => 'Retry the same command';
+
+  @override
+  String get companyReview => 'Review state and finish this command';
+
+  @override
+  String get companyMembers => 'Members';
+
+  @override
+  String get companyActive => 'Active';
+
+  @override
+  String get companyRemoved => 'Removed';
+
+  @override
+  String get companyRemove => 'Remove member';
+
+  @override
+  String get companyChangeRole => 'Change role';
+
+  @override
+  String companyChangeHelp(String member) {
+    return 'Apply this membership change to $member? Removing a member ends their active sessions; their personal data is retained.';
+  }
+
+  @override
+  String get companyConfirm => 'Confirm';
+
+  @override
+  String get companyNextMembers => 'Next members';
+
+  @override
+  String get companyInvite => 'Invite by email';
+
+  @override
+  String get companyDeliveryHelp =>
+      'Sending an invitation, acceptance by the mail service and joining the company are separate steps. Links expire after seven days.';
+
+  @override
+  String get companyInvitePending => 'Awaiting acceptance';
+
+  @override
+  String get companyJoined => 'Joined';
+
+  @override
+  String get companyInviteExpired => 'Expired';
+
+  @override
+  String get companyInviteRevoked => 'Revoked';
+
+  @override
+  String get companyDeliveryPending => 'Mail: awaiting delivery result';
+
+  @override
+  String get companyDeliveryAccepted => 'Mail: accepted by the mail service';
+
+  @override
+  String get companyDeliveryFailed => 'Mail: not sent';
+
+  @override
+  String get companyDeliveryUnknown => 'Mail: delivery result unknown';
+
+  @override
+  String get companyRevoke => 'Revoke invitation';
+
+  @override
+  String get companyNextInvitations => 'Next invitations';
+
+  @override
+  String get invitationImport => 'Open invitation';
+
+  @override
+  String get invitationLink => 'Invitation link';
+
+  @override
+  String get invitationVerify =>
+      'Invitation loaded. Enter the invited email address and verify the code sent to it. The link alone does not sign you in.';
+
+  @override
+  String get invitationSignOut =>
+      'An invitation is waiting. Sign out first to verify the invited email address.';
 }

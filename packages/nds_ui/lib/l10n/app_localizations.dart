@@ -1853,6 +1853,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The catalog could not finish updating because synchronization storage reached its limit. Saved observations remain available.'**
   String get catalogCapacityReached;
+
+  /// No description provided for @companyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get companyTitle;
+
+  /// No description provided for @companyPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Company administration is online. Personal Vault, secrets and repositories remain private to their owner.'**
+  String get companyPrivacy;
+
+  /// No description provided for @companyAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator'**
+  String get companyAdmin;
+
+  /// No description provided for @companyUser.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get companyUser;
+
+  /// No description provided for @companyCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The server confirmed the change. Refresh to see the current state.'**
+  String get companyCompleted;
+
+  /// No description provided for @companyLastAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'The last active administrator cannot be removed or demoted.'**
+  String get companyLastAdmin;
+
+  /// No description provided for @companyConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'The member changed since this page was loaded. Review the current state.'**
+  String get companyConflict;
+
+  /// No description provided for @companyExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The command has expired. Review the current state before a new action.'**
+  String get companyExpired;
+
+  /// No description provided for @companyInvitationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation or recipient is no longer available for this action.'**
+  String get companyInvitationUnavailable;
+
+  /// No description provided for @companyDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current membership does not allow this action.'**
+  String get companyDenied;
+
+  /// No description provided for @companyInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the email address and selected action.'**
+  String get companyInvalid;
+
+  /// No description provided for @companyPending.
+  ///
+  /// In en, this message translates to:
+  /// **'The original command is retained for retry. If the connection failed, the server may have applied it. Review the current state before creating another command. Closing this screen does not resend it.'**
+  String get companyPending;
+
+  /// No description provided for @companyRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry the same command'**
+  String get companyRetry;
+
+  /// No description provided for @companyReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review state and finish this command'**
+  String get companyReview;
+
+  /// No description provided for @companyMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get companyMembers;
+
+  /// No description provided for @companyActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get companyActive;
+
+  /// No description provided for @companyRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
+  String get companyRemoved;
+
+  /// No description provided for @companyRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove member'**
+  String get companyRemove;
+
+  /// No description provided for @companyChangeRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Change role'**
+  String get companyChangeRole;
+
+  /// No description provided for @companyChangeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply this membership change to {member}? Removing a member ends their active sessions; their personal data is retained.'**
+  String companyChangeHelp(String member);
+
+  /// No description provided for @companyConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get companyConfirm;
+
+  /// No description provided for @companyNextMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Next members'**
+  String get companyNextMembers;
+
+  /// No description provided for @companyInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite by email'**
+  String get companyInvite;
+
+  /// No description provided for @companyDeliveryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending an invitation, acceptance by the mail service and joining the company are separate steps. Links expire after seven days.'**
+  String get companyDeliveryHelp;
+
+  /// No description provided for @companyInvitePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting acceptance'**
+  String get companyInvitePending;
+
+  /// No description provided for @companyJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get companyJoined;
+
+  /// No description provided for @companyInviteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get companyInviteExpired;
+
+  /// No description provided for @companyInviteRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get companyInviteRevoked;
+
+  /// No description provided for @companyDeliveryPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail: awaiting delivery result'**
+  String get companyDeliveryPending;
+
+  /// No description provided for @companyDeliveryAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail: accepted by the mail service'**
+  String get companyDeliveryAccepted;
+
+  /// No description provided for @companyDeliveryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail: not sent'**
+  String get companyDeliveryFailed;
+
+  /// No description provided for @companyDeliveryUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail: delivery result unknown'**
+  String get companyDeliveryUnknown;
+
+  /// No description provided for @companyRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke invitation'**
+  String get companyRevoke;
+
+  /// No description provided for @companyNextInvitations.
+  ///
+  /// In en, this message translates to:
+  /// **'Next invitations'**
+  String get companyNextInvitations;
+
+  /// No description provided for @invitationImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Open invitation'**
+  String get invitationImport;
+
+  /// No description provided for @invitationLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation link'**
+  String get invitationLink;
+
+  /// No description provided for @invitationVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation loaded. Enter the invited email address and verify the code sent to it. The link alone does not sign you in.'**
+  String get invitationVerify;
+
+  /// No description provided for @invitationSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'An invitation is waiting. Sign out first to verify the invited email address.'**
+  String get invitationSignOut;
 }
 
 class _AppLocalizationsDelegate
