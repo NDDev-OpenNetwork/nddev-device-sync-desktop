@@ -164,6 +164,8 @@ impl Drop for DeviceCompletion {
 struct RoleLife {
     stop: CancellationToken,
     #[cfg(target_os = "linux")]
+    validation: Mutex<Option<nddev_device_sync_domain::screen::ViewProjection>>,
+    #[cfg(target_os = "linux")]
     done: CancellationToken,
 }
 impl State {
@@ -811,6 +813,7 @@ mod native {
         state.cancel_role();
         let life = Arc::new(RoleLife {
             stop: state.stop.child_token(),
+            validation: Mutex::default(),
             done: CancellationToken::new(),
         });
         *state.role.lock().unwrap_or_else(|e| e.into_inner()) = Some(life.clone());
@@ -1113,6 +1116,7 @@ mod native {
                     .map_err(account)?;
                 check(state, deadline)?;
                 permitted(&life)?;
+                *life.validation.lock().unwrap_or_else(|e| e.into_inner()) = Some(view);
                 Ok(viewer)
             };
             let result = super::super::identity::observe_operation(
@@ -1262,6 +1266,7 @@ mod native {
                 check(state, deadline)?;
                 permitted(&life)?;
                 let pending = self.pending_host.take().ok_or(ScreenFailure::Closed)?;
+                let control_view = ready.clone();
                 let host =
                     match pending
                         .admission
@@ -1294,6 +1299,7 @@ mod native {
                     life: life.clone(),
                     task,
                 });
+                *life.validation.lock().unwrap_or_else(|e| e.into_inner()) = Some(control_view);
                 // NdsClient guards the final handle publication after this result.
                 Ok(())
             };
@@ -1331,18 +1337,79 @@ mod native {
             classify,
         )
         .await;
-        match result {
+        let control = match result {
             Ok(device) => {
+                let control = (device.identity.clone(), device.fence.clone());
                 *state.device.lock().await = Some(device);
                 let _ = ready.send(Ok(()));
+                control
             }
             Err(error) => {
                 state.stop.cancel();
                 let _ = ready.send(Err(error));
+                return;
+            }
+        };
+        // The existing device owner also owns remote permission checks: no
+        // detached watcher or new task registry. Idle registrations do no I/O.
+        // Each active role checks every five seconds, with three seconds for a
+        // fresh answer. Failure cancels media; neither retry nor success renews it.
+        loop {
+            tokio::select! {
+                _ = state.stop.cancelled() => break,
+                _ = tokio::time::sleep(Duration::from_secs(5)) => {}
+            }
+            let role = state.role.lock().unwrap_or_else(|e| e.into_inner()).clone();
+            let Some(role) = role else { continue };
+            if role.done.is_cancelled() {
+                continue;
+            }
+            let original = role
+                .validation
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .clone();
+            if let Some(original) = original.filter(|_| !role.stop.is_cancelled()) {
+                let revalidate = async {
+                    for attempt in 0..8 {
+                        match control.0.screen_revalidate(&control.1, &original).await {
+                            Ok(true) => return Ok(()),
+                            Ok(false) => return Err(ScreenFailure::Closed),
+                            Err(ClientError::Busy) if attempt < 7 => {
+                                tokio::time::sleep(Duration::from_millis(
+                                    (25u64 << attempt).min(400),
+                                ))
+                                .await;
+                            }
+                            Err(error) => return Err(account(error)),
+                        }
+                    }
+                    Err(ScreenFailure::Busy)
+                };
+                let result = tokio::select! {
+                    _ = state.stop.cancelled() => break,
+                    _ = role.stop.cancelled() => Err(ScreenFailure::Closed),
+                    result = super::super::identity::observe_operation(
+                        "rds", "rds.view.revalidate",
+                        async { tokio::time::timeout(Duration::from_secs(3), revalidate)
+                            .await.unwrap_or(Err(ScreenFailure::Timeout)) },
+                        ScreenFailure::Unavailable, classify,
+                    ) => result,
+                };
+                if result.is_err() {
+                    role.stop.cancel();
+                }
+            }
+            if role.stop.is_cancelled() && !role.done.is_cancelled() {
+                // Close only this role: a newer opening cannot be canceled by an
+                // earlier response. Cancellation reaches native media immediately.
+                let closed =
+                    tokio::time::timeout(Duration::from_secs(3), state.close_role(&role)).await;
+                if !matches!(closed, Ok(Ok(()))) {
+                    state.stop.cancel();
+                }
             }
         }
-        // Existing Shared session/lifetime invalidation owns this device scope.
-        state.stop.cancelled().await;
         if let Some(device) = state.device.lock().await.take() {
             device.close().await;
         }

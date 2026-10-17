@@ -6,3 +6,6 @@ pub mod modules;
 pub mod organizations;
 pub mod screen;
 pub mod telemetry;
+
+#[cfg(all(test, target_os = "linux"))]
+mod screen_acceptance;
