@@ -51,6 +51,10 @@ pub fn capture_invitation_link(route: String) -> Result<(), JsError> {
     crate::api::organizations::capture_invitation_link(route).map_err(client_error)
 }
 #[wasm_bindgen]
+pub fn new_vault_record_id() -> String {
+    crate::api::identity::new_vault_record_id()
+}
+#[wasm_bindgen]
 pub fn client_diagnostics() -> Result<Ts<LocalDiagnostics>, JsError> {
     present(telemetry::client_diagnostics())
 }
