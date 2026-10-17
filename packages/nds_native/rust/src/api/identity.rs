@@ -605,6 +605,8 @@ impl NdsClient {
         username: String,
         secret: String,
     ) -> Result<VaultView, VaultError> {
+        // Own and clear supplied secret bytes even if authorization/storage fails.
+        let secret = Zeroizing::new(secret);
         let result = observe("vault.record.save", async {
             let vault = self.vault().await?;
             vault
@@ -614,7 +616,7 @@ impl NdsClient {
                     expected_pending,
                     title,
                     username,
-                    Zeroizing::new(secret),
+                    secret,
                 )
                 .await?;
             Ok(vault.snapshot())
@@ -686,11 +688,9 @@ impl NdsClient {
             .map_or_else(Default::default, |(metadata, _)| metadata))
     }
     pub async fn clipboard_publish_text(&self, text: String) -> Result<String, VaultError> {
+        let text = Zeroizing::new(text);
         let result = observe("clipboard.publish", async {
-            self.vault()
-                .await?
-                .share_clipboard(Zeroizing::new(text))
-                .await
+            self.vault().await?.share_clipboard(text).await
         })
         .await?;
         self.wake_replica();
